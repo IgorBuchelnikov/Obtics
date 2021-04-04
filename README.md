@@ -1,2 +1,344 @@
+*All content of this repository is copied 2021-04-04 from https://archive.codeplex.com/?p=obtics*
+
 # Obtics
-Copied from https://archive.codeplex.com/?p=obtics
+
+The object of this project is to create a library that offers Functional Reactive Programming abilities to common .Net languages. With FRP your calculations automatically respond to changes in the underlying data. Obtics includes a live Object Linq and Linq to Xml.
+
+
+
+**Project Description**
+The object of this project is to create a library that offers Functional Reactive Programming abilities to common .Net languages.
+With FRP your calculations automatically respond to changes in the underlying data. Obtics includes a live Object Linq and Linq to Xml. 
+
+# Features
+
+Obtics allows you to create [reactive](reactive) and [observable](observable) [transformation](transformation)s in a number of ways, freeing you of the burden of having to update and knowing when to update your results in a dynamic application. Having less to think about, you should be able to create richer and more reliable applications sooner.
+
+* Implicit Value transformations; Using methods form the Obtics.Values.ExpressionObserver class. Simply write a lambda function yielding your desired result. ExpressionObserver will analyze it, extract any dependencies and build an expression that is fully [reactive](reactive)(reactive) to any [observable](observable)(observable) changes of those dependencies. It will also rewrite your existing standard object LINQ statements into a [reactive](reactive)(reactive) and [observable](observable)(observable) form giving the most convenient way of creating bindable object LINQ queries.
+* Explicit Value transformations; Using methods from the Obtics.Values.ValueProvider class. You can build your value [transformation pipeline](transformation-pipeline) manually using these methods, trading ease of use for control. It allows you to specify exactly where the relevant volatile dependencies are for you calculation, allowing you to prevent wasting of resources on stable or unobservable dependencies. This style may be useful when working with larger amounts of data, when wasted resources add up.
+* Collection transformations (LINQ) ; Using methods from the Obtics.Collections.ObservableEnumerable class. Like with Explicit Value transformations this allows you to specify exactly how [reactive](reactive) your collection [transformation](transformation)(transformation)s should be. This goes at the expense of ease of use since you have to write out [transformation](transformation)(transformation)s manually and have to be aware of what dependencies need to be monitored for changes. But it does allow you to prevent wasting of resources on dependencies that never change anyway. This style may be useful when working with larger collections and wasted resources add up. To take full advantage of these methods though a System.Linq using statement in your source code needs to be replaced with an Obtics.Collections using statement or ambiguity errors will occur.
+
+The ExpressionObserver (implicit value transformations) is extendible. A library has been created ([ObticsToXml](ObticsToXml)) that builds on this extensibility and allows the creation of fully live LINQ to XML expressions.
+
+Obtics offers **full observable support for all object LINQ and most LINQ to XML statements**. Even other LINQ versions can become [observable](observable) and [reactive](reactive) to local dependencies. 
+
+Features are since version 1.0.8.0. [Features before 1.0.8.0](Features-before-1.0.8.0)
+
+# Less abstract
+
+A simple piece of code like below would yield a static result using standard Object LINQ. If you would bind to the property PeoplesNames from XAML you would get a one-time result no matter how much you would change the _People collection. Using Obtics the result of PeoplesNames will become fully [reactive](reactive) and [observable](observable). This means: 
+* Make changes to the _People collection or the LastName properties of the individual People objects and PeoplesNames will get updated automatically (reactivity). 
+* Your bound XAML application will display the changes in PeoplesNames automatically (observability).
+{{
+public class Test
+{
+        ObservableCollection<Person> _People;
+
+        public IEnumerable<string> PeoplesNames_Static
+        {
+            get 
+            {
+                return 
+                    from p in _People 
+                    orderby p.LastName
+                    select p.LastName ;
+            }
+        }
+    
+        public IEnumerable<string> PeoplesNames
+        {
+            get 
+            {
+                return 
+                    ExpressionObserver.Execute(
+                        this, 
+                        t =>
+                            from p in t._People 
+                            orderby p.LastName
+                            select p.LastName 
+                    ).Cascade();
+            }
+        }
+} 
+}} Though the above example is clearly aimed at the Observable Object LINQ facet of Obtics it is possible to do the same with single values. XAML bound to the FullName property shown below would never reflect changes made to the LastName or FirstName properties of + +Person automatically.
+
+{{
+public class Test
+{
+        Person _Person;
+
+        public string FullName
+        { get { return _Person.LastName + ", " + _Person.FirstName; } }
+} 
+}} With obtics you could create the code below and bind to the Value property of FullName. Any changes to the LastName or FirstName properties will be automatically and immediately reflected in your bound application.
+
+{{
+public class Test
+{
+        Person _Person;
+
+        public IValueProvider<string> FullName
+        { get { return ExpressionObserver.Execute(this, t => t._Person.LastName + ", " + t._Person.FirstName); } }
+} 
+}} (Class Person in these examples is an observable class. That means an instance of this class sends change notifications whenever a property changes value. See [http://www.codeplex.com/Obtics/SourceControl/FileView.aspx?itemId=209671&changeSetId=14599](http://www.codeplex.com/Obtics/SourceControl/FileView.aspx?itemId=209671&changeSetId=14599) for a possible implementation.)
+
+See more [Transformation Examples](Transformation-Examples), the [ObticsExaml](ObticsExaml) and [ObticsRaytracer](ObticsRaytracer) demonstration projects and [why](why)?
+
+The project [ObticsWpfHelper](ObticsWpfHelper) contains a solution for a particular challenge when combining Obtics with WPF.
+
+It is important that functions, lambda expressions, values and object that are being used with Obtics are [Well-behaved](Well-behaved).
+
+# Future features
+
+Version 2.0 is coming up. These are the plans for future versions:
+
+* Two way operation. All transformations now only support changes from source to client. It should be possible for developers to create a path back so that clients can effect changes on the source.
+* Light version for web (Silverlight) and mobile devices. The bulk of code is concerned with propagating collection changes from source to client. It is possible to create a version that doesn't use collection change notifications but property change notifications only. This should be fine when working with small sequences.
+
+And some more ideas:
+
+* More sexy example projects.
+* Obtics should work well with F#. That needs to be worked out.
+* Combine Obtics with some sort of software transaction mechanism. I think this is a must when multithreading is implemented.
+* Somebody should do something about my almost English.
+
+Any more brilliant ideas are much appreciated.
+
+# Project Log
+
+**2009 08 23**
+
+New release again. This version also has support for Silverlight. A number of projects have been added that build Silverlight versions of existing libraries: {"Obtics_Silverlight"}, {"ObticsBindingHelper_Silverlight"} and {"ObticsWpfHelper_Silverlight"}.
+
+A project {"ObticsUnitTestRunner_SilverLight"} has been added that runs a subset of ObticsUnitTest as a silverlight application. This project also serves as an example on how to use Obtics with SIlverlight. It lets you view all test methods in {"ObticsUnitTest_Silverlight"}, filter them, select them and run them.
+
+Running Obtics with SIlverlight has similar limitations as running Obtics under partial trust with limited reflection permissions.
+
+**2009 08 12**
+
+New release. This version contains some small feature extensions and code improvements. The most important change is that this version runs under partial trust and most notably with limited reflection permissions. Running with limited reflection permissions does impose some limitations on the ExpressionObserver. Assuming that discovery of private types and members is not allowed the following limitations apply:
+
+# All members in the lambda expression passed to ExpressionObserver must be public. This is a tough limitation and sometimes hard to work arround. 
+# Closures of local variables can not be used. This can be easily worked arround by transforming these closures into parameters.
+# Anonymous types can not be used. The types will need to be explicitly and publicly defined.
+
+Binding to interfaces (as returned by Obtics methods) in WPF also has limitations. When discovery of private types and members is not allowed; interface properties will need to be refered explicitly. To do this with, for example, the Value property of IValueProvider, register Obtics.Values namespace in XAML ( xmlns:ov="clr-namespace:Obtics.Values;assembly=Obtics" ) and refer to the Value property in bindings as (ov:IValueProvider.Value). A binding would look like: {Binding Path=VPObject.(ov:IValueProvider.Value)}. Note that you need the 'Path=' part in the binding or you will receive a very obscure internal null reference exeception.
+
+An other solution to the binding limitations migth be the ObticsBindingHelper library. ObticsBindingHelper offers a number of exptension methods that allow proxying of a number of interfaces commonly returned by Obtics methods, with concrete instances. These concrete types are public classes having public properties and methods for the interface implementations. These can be easily bound to from XAML and WinForms with limited reflection. (Though explicit interface property reference would still be more efficient).
+
+The RegexTool has been converted to an XBAP application to demonstrate the use of Obtics with limited priviliges.
+
+Two projects have been added (ObticsUnitTestRunner and UnitTestStub) to allow execution of ObticsUnitTest tests under partial trust. MSTest can work only under FullTrust and Microsoft.VisualStudio.QualityTools.UnitTestFramework does not allow PartiallyTrusted callers. To run the unit tests under partial trust replace the "Microsoft.VisualStudio.QualityTools.UnitTestFramework" reference in the ObticsUnitTest project with a reference to "UnitTestStub". ObticsUnitTestRunner can then be used to run all or any individual tests under partial trust.
+
+ObticsUnitTestRunner takes a single parameter. This parameter is a regular expression to select the unit tests in ObticsUnitTest to run. The regex is matched against the full name of all test methods and the methods that match will be run.
+
+X:\>ObticsUnitTestRunner "^.*(?<!ConcurrencyTest.?)$"
+
+Would run all TestMethods except the concurrency tests.
+
+X:\>ObticsUnitTestRunner "^ObticsUnitTest\.Obtics\.Regression\.Regression5$"
+
+Would run only the Regression5 test method of the ObticsUnitTest.Obtics.Regression test class.
+
+All libraries and some executables are now signed using the dev.snk key. Note that this key is **not secret** and you should sign the libraries with your own secret key before releasing a product.
+
+**2009 05 31**
+
+Again a new release. The extensibility of ExpressionObserver has been widened to include overloaded operators. 
+
+Introduced a new library named [ObticsToXml](ObticsToXml). This library contains a set of method mappings that allows the creation of live Linq-to-Xml expressions. These mappings need to be registered with an ExpressionObserverMaster before they can be used. 
+
+For example:
+{{
+var master = new ExpressionObserverMaster( ExpressionObserver.Default );
+
+Obtics.Xml.ObservableExtensions.RegisterMappings( master );
+
+XDocument document = XDocument.Load("MyXml.xml");
+
+var personsNamedVicky = 
+    master.ExpressionObserver.Execute( 
+        document, 
+        d => d.Descendants("Person").Where(p => p.Attribute("Name").Value == "Vicky")
+    ).Cascade() ;
+}}
+
+**2009 05 14**
+
+Created a new release with some nice features. 
+
+Have a pipeline generator cache that can yield quite a performance improvement when using ExpressionObserver compiled expressions.
+
+ExpressionObserver is now extensible. It already knew about Syste.Linq.Enumerable methods and how to map them to Obtics.Collections.ObservableEnumerable methods to create fully live expressions. The problem was that it didn't know what to do with any other methods. So if you created your very handy own extensions methods for IEnumerable<T> you couldn't get live expression with them via ExpressionObserver. Now you can inform ExpressionObserver what to do with your custom methods (or properties or fields). Expressions with your own methods can become just as live as with object Linq methods.
+
+You can use ExpressionObserverMappingAttribute to declaratively map your standard methods, properties or fields to live variations that ExpressionObserver can use. Alternatively you can use ExpressionObserverMaster to add or remove mappings imperatively to and from your own mappings database. This means you can provide live version for methods, propertie or fields that are not your own.
+
+Use of ExpressionObserverMappingAttribute is demonstrated in the new [CustomMapping](CustomMapping) sample project. [Rules for mappings](Rules-for-mappings)
+
+**2009 05 07**
+
+Not many changes lately. Added some comments and optimizations. Fix of a potential bug. Added code snippets for instance methods and properties that return IValueProviders or IEnumerables generated using a precompiled expression (using ExpressionObserver) This pattern I use the most and the snippets save a lot of repetative work.
+They can be found here: [http://obtics.codeplex.com/SourceControl/changeset/view/19469#368332](http://obtics.codeplex.com/SourceControl/changeset/view/19469#368332)
+
+**2009 03 04**
+
+Added a new sample application [GroupingTest](GroupingTest). It fills an ObservableCollection<int> with a given number of random integers and then does a given number of random manipulations on that collection. It filters in only those numbers where n%3 == 1 and then groups them by number of bits set. It creates an overview of those groeps (32 in total) and displays a score of the count in each group. All work is done on a background thread.
+
+**2009 03 03**
+
+Created a new release yesterday with quite a few changes.
+
+* The internal collection change propagation mechanism has changed. Internally only single item changes are handled. 
+* IEnumerables that are results of Obtics transformation methods generally no longer support INotifyPropertyChanged. Only the results of ObservableEnumerable.ToList() and ObservableEnumerable.Cap(), both of which return IList objects and therefore have actually changing properties, support INotifyPropertyChanged.
+* ObservableEnumerable sorting methods no longer do a stable sort. That means that the original element order is no longer the final sorting criterium. Elements with an equal sorting key will appear in a random order in the result sequence.
+* Internally Obtics can use unordered sequences. It can do this when the final result does not depend on the original ordering of source sequence elements. Unordered sequences carry a lot less information (no index information) and are therefore a lot cheaper in resources. When creating complex queries on long source sequences, try to sort the end result for a performance boost. Equality comparison and hashing are very important for unordered sequences. Make sure all elements of your source sequences implement these properly.
+* ObticsRaytracer example has been optimized. Scene changes are processed much faster.
+
+The most fundamental change is the use of unordered sequences internally. 'Where' clauses for example always needed to maintain an internal buffer with item <-> index information to properly pass on change events with index information. When index information is not important this buffer can be left out. The order of items becomes unimportant when either the end result is sorted or the end result is an aggregate that does not depend on the order of items. Such aggregates are: Min,Max,Sum,Average,All,Any,Contains,Count and LongCount. Other transformations, like Skip, Take or First, may actually prevent the use of unordered sequences as their sources. A solution could be to sort before such a transformation is used.
+
+Created a new project [ObticsWpfHelper](ObticsWpfHelper) (not in release 1.0.9.0, check out Source Code) that contains a solution for an anoying challenge when combining Obtics with Wpf. The problem occurs when binding from Wpf Elements to an Obtics transformation that again depends on properties of other elements and these elements are referenced by their code behind fields.
+
+**2009 01 10**
+
+Some bug fixes and performance improvements. Added a demonstration project [ObticsRaytracer](ObticsRaytracer) to show that obtics can handle complex LINQ statements, multiple threads and parallelization. 
+
+Also going Beta with version 1.0.8.2. Now a period of checking the documentation and bug hunting. 
+
+**2009 01 03**
+
+New version 1.0.8.0. Added more comments and some improvements concerning ConcurrentHashtable library. About to go beta. Will need to update the wiki because quite a few things have changed. Version 2.0 will have the following planned features implemented:
+
+* Multithreading support. Safe access to [transformation pipeline](transformation-pipeline)s from multiple threads.
+* Support for asynchronous change propagation. This is different from multithreading support. The idea is that you can modify a source and some time later clients will be notified of the change.
+* Replace INotifyCollectionChanged internally for a more efficient collection change notification mechanism. The existing INotifyCollectionChanged works with untyped change-sets which leads to unwanted boxing and unboxing when working with value types. Also the change-sets are always collections while most changes will be 1 item only changes.
+
+A sexier example is in the making.
+
+**2008 12 29**
+
+Implemented a new internal eventing mechanism. One mechanism for both property and collection changes and using interfaces instead of delegates. The registration mechanism of event consumers switches to a hash table instead of an array when a larger number of consumers register for an event. This gives much better performance for pivot nodes (ValueProviders and Collections with many clients).
+
+Both the CASHED_HASH and ASSUME_EXECUTION_SCOPE are very important for performance. The CASHED_HASH symbol has been removed and only the CASHED_HASH inclusive code remains. ASSUME_EXECUTION_SCOPE is still there though for purist reasons.
+
+Started an experiment with parallel computing. This can be enabled by defining both the MT and PARALLEL compilation symbols. Using the PARALLEL option requires a reference to the ParallelExtensions library (System.Threading).
+
+**2008 12 08**
+
+Quite a few changes in the sources. Also the public interface of the library has changed a lot. The next release will be version 2 and there will not be an intermediate release. 
+ImplicitObservable collection transformations have been removed from the library. This is because its functionality has been completely eclipsed by the ExpressionObserver class. The ObservableEnumerable  class from the ExplicitObservable namespace has moved up a namespace and is now the one and only ObservableEnumerable implementation. (Obtics.Collections.ObservableEnumerable). Documentation in this Wiki will need to be updated but I'll do that when version 2 goes beta.
+
+Expression rewriting by the ExpressionObserver class has been improved too. {?:} , {&&}, {||} and {??} will not register for events on irrelevant arguments ( like in 'true ? firstArg : secondArg' secondArg is irrelevant). Member access on reference types will always be preceded by a null check and hard down-casts will be translated in soft down-casts ( '(Type)x' will become 'x as Type' ). Performance has improved.
+
+**2008 11 18**
+
+Today implemented a work around for some very odd (at least I think it is) BCL behavior concerning delegates. Standard all lambda functions with the same signature get the same hash code. This is very bad for hash tables where a delegate is part of the key. 
+
+Implemented an IEqualityComparer for delegates that looks a bit deeper and creates a more useful hash. When setting the ASSUME_EXECUTION_SCOPE compilation symbol the work around  goes even deeper and can successfully match logically equal delegates that otherwise would have been regarded as unequal. Disadvantage of the ASSUME_EXECUTION_SCOPE is that the code will be trespassing on classes that are "not intended to be used directly from your code". Also I don't know the fine details of these classes yet (System.Runtime.CompilerServices.ExecutionScope and System.Runtime.CompilerServices.IStrongBox) so I'm not sure of the implementation. Fact is though that previously, in the ObticsExaml application, the carrousel had a hit-miss rate of 3 : 1 (with a bad hash on top of that) and now it gets a rate of 25 : 1
+
+**2008 11 15**
+
+Getting multithreading support working right is quite a challenge. Needed to do some redesign on the internal event registration and collection version checking. Internally collection transformations now use INotifyCollectionChanged events only. Outward INotifyPropertyChanged for collections is still supported. The last concurrence test-runs give repeated positive result, so it looks like it is finally getting somewhere.
+
+Also started experimenting with a typed and lighter internal collection changed notification mechanism. The NotifyCollectionChangedEventArgs seems to instantiate too many (complex) objects to propagate a simple change.
+
+**2008 10 18**
+
+Multithreading support now code complete. Now to test it. There will be some special demands for multithreaded observable collections. The enumerators will need snapshot quality and publish a sequence number that needs match a sequence number in the NotifyCollectionChangedEventArgs. A CollectionChanged event handler should be allowed to do read-only actions on the source of the event. I'm quite sure not many collections will implement such features. Need to invent a way to create configurable wrappers for all sorts of concurrent collections.
+
+If you got reading until here it probably means you find this stuff at least interesting. Well.. I could use some help. I have a gut feeling that obtics should work well with F# and I would also like to research applicability to guided automation tools like CAB and Prism. So, if you would like to contribute, please let me know.
+
+**2008 10 1**
+
+Completed work for asynchronous change propagation. The ValueProvider and both ObservableEnumerable have a new set of overloaded methods named 'Async'. These methods generate a 'buffer transformation'. They buffer the current contents of their sources and place any change notifications in a queue. These change notifications are delayed processed using a 'Work Queue'. The eventual dispatcher of work items can either be passed explicitly to some of the Async overloads or configured in a configuration file as default. Without any configuration the default dispatcher will be the System.Windows.Thread.Dispatcher.Current with priority 'DataBinding'.
+
+I have created a preliminary release 1.0.2.0 with the Async work.
+
+Next step will be the possibility for a developer to create a return path.
+
+**2008 09 23**
+
+Replaced existing Cache and Carrousel implementations with an implementation based on 'A Concurrent Hashtable'. For one this is already a preparation for multithreaded support. The old one-thread-at-a-time implementation could have caused a contention issue. Another advantage is that now the key to all objects in the Carrousel is a value type. That means it can be created on the stack and used to find a preexisting instance of a transformation object. Only when none can be found a new object will be created on the heap. The old version required a new instance of the object to compare to existing instances. This should reduce 'heap trashing'.
+
+Currently working on the implementation of asynchronous change propagation. I have added a new project 'ObticsAsync' as an add-on library to Obtics. All Async functionality will be implemented in there. Note that asynchronous operation is not synonymous with multithreaded operation. 
+
+**2008 08 24**
+
+More and more documenting comments. Code has been stable for some time now. Time to release version 1.0 and have some fun. All that documenting is dull work. Here are my plans for the next versions:
+
+* Multithreading support.
+* Support for asynchronous change propagation.
+* Two way operation (writing changes back to source)
+* Light version for web (Silverlight) and mobile devices.
+* Replace INotifyCollectionChanged internally for a more efficient collection change notification mechanism.
+
+**2008 08 19**
+
+Added a lot of documenting comments. Removed some of the biggest nonsense from outdated comments. Code itself hardly changed. This is boring work but well, almost done.
+
+**2008 08 09**
+
+Despite the project being in Beta stage the public interface of the Obtics library changed. The signatures of ObservableEnumerable methods have been changed to make them as much as possible compatible with System.Linq.Enumerable methods.
+
+Originally methods like Max( IEnumerable<int> source ) would return an IValueProvider<int?>. So: a nullable int. This was done so that null could be returned in case of a nonsensical result. Like when the source collection is empty. System.Linq.Enumerable.Max() would return an int and raise an exception in case the source was empty. Observable methods should never raise exceptions in such cases. It could be that the source is temporarily empty and on top of that it would never be clear who would be responsible for creating the empty source. So instead of raising an exception the IValueProvider<int?> ObservableEnumerable.Max() would have null for its Value property.
+
+This incompatibility made it impossible though to create a simple expression rewriting mechanism that would translate Enumerable methods into ObservableEnumerable methods. Such a mechanism would make it possible to turn existing non observable LINQ queries onto observable ones as so:
+{{ ExpressionObserver.Execute( collection, c => from i in c where i != 0 select 1 / i ).Cascade() }}
+Without having to replace the System.Linq using statement with an observable one, breaking al sorts of different existing queries.
+
+Rewriting non observable LINQ queries into observable ones is not as versatile as using observable LINQ queries directly but I think this possibility adds great value.
+
+So; the changed ObservableEnumerable.Max( IEnumerable<int> source ) method now returns an IValueProvider<int> and in case the source collections happens to be empty the Value of the returned IValueProvider will be default(int). This naturally leaves it to the developer to determine if the returned value makes sense or not.
+
+**2008 07 20**
+
+Renamed a few things still and extended ObservableEnumerable.Select function so that it can take extra arguments as seed for its lambda. This can help keeping lambda functions in transformations a pure as possible. None pure means poor performance. 
+
+Also added a special example application [ObticsExaml](ObticsExaml) to show how Observable LINQ and value transformations can be used and how easy it is to use.
+
+Reached Beta stage. The public interface of Obtics.dll should now remain stable until version 1.
+
+**2008 07 15**
+
+Implemented a carrousel pattern for all the transformation methods. A carrousel is in fact a cache mechanism. The transformation methods return objects. Calling the same transformation method twice with exactly the same arguments would return two different object instances that are actually equivalent. The carrousel will try to return the same object by maintaining a dictionary with references. This dictionary is always free though for garbage collecting so memory impact should be limited or at most only temporarily. Doing lookups all the time may reduce performance but having fewer transformation objects alive in memory may increase performance. The carrousel may be turned of in the build by undefining the CARROUSEL symbol.
+
+All the transformation methods (ValueProvider and ObservableEnumerable methods) used to throw exceptions when passed a null value as a required argument. Now they do not raise exceptions but return null as result instead. This works better when building implicitly observable transformation pipelines.
+
+The DynamicValueProvider object is now hidden from view and can be created only through the ValueProvider.Dynamic method. This seems more pure to me.
+
+**2008 06 25**
+
+Did some heavy renaming on the projects, assemblies and namespaces. Point was that I think 'Utilities' is too intrusive for a root namespace. Also I thought that ObsTrans did not sound very attractive. So I renamed the whole project, assembly and root namespace to 'Obtics'. I choose this name because I tend to liken the transformations to lenses. Lenses that are themselves static but give a live view on the object underneath them. So; Obtics it is. Also added more unit tests, fixed some bugs, removed unused code and added some more comments. Almost ready to go beta.
+
+**2008 06 08**
+
+Added more unit tests and cleaned up code. Fixed a serious bug in the ValueTransformations. The bug was serious enough to make a new release. Next will be doing Equivalence tests.
+
+**2008 05 21**
+
+All entities in the Obtics library that are not part of the public interface of the core functionality have been made internal to the library. This should make it easier to make changes after the first full release. Some internal items may be of use (like [ExpressionEqualityComparer](ExpressionEqualityComparer)) but they can always be copied from source. It still needs some thought if and how to release those items as part of the Obtics library. Scope crawl should be avoided.
+
+The library is pretty much feature complete for the first full release. Need to do some double check on the naming. And naturally test and document and test and document... the fun period. Released an Alpha version.
+
+**2008 05 16**
+
+Created a number of unit tests for the CollectionTransformations and Aggregates and fixed a number of bugs in the process. (Unit testing is great!) There are still a lot more things to test.
+
+I abandoned the idea of have the Observable Object LINQ implementation cooperate with the Standard version. The signatures of some methods are different and that is very confusing when the two are mixed. More important though is the fact the some standard Object LINQ methods may throw exceptions in some cases (like Max on an empty list) and for a (partly) observable transformation this just CAN NOT happen! It is not clear who is the invoker (Client by requesting a result or a source out of multiple by sending a change notification) and therefore who should handle the exception. On top of that the ordinary update process may get aborted and leave some transformations in an inconsistent state. Co operability therefore is out. 
+
+This leaves no use for the IObservableEnumerable interface so that is out to and that greatly simplifies the ObservableEnumerable implementation (the one holding all the Observable Object LINQ methods)
+
+There are now two variations of Observable Object LINQ. One implicitly and one explicitly observable. ([ImplicitObservable](ImplicitObservable) and [ExplicitObservable](ExplicitObservable))The difference being that the first will automatically try to achieve maximum observability (listen for potential changes on all properties) and with the second the programmer will have to specify what needs to be observed and how. The first variation is much more convenient to program (especially when there are many potentially changing properties) and the second can be much more conservative with resources and have better performance especially with large collections of static objects.
+
+ValueProvider transformations are getting more mature. A feature has been added that can analyze a LambdaExpression for observable properties and translate it to an expression that returns an IValueProvider and listens for changes on source properties. This is used for the Implicit Observable Object LINQ. 
+
+Another nice addition is the [ExpressionEqualityComparer](ExpressionEqualityComparer). This equality comparer tries to determine if two different LambdaExpressions will always have the same result, even though they are different instances. This is used to cache Compiled expressions (ValueProvider.CompileObservable) and gives an enormous performance boost when equivalent lambda expressions are being compiled repeatedly.
+
+All Transformation objects will become internal objects. The original idea was that these could be used externally to build new transformations but they are just too specific and often have special requirements to operate correctly. These are just too many open sinews.
+
+**2008 04 15**
+
+At the moment the library has support for all LINQ functions (Collection Transformations) and starts becoming useful. More support for Value Transformations is needed.
+
+Support for asynchronous operations and multithreading is not implemented yet. That still needs some thought.
+
+I think the project would benefit most from some stabilization and documentation at the moment.
