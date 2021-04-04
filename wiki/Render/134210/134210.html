@@ -1,0 +1,167 @@
+<div class="wikidoc"><h1>ObticsRaytracer</h1>
+<b>!Disclaimer!</b><br />This small application, which is code demonstration, is not an example of how Obtics <b>should</b> be used. Same as that Luke Hoban&#39;s &quot;Raytracer in one line LINQ code&quot; is not a demonsration of how LINQ should be used. There are far better ways of implementing a raytracer that updates it result when the scene changes, than through Obtics or LINQ. The point of this demonstration is that it is possible to do. And for fun naturaly :-)<br /><br /><img src="http://download-codeplex.sec.s-msft.com/Download?ProjectName=Obtics&DownloadId=54516" alt="ObticsRaytracer.jpg" title="ObticsRaytracer.jpg" /><br /><br /><b>Credits</b><br />ObticsRaytracer is based on Luke Hoban&#39;s &quot;Raytracer in one line LINQ code&quot;, which can be found here: <a href="http://blogs.msdn.com/lukeh/archive/2007/10/01/taking-linq-to-objects-to-extremes-a-fully-linqified-raytracer.aspx">http://blogs.msdn.com/lukeh/archive/2007/10/01/taking-linq-to-objects-to-extremes-a-fully-linqified-raytracer.aspx</a><br /><br /><b>What it does</b><br />ObticsRaytracer creates an image out of a 3d scene and does so via 2 LINQ statements. The position and color of the lights have been made observable and the LINQ statements have been passed through the Obtics ExpressionObserver. The result is that the image automatically redraws itself whenever the color or position of a light changes. When the original image has been painted the application starts a loop and randonly changes the position or color of a light with each iteration. It shows a count of the number of changes and the average time it took to completely redraw the image. The time it takes to redraw depends on the change; which pixels are influenced by it and via how many rays. This demonstrations shows that Obtics can handle complex (LINQ) queries, is thread safe and parallelization ready.<br /><br /><b>Parallelization</b><br />To speed things up a bit and for demonstration reasons the application uses the &#39;Parallel Extension&#39; library. You can download it here: <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=348F73FD-593D-4B3C-B055-694C50D2B0F3">http://www.microsoft.com/downloads/details.aspx?FamilyId=348F73FD-593D-4B3C-B055-694C50D2B0F3</a><br />This proves that Obtics is thread safe and getting &#39;parallel ready&#39;.<br /><br /><b>The core</b><br />In ObticsRaytracer the &quot;one line LINQ&quot; (which is an almost true statement) is split in two. The reason is that the original LINQ statement contained an inner lambda passed to a custom function. For the ExpressionObserver inner lambdas form an observablity boundary. It doesn&#39;t know how the inner lambda is being used by the custom function so it doesn&#39;t make any assumptions. The mentioned inner lambda therefore is passed to the ExpressionObserver seperately.<br /><br />The core of the demo is formed by these pieces of code:<br /><pre>
+        static Func&lt;Func&lt;TraceRayArgs, IValueProvider&lt;Color&gt;&gt;,TraceRayArgs, IValueProvider&lt;Color&gt;&gt; _ComputeTraceRayF =
+            ExpressionObserver.Compile(
+                (Func&lt;TraceRayArgs, IValueProvider&lt;Color&gt;&gt; f, TraceRayArgs traceRayArgs) =&gt;
+                         (from isect in
+                            (
+                              from thing in traceRayArgs.Scene.Things
+                              let iisect = thing.Intersect(traceRayArgs.Ray)
+                              where iisect != null
+                              orderby iisect.Dist
+                              select iisect
+                            ).Take(1)
+                          let d = isect.Ray.Dir
+                          let pos = Vector.Plus(Vector.Times(isect.Dist, isect.Ray.Dir), isect.Ray.Start)
+                          let normal = isect.Thing.Normal(pos)
+                          let reflectDir = Vector.Minus(d, Vector.Times(2 * Vector.Dot(normal, d), normal))
+                          let naturalColors =
+                              from light in traceRayArgs.Scene.Lights
+                              let ldis = Vector.Minus(light.Pos.Value, pos)
+                              let livec = Vector.Norm(ldis)
+                              let testIsect = 
+                                 (
+                                     from thing in traceRayArgs.Scene.Things
+                                     select thing.Intersect(new Ray() { Start = pos, Dir = livec })
+                                 ).Aggregate(
+                                     null, 
+                                     (ISect closest,ISect inter) =&gt; 
+                                         closest == null || inter != null &amp;&amp; inter.Dist &lt; closest.Dist ? inter : closest
+                                )
+                              where testIsect == null || testIsect.Dist &gt; Vector.Mag(ldis) //!isInShadow
+                              let illum = Vector.Dot(livec, normal)
+                              let lcolor = illum &gt; 0 ? Color.Times(illum, light.Color.Value) : Color.Make(0, 0, 0)
+                              let specular = Vector.Dot(livec, Vector.Norm(reflectDir))
+                              let scolor = 
+                                specular &gt; 0
+                                    ? Color.Times(
+                                        Math.Pow(specular, isect.Thing.Surface.Roughness),
+                                        light.Color.Value
+                                    )
+                                    : Color.Make(0, 0, 0)
+                              select 
+                                Color.Plus(
+                                    Color.Times(isect.Thing.Surface.Diffuse(pos), lcolor),
+                                    Color.Times(isect.Thing.Surface.Specular(pos), scolor)
+                                )
+                          let reflectPos = Vector.Plus(pos, Vector.Times(.001, reflectDir))
+                          let reflectColor =
+                                traceRayArgs.Depth &gt;= MaxDepth
+                                      ? Color.Make(.5, .5, .5)
+                                      : Color.Times(
+                                            isect.Thing.Surface.Reflect(reflectPos),
+                                            f(
+                                                new TraceRayArgs(
+                                                    new Ray()
+                                                    {
+                                                        Start = reflectPos,
+                                                        Dir = reflectDir
+                                                    },
+                                                    traceRayArgs.Scene,
+                                                    traceRayArgs.Depth + 1
+                                                )
+                                            ).Value
+                                        )
+                                                
+                          select
+                            naturalColors.Aggregate(
+                                reflectColor,
+                                (color, natColor) =&gt; Color.Plus(color, natColor)
+                            )
+                         ).DefaultIfEmpty(Color.Background).First()
+            );
+
+        static Func&lt;RayTracer, Scene, IValueProvider&lt;IEnumerable&lt;IEnumerable&lt;Pixel&gt;&gt;&gt;&gt; BuildPixelsQuery =
+            ExpressionObserver.Compile(
+                (RayTracer t, Scene scene) =&gt;
+                    from y in Enumerable.Range(0,t.screenHeight).Reverse()
+                    let recenterY = -(y - (t.screenHeight / 2.0)) / (2.0 * t.screenHeight)
+                    select 
+                        from x in Enumerable.Range(0, t.screenWidth)
+                        let recenterX = (x - (t.screenWidth / 2.0)) / (2.0 * t.screenWidth)                       
+                        select 
+                            new Pixel { 
+                                X = x, 
+                                Y = y, 
+                                Color = 
+                                    Y(
+                                        (Func&lt;Func&lt;TraceRayArgs, IValueProvider&lt;Color&gt;&gt;, Func&lt;TraceRayArgs, IValueProvider&lt;Color&gt;&gt;&gt;) (
+                                            f =&gt; traceRayArgs =&gt;
+                                                _ComputeTraceRayF(f, traceRayArgs)
+                                        )
+                                    )( 
+                                        new TraceRayArgs(
+                                            new Ray() { 
+                                                Start = scene.Camera.Pos, 
+                                                Dir = 
+                                                    Vector.Norm(
+                                                        Vector.Plus(
+                                                            scene.Camera.Forward,
+                                                            Vector.Plus( 
+                                                                Vector.Times(recenterX, scene.Camera.Right),
+                                                                Vector.Times(recenterY, scene.Camera.Up)
+                                                            )
+                                                        )
+                                                    ) 
+                                            }, 
+                                            scene, 
+                                            0
+                                        )
+                                    ) 
+                            }
+            );
+
+        object _Pixels;
+
+        internal void Render(Scene scene)
+        {
+            var pixelsQuery = BuildPixelsQuery(this,scene).Cascade();
+
+            var pixels = new IValueProvider&lt;Color&gt;[screenWidth, screenHeight];
+
+            Parallel.ForEach(
+                pixelsQuery.SelectMany(row =&gt; row),
+                pixel =&gt;
+                {
+                    var colorProvider = pixel.Color;
+                    var px = pixel.X;
+                    var py = pixel.Y;
+
+                    pixels[px, py] = colorProvider;
+                    var npc = colorProvider as INotifyPropertyChanged;
+
+
+                    if (npc != null)
+                        npc.PropertyChanged += delegate(object sender, PropertyChangedEventArgs args)
+                        {
+                            if (args.PropertyName == &quot;Value&quot;)
+                                setPixel(px, py, colorProvider.Value.ToDrawingColor());
+                        };
+
+                    setPixel(px, py, colorProvider.Value.ToDrawingColor());
+                }
+            );
+
+            _Pixels = pixels;            
+        }
+
+</pre><br /><br />The original Light class has been replace with the following:<br /><pre>    //class Light
+    //{
+    //    public Vector Pos;
+    //    public Color Color;
+    //}
+
+    class Light
+    {
+        public IValueProvider&lt;Vector&gt; Pos;
+        public IValueProvider&lt;Color&gt; Color;
+    }
+
+</pre><br />The original fields are replaced with fields that hold ValueProviders. It is also possible to replace the original fields with properties and implement INotifyPropertyChanged on the Light class itself.<br /><br />And they are initialized like so:<br /><pre>                new Light() {
+                    Pos = ValueProvider.Dynamic(Vector.Make(-2,2.5,0)),
+                    Color = ValueProvider.Dynamic(Color.Make(.49,.07,.07))
+                }
+
+</pre><br />ValueProvider.Dynamic supplies a value container with a mutable Value property and an INotifyPropertyChanged implementation.<br /><br />Now when the raytracer has finished rendering (or before) and the color of a light is changed; all pixels with a dependency on that light&#39;s color are recalculated and redrawn:<br /><pre>              RayTracer.DefaultScene.Lights[2].Color.Value = Color.Make(.07,.49,.29);
+
+</pre><br /><br /><b>Performance</b><br />Note that the _ComputeTraceRayF function may be called many times per pixel. The exact number of times depends on each individual pixel (if a ray through that pixel intersects with anything or not). This means that a large to hughe transformation pipeline is generated for each of the 10,000 pixels. This means that the result is not exactly lightning fast and the application will claim an enormous chunk of working memory (about 1G). Be aware that this a technology demonstration and not a guideline of how to build a raytracer.<br /><br />In this demonstration &#39;only&#39; the color and position of the lights are changed. Future versions may become even more dynamic.</div><div class="ClearBoth"></div>

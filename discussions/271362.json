@@ -1,0 +1,42 @@
+[
+  {
+    "Id": "667126",
+    "ThreadId": "271362",
+    "Html": "\r\n<p>Hi Throb,</p>\r\n<p>I try to upgrade my project with the latest changeset of obtics.</p>\r\n<p>In my old version, the first get of &quot;.Value&quot; and the second, take the same time... so there are not cache of the value.<br>\r\nIn the latest, there are no changes about this =( I have try to import the &quot;CachedTransformation&quot; of WPF version in silverlight, but same with Cached() :(</p>\r\n<p><span>Is there</span> <span>a ended transformation&nbsp;</span><span>that</span>\r\n<span>keeps the</span> <span>value in</span> <span>cache</span> <span>and</span> <span>\r\ndid not recompute the value for each access ?</span></p>\r\n<p><span>Regs,<br>\r\nVincent</span></p>\r\n<p>&nbsp;</p>\r\n",
+    "PostedDate": "2011-09-03T03:36:39.64-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "672489",
+    "ThreadId": "271362",
+    "Html": "<p>Hi Vincent,</p>\r\n<p>Cached() should work though but it will work only when at least one client is registered for change notifications.</p>\r\n<p>If it still does not work could you post some code that shows this problem?</p>\r\n<p>Regs,</p>\r\n<p>Thomas</p>",
+    "PostedDate": "2011-09-15T16:21:20.06-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "681319",
+    "ThreadId": "271362",
+    "Html": "<p>Hi Throb,</p>\r\n<p>I am very disapppointed, I try this code :</p>\r\n<hr />\r\n<p>\r\n<div><span style=\"font-family: Consolas; font-size: x-small;\"><span style=\"font-family: Consolas; font-size: x-small;\"><span style=\"font-family: Consolas; font-size: x-small;\">EmployeesSchedulesViewModel employeesSchedulesViewModel = (<span style=\"color: blue;\">this</span>.LayoutRoot.DataContext <span style=\"color: blue;\">as</span> EmployeesSchedulesViewModel);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style=\"color: blue;\">var</span> selectMany = employeesSchedulesViewModel.PlanningDomainContext.Employees<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .SelectMany(evm =&gt; evm.WorkDays).Take(10)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .Select(wd =&gt; DynamicWorkDay.GetOrCreate(wd.Employee, wd.Date, wd.IsRealized)).ToList();<br /><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List&lt;<span style=\"color: blue;\">string</span>&gt; colors = <span style=\"color: blue;\">new</span> List&lt;<span style=\"color: blue;\">string</span>&gt;();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DateTime datetime = DateTime.Now;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style=\"color: blue;\">foreach</span> (DynamicWorkDay workDay <span style=\"color: blue;\">in</span> selectMany)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ((INotifyPropertyChanged)workDay.Color).PropertyChanged += <span style=\"color: blue;\">new</span> PropertyChangedEventHandler(EmployeesSchedulesView_PropertyChanged);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style=\"color: blue;\">string</span> valueProvider = workDay.Color.Value;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; colors.Add(valueProvider);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TimeSpan timeSpan = DateTime.Now - datetime ;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; datetime = DateTime.Now;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style=\"color: blue;\">foreach</span> (DynamicWorkDay workDay <span style=\"color: blue;\">in</span> selectMany)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style=\"color: blue;\">string</span> valueProvider = workDay.Color.Value;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; colors.Add(valueProvider);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TimeSpan timeSpan2 = DateTime.Now - datetime;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MessageBox.Show(selectMany.Count + <span style=\"color: #a31515;\">\" \"</span>+timeSpan.TotalMilliseconds + <span style=\"color: #a31515;\">\" \"</span> + timeSpan2.TotalMilliseconds);<br /></span></span></span></div>\r\n</p>\r\n<p><span style=\"font-family: Consolas; font-size: x-small;\"><span style=\"font-family: Consolas; font-size: x-small;\"><span style=\"font-family: Consolas; font-size: x-small;\">&nbsp;</span></span></span></p>\r\n<div><span style=\"font-family: Consolas; font-size: x-small;\"><span style=\"font-family: Consolas; font-size: x-small;\">&nbsp;</span>&nbsp; \r\n<hr />\r\n</span>\r\n<p>When I don't suscribe to PropertyChanged of Color ValueProvider, the value of MessageBox is \"10 4060.23 4058.23\" then I suscribe, the result is \"10 8.0 0\", WTF ?</p>\r\n<p>Regs,<br />Vincent</p>\r\n</div>",
+    "PostedDate": "2011-10-07T07:36:43.583-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "683675",
+    "ThreadId": "271362",
+    "Html": "<p>Hi Vincent,</p>\r\n<p>I don't know about the details of your project. In general it is not strange that Obtics would perform (much) beter when clients have registered for change notifications. I short; Obtics does not track changes when no clients are registered. This makes sense because you don't want Obtics to waste resources on transformation pipelines you don't need anymore. So when you ask for the value&nbsp;it will be recalculated every time. When clients ARE registered for change notifications Obtics will track them and (because you use ToList()) may cache the result. This means that the value result may not be recalculated every time you ask for it and the result is a better performance.</p>\r\n<p>In case you don't want to register for change notifications (directly via INotifyPropertyChanged or ICollectionChanged or indirectly via bindings) I'd suggest you use plain LINQ and not Obtics.</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2011-10-13T06:33:13.483-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "683689",
+    "ThreadId": "271362",
+    "Html": "<p>Hi Throb,</p>\r\n<p>Thanks for your answer. I have several problems about&nbsp;performance in my application who use Obtics (in&nbsp;very old version)&nbsp;=(</p>\r\n<p>Vincent</p>",
+    "PostedDate": "2011-10-13T06:52:23.02-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

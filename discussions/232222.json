@@ -1,0 +1,34 @@
+[
+  {
+    "Id": "512155",
+    "ThreadId": "232222",
+    "Html": "\r\n<p>First of all, thank you for developing Obtics.</p>\r\n<p>In interactive part of&nbsp;Reactive Framework&nbsp;there's a bunch of new operators for IEnumerable types (for example: Return, Repeat, Scan, TakeLast, SkipLast).</p>\r\n<p>It would be cool if Obtics supported them also.</p>\r\n<p>&nbsp;</p>\r\n<p>Regards,&nbsp;</p>\r\n<p>Gregory</p>\r\n",
+    "PostedDate": "2010-10-25T07:35:27.387-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "512669",
+    "ThreadId": "232222",
+    "Html": "\r\n<p>Hi Gregory,</p>\r\n<p>Did you know that Obtics is extensible? Check out the CustomMapping and ObticsToXml projects. If you have created a good working set for methods from the standard framework (like the methods you mentioned) naturaly&nbsp;I would like to add them to the standard\r\n Obtics implemention. :-)</p>\r\n<p>Regs,</p>\r\n<p>Thomas.&nbsp;</p>\r\n",
+    "PostedDate": "2010-10-26T05:44:04.107-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "543634",
+    "ThreadId": "232222",
+    "Html": "\r\n<p>Hi Thomas,</p>\r\n<p>Sorry haven't answered so long. Actually we're using Obtics quite successfully in our project, Obtics has allowed to write&nbsp;a presentation layer of our application in&nbsp;almost declarative way. We got enormous speed-up in development.</p>\r\n<p>On extensibility of Obtics. I did a quick look and found out that to extend Obtics you need to have access to the source of the method you want Obtics to recognize. That would be good if completely&nbsp;non-intrusive mapping were possible</p>\r\n<blockquote style=\"border:solid .1em #ccc; font-style:italic; margin:.25em 1em 0 1em; padding:0 .25em 0 .25em\">\r\n<p>If you have created a good working set for methods from the standard framework (like the methods you mentioned) naturaly&nbsp;I would like to add them to the standard Obtics implemention. :-)&nbsp;</p>\r\n</blockquote>\r\n<p>&nbsp;Some of the methods are quite easy to do. For example, EnumerableEx.Return should map to AsEnumerable method. I think I may volunteer to write several of them.</p>\r\n<p>Regards,</p>\r\n<p>Gregory</p>\r\n",
+    "PostedDate": "2011-01-04T03:53:53.2-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "546019",
+    "ThreadId": "232222",
+    "Html": "\r\n<p>Hi Gregory,</p>\r\n<p>It is good to hear that you can make good use of Obics. :-)</p>\r\n<p>The ObticsToXml project proves that non-intrusive mapping is possible. You need to specify the mappings programmaticaly in that case.&nbsp; So; my 'challenge' still stands. Create a library with mappings for the new extension methods. And while you are at\r\n it.. Make an addaption for Obtics so that 3rd party libraries can be included via the config file.. :-)</p>\r\n<p>Regs,</p>\r\n<p>Thomas</p>\r\n<p>&nbsp;</p>\r\n",
+    "PostedDate": "2011-01-08T11:52:03.6-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

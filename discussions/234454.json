@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "521052",
+    "ThreadId": "234454",
+    "Html": "\r\n<p>Hi Throb,</p>\r\n<p>The file&nbsp;ObservableEnumerable.Cache.cs is missing in the recent changeset. It's normal ?</p>\r\n<p>Regs,<br>\r\nVincent&nbsp;</p>\r\n",
+    "PostedDate": "2010-11-12T05:20:21.85-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "521184",
+    "ThreadId": "234454",
+    "Html": "\r\n<p>Ok, Thanks.</p>\r\n<p>Don't know where that happened.. fixed.</p>\r\n<p>Thomas.</p>\r\n",
+    "PostedDate": "2010-11-12T09:45:28.99-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

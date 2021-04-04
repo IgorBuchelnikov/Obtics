@@ -1,0 +1,39 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": "2009-08-05T08:44:29.733-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "Not correct result if no match can be found in sequence.",
+    "LastUpdatedDate": "2013-05-15T21:55:55.6-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Unassigned",
+      "Severity": 0,
+      "Id": 0
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2008-06-21T18:58:27.48-07:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "FindFirst and FindLast collection aggregates not correct.",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 0,
+    "Id": 2506
+  },
+  "FileAttachments": [],
+  "Comments": []
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "271883",
+    "ThreadId": "79419",
+    "Html": "<p>Hi Thomas</p>\r\n<p>Is there a workaround so that Obtics can observe a lambda statement block?</p>\r\n<p>Example:</p>\r\n<p><span style=\"font-size:8pt;color:blue\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static</span><span style=\"font-size:8pt\"> <span style=\"color:#2b91af\">Func</span>&lt;<span style=\"color:blue\">int</span>&gt; func;</span></p>\r\n<p><span style=\"font-size:8pt\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; func = () =&gt; { logic-here-that-references-observable-properties-queries-etc; <span style=\"color:blue\">return</span> result; };&nbsp;&nbsp;&nbsp;&nbsp; // something too long to write as a lambda expression</span></p>\r\n<p><span style=\"font-size:8pt\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style=\"color:#2b91af\">ExpressionObserver</span>.Execute(() =&gt; func());</span></p>\r\n<p>I assume the issue is that it's not possible to automatically create an expression tree from a lambda statement block?</p>\r\n<p>Many thanks.</p>",
+    "PostedDate": "2009-12-30T18:43:38.99-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "271916",
+    "ThreadId": "79419",
+    "Html": "<p>Hi,</p>\r\n<p>Unfortunately it is not possible under Framework 3.5&nbsp;to create a lambda expression of a lambda function&nbsp;that contains a statement block.</p>\r\n<p>It is possible though to reference other&nbsp; expressions-made-observable from lambda expressions. That way you can partition your complex expression over multiple expressions. Like:</p>\r\n<p>static Func&lt;IValueProvider&lt;int&gt;&gt;&nbsp;First = ExpressionObserver.Compile( () =&gt; 'expression-returning-an-int' );</p>\r\n<p>static Func&lt;IValueProvider&lt;int&gt;&gt; Second = ExpressionObserver.Compile( ()=&gt; First().Value * First().Value + 1 ); //nests observable&nbsp;lambda function stored in&nbsp;First</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2009-12-31T00:37:30.303-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "272136",
+    "ThreadId": "79419",
+    "Html": "<p>Hi Thomas</p>\r\n<p>That's a good idea.</p>\r\n<p>To overcome the .NET framework limitation, I'll try breaking down my (complex) lambda statement blocks into several simpler lambda expressions so that they can be individually observed by obtics.</p>\r\n<p>Cheers</p>\r\n<p>Tibor</p>",
+    "PostedDate": "2010-01-01T00:38:55.8-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

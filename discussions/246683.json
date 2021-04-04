@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "568766",
+    "ThreadId": "246683",
+    "Html": "\r\n<p>Anyone else getting a&nbsp;&quot;<strong>key not present in dictionary</strong>&quot;&nbsp;exception?</p>\r\n<p>My users are getting this Obtics exception. &nbsp;Not sure how to reproduce yet. &nbsp;I will post more details as they become available.</p>\r\n<p>Anyone have this same exception?</p>\r\n<p>Ryan</p>\r\n",
+    "PostedDate": "2011-02-18T14:11:07.407-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "568778",
+    "ThreadId": "246683",
+    "Html": "<p>A 'regular' way this might happen is when you would use a LINQ statent like this&nbsp;&nbsp;<em>collection.Select(x =&gt; new object())</em> and make it observable.</p>\r\n<p>Obtics uses your lambda expression both for adding new items and removing old ones. with this state ment if you would add an item I and later remove it again <strong>after</strong> the select objtics would add one object but remove another.</p>\r\n<p>So; if you would do something like <em>collection.Select(x =&gt; new object()).Distinct().OrderBy(obj =&gt; obj.GetHashCode()) </em>the Distinct() part would introduce a Dictionary where first object a is inserted and later object b, which is <strong>not</strong> in the dictionary, will be removed.</p>\r\n<p>It is therefore important that all your lambda functions are well-behaved, meaning that they should always return the same result when given the same parameters. (where same is defined by the T.Equals(T other) method)</p>\r\n<p>So always when&nbsp;Func&lt;X,R&gt; lambda = .... then EqualityComparer&lt;R&gt;.Default.Equals(lambda(x), lamda(x)) should be true.</p>\r\n<p>Anyway, if you find out,&nbsp;I would be very interested in how this exception happens.</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2011-02-18T14:31:39.76-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

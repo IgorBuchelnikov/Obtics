@@ -1,0 +1,95 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": "2009-08-05T08:44:41.047-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "I am using Obtics to perform a query on a collection and then bind that query to the ItemsSource property on an ItemsControl.  This is all wrapped into a UserControl.\nWithin VisualStudio's designer, every works.  When I view the UserControl in design mode, the designer correctly binds the data and displays the items.\nHowever, in Expression Blend, it doesn't work at all.  When I view the exact same page in design mode, the ItemsControl is empty (no items are generated from the Obtics query).\nIf I simply remove the Obtics \"includes\" from the class that provides the data (thus forcing it to use Microsoft's LINQ stuff instead of Obtic's LINQ stuff), then Expression Blend works correctly.",
+    "LastUpdatedDate": "2017-12-06T23:32:04.22-08:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-06-09T08:51:39.13-07:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "Obtics, Binding, and Microsoft Expression Blend",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 4124
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "I have an example.  The following property can be bound to without problem:\r\n\r\n\tPublic ReadOnly Property TestStrings() As IEnumerable(Of String)\r\n\t\tGet\r\n\t\t\tIf _TestStrings Is Nothing Then\r\n\t\t\t\t_TestStrings = New String() {\"1\", \"2\", \"3\"}\r\n\t\t\tEnd If\r\n\t\t\tReturn _TestStrings \r\n\t\tEnd Get\r\n\tEnd Property\r\n\tPrivate _TestStrings As IEnumerable(Of String)\r\n\r\nHowever, as soon as I add a linq expression (that uses Obtics), the property value stops working in Expression Blend.  Note that I'm not even using the linq expression!\r\n\r\n\tPublic ReadOnly Property TestStrings() As IEnumerable(Of String)\r\n\t\tGet\r\n\t\t\tIf _TestStrings Is Nothing Then\r\n\t\t\t\tDim query = From item In New String() {\"1\", \"2\", \"3\"} Select item\r\n\t\t\t\t_TestStrings = New String() {\"1\", \"2\", \"3\"}\r\n\t\t\tEnd If\r\n\t\t\tReturn _TestStrings \r\n\t\tEnd Get\r\n\tEnd Property\r\n\tPrivate _TestStrings As IEnumerable(Of String)\r\n",
+      "PostedDate": "2009-06-09T09:53:23.583-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "One more bit of info:\r\nI debugged the Expression Blend process to see if there were any exceptions being thrown, and there was!  When the line with LINQ tries to run, the following exception occurs:\r\n\r\nSystem.TypeInitializationException occurred\r\n  Message=\"The type initializer for 'Obtics.Collections.Transformations.SequencingPatchTransformationOperations' threw an exception.\"\r\n  Source=\"Obtics\"\r\n  TypeName=\"Obtics.Collections.Transformations.SequencingPatchTransformationOperations\"\r\n  StackTrace:\r\n       at Obtics.Collections.Transformations.SequencingPatchTransformationOperations.GetPatch(IEnumerable source)\r\n       at Obtics.Collections.ObservableEnumerable.Cast[TResult](IEnumerable source)\r\n       at Obtics.Collections.ObservableEnumerable.Sequenced[TElement](IEnumerable`1 source)\r\n       at Obtics.Collections.Transformations.ConvertTransformation`2.Create(IEnumerable`1 s, Func`2 func)\r\n       at Obtics.Collections.ObservableEnumerable.Select[TSource,TResult](IEnumerable`1 source, Func`2 selector)\r\n       at Npipm.Nicjm.ViewModels.TestViewModel.get_TestStrings() in C:\\Users\\NorthPointe\\Code\\Npipm\\Nicjm\\Wpf\\Project\\ViewModels\\TestViewModel.vb:line 36\r\n  InnerException: System.IO.FileNotFoundException\r\n       FileName=\"ConcurrentHashtable, Version=1.3.2.0, Culture=neutral, PublicKeyToken=null\"\r\n       FusionLog=\"WRN: Assembly binding logging is turned OFF. To enable assembly bind failure logging, set the registry value [HKLM\\Software\\Microsoft\\Fusion!EnableLog] (DWORD) to 1. Note: There is some performance penalty associated with assembly bind failure logging. To turn this feature off, remove the registry value [HKLM\\Software\\Microsoft\\Fusion!EnableLog]. \"\r\n       Message=\"Could not load file or assembly 'ConcurrentHashtable, Version=1.3.2.0, Culture=neutral, PublicKeyToken=null' or one of its dependencies. The system cannot find the file specified.\"\r\n       Source=\"Obtics\"\r\n       StackTrace:\r\n            at Obtics.Collections.Transformations.SequencingPatchTransformationOperations..cctor()\r\n       InnerException: \r\n",
+      "PostedDate": "2009-06-09T10:37:13.317-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "So I guess the problem was that I wasn't referencing ConcurrentHashtable.dll in my project.  I also had to restart Expression Blend.  I'm assuming that there was some static instance loaded in Blend's AppDomain that needed to be unloaded, which restarting the app did.",
+      "PostedDate": "2009-06-09T10:55:48.027-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Hi joshmouch,\r\n\r\nThanks for submitting this issue. \r\n\r\nThat your property would stop working without even using the result of the linq expression can be explained. The exception happens at the 'Dim query = ..' part and prevents the property from returning a value.\r\n\r\nThe exception naturaly should not happen. \r\n\r\nJust to be sure; You are using the 1.0.11.0 download?\r\n\r\nRegs,\r\n\r\nThomas.",
+      "PostedDate": "2009-06-22T18:08:15.467-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-06-22T18:09:46.98-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Right;\r\n\r\nNow if I start reading properly I'll see that you already solved the issue. :-)\r\n\r\nFunny way of Blend to report that it is missing an assembly.\r\n\r\nRegs,\r\n\r\nThomas.",
+      "PostedDate": "2009-06-22T18:12:01.917-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-06-22T18:13:36.963-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-08-05T08:44:41.047-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:08.7-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:54.753-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2017-12-06T23:32:04.22-08:00",
+      "Id": -2147483648
+    }
+  ]
+}

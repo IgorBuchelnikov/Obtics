@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "453282",
+    "ThreadId": "215404",
+    "Html": "<p>Greetings.</p>\r\n<p>In LazySnapshotEnumerator.cs there's a NotImplementedException throw in the Reset method.&nbsp; We have been running into this exception and we're wondering if the fix is difficult.</p>\r\n<p>Thanks for your thoughts on this.</p>\r\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Patrick</p>",
+    "PostedDate": "2010-06-08T19:50:46.36-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "471351",
+    "ThreadId": "215404",
+    "Html": "<p>I think Reset&nbsp;could be a bit tricky to implement. What would you need it for? I believe most LINQ inumerators don't implement Reset either.</p>\r\n<p>Thomas</p>",
+    "PostedDate": "2010-07-22T23:28:56.657-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

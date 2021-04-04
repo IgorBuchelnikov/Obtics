@@ -1,0 +1,66 @@
+[
+  {
+    "Id": "259829",
+    "ThreadId": "75961",
+    "Html": "<p>Hi there,</p>\r\n<p>You've done some fantastic work with this library--I've had a lot of fun experimenting with it. &nbsp;I was wondering if you have plans to support some the new expression types in .NET 4.0 (the extended expression trees created for the DLR). &nbsp;While many of the new expression types can't be effectively observed, I'm sure some of them can.</p>\r\n<p>Cheers,</p>\r\n<p>Mike</p>",
+    "PostedDate": "2009-11-23T07:16:21.167-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "260595",
+    "ThreadId": "75961",
+    "Html": "<p>Hi Mike,</p>\r\n<p>It is good to hear that you are enjoying it! I haven't had a chance yet to take an in depth look at the new 4.0 expression trees.&nbsp;With the scanty looks that I did take i'm afraid that the new additions make the expressions quite a bit more complex.</p>\r\n<p>C# 4.0 itself will open up&nbsp;a whole new avenue of possibilities with contra- and covariance functionality.&nbsp;&nbsp;</p>\r\n<p>Right now I'm trying to make error handling a bit more robust. It is quite hard (What DO you do when the&nbsp;filter of a where statement throws an exception?)&nbsp;&nbsp;and I'm not sure if it is worth the extra weight.</p>\r\n<p>I hope you keep enjoying it and any suggestions are welcome,</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2009-11-25T05:27:25.03-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "262251",
+    "ThreadId": "75961",
+    "Html": "<p>Right, expression nodes like blocks, loops, etc. cannot be reliably observed. &nbsp;There might be some improvements to some of the member/list binding and initialization expressions, though. &nbsp;I'm not really sure, I was just wondering if you'd spent any time with them yet :).</p>\r\n<p>On an unrelated note, have you had a chance to look at the Reactive Extensions (Rx)? &nbsp;They might prove useful for your work on this project. &nbsp;FYI, the IObservable/IObserver interfaces are being included in .NET 4.0.</p>\r\n<p>Regards,</p>\r\n<p>Mike</p>",
+    "PostedDate": "2009-12-01T04:54:42.063-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "265185",
+    "ThreadId": "75961",
+    "Html": "<p><span style=\"font-family:'Segoe UI','sans-serif';color:black;font-size:10pt\">Hi Thomas,</span></p>\r\n<p><span style=\"font-family:'Segoe UI','sans-serif';color:black;font-size:10pt\">Firstly, great work with the library! You've certainly surpassed the CLinq &amp; BLinq projects in terms of functionality. The other projects have become stale and are poorly maintained in comparison. In addition to this you fully support all of the SelectMany overloads and the Join operator! Well done!</span></p>\r\n<p><span style=\"font-family:'Segoe UI','sans-serif';color:black;font-size:10pt\">I think project would be very popular had you picked a&nbsp;catchier (name perhaps tying the project to LINQ more, however I understand this is not just LINQ).</span></p>\r\n<p><span style=\"font-family:'Segoe UI','sans-serif';color:black;font-size:10pt\">I agree with Mike in that there is defiantly some overlap here with .NET Rx. IValueProvider seems to perform a similar function IObservable.</span></p>\r\n<p><span style=\"font-family:'Segoe UI','sans-serif';color:black;font-size:10pt\">I'll be keeping an eye on this project.</span></p>\r\n<p><span style=\"font-family:'Segoe UI','sans-serif';color:black;font-size:10pt\">Cheers,<br>James Miles</span></p>",
+    "PostedDate": "2009-12-08T22:38:00.013-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "265435",
+    "ThreadId": "75961",
+    "Html": "<p>Well; thanks for the boosting comments. :-)</p>\r\n<p>You are right; there is deffinitely a functional overlap between Obtics and .NET Rx. That said; there are also&nbsp;some big&nbsp;differences.&nbsp;Event pushing in Obtics is quite simple so I don't think Rx&nbsp;would add&nbsp;anything to Obtics internally.</p>",
+    "PostedDate": "2009-12-09T12:34:00.39-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "275095",
+    "ThreadId": "75961",
+    "Html": "<p>I was thinking that supporting IObservable&lt;T&gt; would be useful for custom observable methods. &nbsp;If a .NET developer could leverage his existing knowledge of Rx to write methods that return IObservable&lt;T&gt; instead of IValueProvider&lt;T&gt;, it would reduce the learning curve and enable the developer to harness some of the powerful APIs in Rx.</p>",
+    "PostedDate": "2010-01-09T04:10:06.427-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "275105",
+    "ThreadId": "75961",
+    "Html": "<p>Hi Mike,</p>\r\n<p>The plan is to support IValueProvider, INotifyPropertyChanged and IObservable on value transformations and IVersionedEnumerable, INotifyCollectionChanged and IObservable on collection transformations.</p>\r\n<p>But to be able to do that we will need C# 4.0 support for contra- and covariance. Otherwise we would end up with an overload of overloaded extension methods.&nbsp;<span style=\"font-size:x-small\">GroupJoin for example takes 3 lambdas. Now already these lambdas can eiter return a value or an IValueProvider. This means there are already 2^3 = 8 different overloads of this method. If extension methods would return a type X that supportes IValueProvider, INotifyPropertyChanged and IObservable then the lambdas would need to support that X too. So that would mean 3^3 = 27 different overloads for 1 method.</span></p>\r\n<p><span style=\"font-size:x-small\">An other option would be to let IValueProvider support INotifyPropertyChanged and IObservable&nbsp;directly. That doesn't seem very clean though. I think i'd rather wait untill Obtics can switch to C# 4.0.</span></p>\r\n<p><span style=\"font-size:x-small\">Regs,</span></p>\r\n<p><span style=\"font-size:x-small\">Thomas.</span></p>",
+    "PostedDate": "2010-01-09T04:45:44.637-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "275108",
+    "ThreadId": "75961",
+    "Html": "<p>Hi Thomas,</p>\r\n<p>Sounds great. &nbsp;Since IObservable&lt;T&gt; will be included in the .NET 4.0 BCL, it makes sense to wait for that anyway.</p>\r\n<p>Mike</p>",
+    "PostedDate": "2010-01-09T05:02:26.107-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

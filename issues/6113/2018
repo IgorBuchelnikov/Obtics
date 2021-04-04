@@ -1,0 +1,83 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using NUnit.Framework;
+using Obtics.Values;
+
+namespace Pleasant.Tests.Watchers
+{
+    [TestFixture]
+    public class ObticsTests
+    {
+        [Test]
+        public void AggregateObservability()
+        {
+            ObservableCollection<Simple> items = new ObservableCollection<Simple>();
+            IEnumerable<string> result =
+                ExpressionObserver.Execute(() =>
+                    items.Aggregate(Enumerable.Empty<string>(),
+                                    (previous, item) => previous.Concat(item.DataBoolean ? new[] { item.DataString } : Enumerable.Empty<string>())))
+                .Cascade();
+
+            int oldChangeCount = 0;
+            int changeCount = 0;
+            ((INotifyCollectionChanged)result).CollectionChanged += delegate { changeCount++; };
+
+            items.Add(new Simple {DataBoolean = true, DataString = "a"});
+            items.Add(new Simple {DataBoolean = true, DataString = "b"});
+            items.Add(new Simple {DataBoolean = true, DataString = "c"});
+            CollectionAssert.AreEqual(new[] { "a", "b", "c" }, items.Aggregate(Enumerable.Empty<string>(), (previous, item) => previous.Concat(item.DataBoolean ? new[] { item.DataString } : Enumerable.Empty<string>())).ToArray());
+            CollectionAssert.AreEqual(new[] { "a", "b", "c" }, result.ToArray());
+            Assert.Greater(changeCount, oldChangeCount);
+            oldChangeCount = changeCount;
+
+            items[1].DataBoolean = false;
+            CollectionAssert.AreEqual(new[] { "a", "c" }, items.Aggregate(Enumerable.Empty<string>(), (previous, item) => previous.Concat(item.DataBoolean ? new[] { item.DataString } : Enumerable.Empty<string>())).ToArray());
+            CollectionAssert.AreEqual(new[] { "a", "c" }, result.ToArray());
+            Assert.Greater(changeCount, oldChangeCount);
+            oldChangeCount = changeCount;
+
+            items[2].DataString = "c2";
+            CollectionAssert.AreEqual(new[] { "a", "c2" }, items.Aggregate(Enumerable.Empty<string>(), (previous, item) => previous.Concat(item.DataBoolean ? new[] { item.DataString } : Enumerable.Empty<string>())).ToArray());
+            CollectionAssert.AreEqual(new[] { "a", "c2" }, result.ToArray());
+            Assert.Greater(changeCount, oldChangeCount);
+        }
+    }
+
+    public class Simple : INotifyPropertyChanged
+    {
+        public string DataString
+        {
+            get { return _DataString; }
+            set
+            {
+                _DataString = value;
+                NotifyPropertyChanged("DataString");
+            }
+        }
+        private string _DataString;
+
+        public bool DataBoolean
+        {
+            get { return _DataBoolean; }
+            set
+            {
+                _DataBoolean = value;
+                NotifyPropertyChanged("DataBoolean");
+            }
+        }
+        private bool _DataBoolean;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+}

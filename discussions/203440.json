@@ -1,0 +1,34 @@
+[
+  {
+    "Id": "412766",
+    "ThreadId": "203440",
+    "Html": "<p>Hello.</p>\r\n<p>I have a question regarding the CollectionCap class. When I try to bind it to the ItemsSource Proeprty of an ItemsControl I get an NotSupportedException in the ICollection.SyncRoot implementation.&nbsp;</p>\r\n<p>Isn't it possible to implement that Property? I want to save my result as an IList and not as an IEnumerable (which I know that it would work).&nbsp;</p>\r\n<p>Thank you</p>\r\n<p>Cheers,<br>Andreas</p>",
+    "PostedDate": "2010-03-01T09:34:02.807-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "417198",
+    "ThreadId": "203440",
+    "Html": "<p>Hi Andreas,</p>\r\n<p>Thanks for the sugestion, locking via a SyncRoot may be possible to implement in obtics. There&nbsp;would be&nbsp;some consequences though. Locking your IList might freeze large parts of obtics because many things are interconnected.</p>\r\n<p>I'd have to give it some thought.</p>\r\n<p>Regs,</p>\r\n<p>&nbsp;</p>\r\n<p>Thomas.</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2010-03-11T15:15:46.237-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "432618",
+    "ThreadId": "203440",
+    "Html": "<p>Hi Thomas,</p>\r\n<p>Can you imagine a workaround for the moment? This behaviour makes it&nbsp;impossible&nbsp;to bind a IList&lt;T&gt; to a ItemsControl, which I&nbsp;absolutely need to.</p>\r\n<p>Thank you</p>\r\n<p>Regs,</p>\r\n<p>Andreas</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2010-04-19T02:05:01.717-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "433275",
+    "ThreadId": "203440",
+    "Html": "<p>Hi Andreas,</p>\r\n<p>The ObticsBindingHelper library contains a class ListReturnPath with an extension method ToListFactory. This method allows you to provide a custom implementation&nbsp;for the SyncRoot property. It would look something like:</p>\r\n<p>YourObservableList.ToListFactory().SyncRoot((l,p) =&gt; null).Create();</p>\r\n<p>This will create an&nbsp;IList&nbsp;whose SyncRoot property returns null.</p>\r\n<p>Regards,</p>\r\n<p>Thomas<br><br>&nbsp;</p>",
+    "PostedDate": "2010-04-20T10:59:52.373-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

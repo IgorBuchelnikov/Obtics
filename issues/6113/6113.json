@@ -1,0 +1,71 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": null,
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "Properties within an aggregation expression don't seem to be observed.  When looking at the rewritten expression while debugging, I don't see the \"Property\" thing that other properties tend to get.  There seems to be something missing with the observability hookups when using Aggregate.",
+    "LastUpdatedDate": "2013-02-13T18:41:05.15-08:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2010-03-01T21:06:28.277-08:00",
+    "Status": {
+      "Name": "Active",
+      "Id": 2
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "Aggregate Observability Broken",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 6113
+  },
+  "FileAttachments": [
+    {
+      "FileId": 2018,
+      "FileName": "ObticsTests.cs",
+      "DownloadUrl": ".\\2018"
+    }
+  ],
+  "Comments": [
+    {
+      "Message": "Thanks for the report. Will fix it soon so that at least it works. I'm afraid though that the construct will be an expensive one. You'll be building one (very?) long dependency chain. When you change the first item all the rest of the chain will need to be rebuilt. ",
+      "PostedDate": "2010-03-11T15:20:50.507-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2010-03-11T15:22:52.067-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "We're using the Aggregate method to concatenate collections.  The property being observed changes the contents of the collection.  My assumption was that the aggregate chain wouldn't be recreated when the contents of the individual collections changed.  Since I assume that the Concat transformer is reasonable efficient, I would have expected the Aggregate based on Concats to be reasonably efficient as long as the list of items to aggregate didn't change very often.  Is that how it would work?",
+      "PostedDate": "2010-03-11T16:50:24.79-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "It sounds like what you are looking for is the SelectMany method. Perfect for concatenating a collection of collections. In fact Concat is implemented as a SelectMany on a 'collection' of 2 collections.",
+      "PostedDate": "2010-03-15T02:24:25.03-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:05.15-08:00",
+      "Id": -2147483648
+    }
+  ]
+}

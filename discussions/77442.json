@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "264814",
+    "ThreadId": "77442",
+    "Html": "<div style=\"color:Black;background-color:White\">\r\n<pre>Is there a way to simplify this code?<br><br>    Expression&lt;Func&lt;TDetail, TMaster&gt;&gt; getMasterExpression = ...arbitrary lambda expression...;\r\n    Func&lt;TDetail, IValueProvider&lt;TMaster&gt;&gt; getMaster = ExpressionObserver.Compile(getMasterExpression);\r\n    Expression&lt;Func&lt;TDetail, DetailMaster&gt;&gt; getPairExpression = item =&gt; <span style=\"color:Blue\">new</span> DetailMaster(item, getMaster(item).Value);\r\n    Func&lt;TDetail, IValueProvider&lt;DetailMaster&gt;&gt; getPair = ExpressionObserver.Compile(getPairExpression);\r\n    _DetailMasterCollection = Obtics.Collections.ObservableEnumerable.Select(combinedList, getPair);\r\n</pre>\r\n</div>\r\n<p>I would assume there is some sort of transformation that would condense lines 3 and 4 into a line similar to the Select line, but it wasn't apparent to me what it would be called.</p>\r\n<p>PS.&nbsp; The elegance and power of Obtics continues to impress.&nbsp; Hat's off to a great design.</p>",
+    "PostedDate": "2009-12-08T01:13:49.413-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "265243",
+    "ThreadId": "77442",
+    "Html": "<p>I think something like this should work:</p>\r\n<div style=\"color:Black;background-color:White\">\r\n<pre>Expression&lt;Func&lt;TDetail, TMaster&gt;&gt; getMasterExpression = ...arbitrary lambda expression...;\r\nFunc&lt;TDetail, IValueProvider&lt;TMaster&gt;&gt; getMaster = ExpressionObserver.Compile(getMasterExpression);\r\nFunc&lt;TCombinedList,IValueProvider&lt;IEnumerable&lt;DetailMaster&gt;&gt;&gt; getDetailMasterCollection =\r\n    ExpressionObserver.Compile(\r\n        (TCombinedList combinedList) =&gt;\r\n            combinedList.Select(item =&gt; <span style=\"color:Blue\">new</span> DetailMaster(item, getMaster(item).Value))\r\n    );\r\n\r\n_DetailMasterCollection = getDetailMasterCollection(combinedList).Cascade();    \r\n</pre>\r\n</div>\r\n<p>Note that DetailMaster should be a properly behaving type (two DetailMasters instantiated with the same arguments should be equal).</p>\r\n<p>And thanks :-) I hope you get some good value out of it.</p>\r\n<p>&nbsp;</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2009-12-09T02:01:42.873-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

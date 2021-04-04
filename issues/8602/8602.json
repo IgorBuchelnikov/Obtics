@@ -1,0 +1,60 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": "2011-08-13T07:03:35.72-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "Hi Throb,\n \nWith the latest version, i have problem with a mapping.\n \n    public static partial class ObjectVersionHelper\n    {\n        [ExpressionObserverMapping(typeof (Observable))]\n        public static T GetLastVersionAtDate<T>(this IEnumerable<T> enumerable, DateTime dateTime) where T : IObjectVersion\n        {\n            if (enumerable == null) return default(T);\n            return enumerable.Where(ta => ta.VersionDate.Date <= dateTime.Date).OrderByDescending(ov => ov.VersionDate).FirstOrDefault();\n        }\n    }\n \n    public static partial class ObjectVersionHelper\n    {\n        #region Nested type: Observable\n \n        public static class Observable\n        {\n            public static IValueProvider<T> GetLastVersionAtDate<T>(IEnumerable<T> enumerable, DateTime dateTime) where T : IObjectVersion\n            {\n                return enumerable.Where(ta => ta.VersionDate.Date <= dateTime.Date).OrderByDescending(ov => ov.VersionDate.Date).FirstOrDefault();\n            }\n        }\n   }\n \nHave you an idea ?\n \nVincent",
+    "LastUpdatedDate": "2013-05-15T21:55:52.153-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2011-08-11T08:11:03.99-07:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "Mapping Error",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 8602
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Resolved with changeset 61362.",
+      "PostedDate": "2011-08-13T07:03:35.72-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Tx for reporting. :-)  Mapper was getting confused because new way of registering was finding generic specializations instead of generic type definitions... Fixed.",
+      "PostedDate": "2011-08-13T07:27:06.9-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:04-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:52.153-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

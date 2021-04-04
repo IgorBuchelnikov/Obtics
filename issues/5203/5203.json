@@ -1,0 +1,90 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": null,
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "If an observed expression is passed a parameter that cannot be converted to the type the expression is expecting, no exception is thrown.  I would expect an InvalidTypeCastException to be thrown; otherwise, the bug is near impossible to track down.\n \nHere is an MS unit test to demonstrate the bug:\n<code>\nImports System.Collections.Generic\nImports Microsoft.VisualStudio.TestTools.UnitTesting\nImports Obtics.Values\n \n<TestClass()> Public Class ObticsBugTest\n\t<TestMethod()> Public Sub InvalidCastExceptionNotThrownForExpressionArgument()\n\t\tDim value = New Object()\n \n\t\tDim workingExpression = New TestExpressionTargetWithCorrectType(New Object() {value})\n\t\tDim workingObservedCollection = ExpressionObserver.Execute(CType(workingExpression, Object), _\n\t\t Function(source As IWorking) source.Values).Cascade()\n\t\tAssert.AreEqual(1, workingObservedCollection.Count())\n \n\t\tDim brokenExpression = New TestExpressionTargetWithoutCorrectType(New Object() {value})\n\t\tDim brokenObservedCollection = ExpressionObserver.Execute(CType(brokenExpression, IBase), _\n\t\t Function(source As IWorking) source.Values).Cascade()\n\t\tAssert.AreEqual(1, brokenObservedCollection.Count())\n \n\t\tDim brokenExpression2 = New TestExpressionTargetWithoutCorrectType(New Object() {value})\n\t\tDim brokenObservedCollection2 = ExpressionObserver.Execute(CType(brokenExpression2, Object), _\n\t\t Function(source As IWorking) source.Values).Cascade()\n\t\tAssert.AreEqual(1, brokenObservedCollection2.Count())\n\tEnd Sub\n \n\tPublic Class TestExpressionTargetWithCorrectType\n\t\tImplements IWorking\n \n\t\tPublic Sub New(ByVal values As IEnumerable(Of Object))\n\t\t\t_Values = values\n\t\tEnd Sub\n \n\t\tPublic ReadOnly Property Values() As IEnumerable(Of Object) Implements IWorking.Values\n\t\t\tGet\n\t\t\t\tReturn _Values\n\t\t\tEnd Get\n\t\tEnd Property\n\t\tPrivate _Values As IEnumerable(Of Object)\n \n\tEnd Class\n \n\tPublic Class TestExpressionTargetWithoutCorrectType\n\t\tImplements IBase\n \n\t\tPublic Sub New(ByVal values As IEnumerable(Of Object))\n\t\t\t_Values = values\n\t\tEnd Sub\n \n\t\tPublic ReadOnly Property Values() As IEnumerable(Of Object)\n\t\t\tGet\n\t\t\t\tReturn _Values\n\t\t\tEnd Get\n\t\tEnd Property\n\t\tPrivate _Values As IEnumerable(Of Object)\n \n\tEnd Class\n \n\tPublic Interface IWorking\n\t\tInherits IBase\n \n\t\tReadOnly Property Values() As IEnumerable(Of Object)\n\tEnd Interface\n \n\tPublic Interface IBase\n \n\tEnd Interface\nEnd Class\n</code>",
+    "LastUpdatedDate": "2014-01-07T08:34:00.24-08:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-10-12T08:59:31.757-07:00",
+    "Status": {
+      "Name": "Proposed",
+      "Id": 1
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "No exception thrown when observed expression is passed argument with invalid type",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 2,
+    "Id": 5203
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "I found another separate bug while trying to create a test case for this bug.  I will create a new Work Item for it.  I believe that I will not be able to continue working on this work item until the other two bugs that I found are fixed.",
+      "PostedDate": "2009-10-12T11:33:58.03-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Sorry, I posted that comment to the wrong work item.  Ignore the recent comment.",
+      "PostedDate": "2009-10-12T11:34:39.98-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Yes, this is something of a design issue. Problem is that there is no mechanism to propagate a 'failed' Value. A failed cast now just returnes a default value of the target type. I would like to solve this but will be quite a change and is not something for the short term.",
+      "PostedDate": "2009-10-13T13:42:45.583-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Would it be possible to just throw an exception from within Obtics and not propagate any 'failed' Value?  The current behavior of just returning a default value has resulted in many hours of troubleshooting, whereas if it just threw an exception, the bug would be extremely easy to spot.",
+      "PostedDate": "2009-10-13T15:23:49.767-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "The problem is that the order in which (sub)expressions are calculated is not precisely determined in Obtics. That is because change notification can come from everywhere. If you would take the (simplefied) example of this bit of code:\r\n\r\np.Value is Person ? ((Person)p.Value).Name : string.Empty\r\n\r\nBeause the order is not precisely determined and suppose p.Value changes into something that is not a Person; it can happen that the second part of the ?: operator is evaluated before the first part, which would result in an (unexpected) type cast exception.\r\n\r\nThe same issue holds for accessing members of null objects. This a fault in the design; sorry for that.\r\n\r\nI understand your problem and I agree but it requires a different solution than throwing an exception. At least internaly values need to be propagated in a form simmilar to Nullable<T> say Checked<T>. It's state could be either 'Invalid' and why or 'Valid' and a value. \r\n\r\nMy plan now is to (sometime) extend IValueProvider with a boolean Valid property and a Checked property, which would return the mentioned Checked<T> structure.\r\n\r\nIf this problem is truely bugging you; I can always use some help :-)",
+      "PostedDate": "2009-10-15T02:59:37.44-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "I might take you up on that.  I'm busy this weekend, but perhaps next, I can put some time aside to work on this.  The big time-consumer will be learning how the internals work so I could create an intelligent solution.  Do you have any design docs you could share?\r\n\r\nMy preference would still be to throw an exception, as any properties could go unchecked by the developer and would be a hard-to-detect bug.  However, if the exception was thrown when the Checked<T> structure's value was accessed (like how Nullable<T> does it) then that would be fine.\r\n\r\n",
+      "PostedDate": "2009-10-15T08:25:22.843-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Associated with changeset 30990.",
+      "PostedDate": "2009-11-15T09:38:31.43-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Associated with changeset 31658.",
+      "PostedDate": "2009-11-30T14:26:21.01-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:06.647-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2014-01-07T08:34:00.24-08:00",
+      "Id": -2147483648
+    }
+  ]
+}

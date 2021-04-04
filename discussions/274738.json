@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "679892",
+    "ThreadId": "274738",
+    "Html": "\r\n<p>Quick question for you.</p>\r\n<p>I've used Obtics in the past to create a list of view models based on a list of entities. &nbsp;However, now I'm trying to do it in Silverlight using RIA services and the RIA controls, which support paging.</p>\r\n<p>I'm trying desperately to find a way to expose a pageable list of view models, which are based on a pageable collection view (ICollectionView &#43; IEditableCollectionView &#43; IPagedCollectionView &#43; etc.). &nbsp;And I'd like to do it in a way that the list of\r\n view models also supports paging. &nbsp;I think the only way is for Obtics to return a collection which supports those interfaces I've listed (plus the obvious ones: IEnumerable, INotifyCollectionChanged, etc...).</p>\r\n<p>So is there a way to get Obtics to return a collection that supports paging?</p>\r\n",
+    "PostedDate": "2011-10-04T09:53:14.403-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "683679",
+    "ThreadId": "274738",
+    "Html": "<p>In the basis Obtics only supports IEnumerable for collections. There are some extensions (ToList(), ToDictionary()) that transform an (observable)&nbsp;IEnumerable to an (observable, readonly)&nbsp;IList or IDictionary. The ObticsBindingHelper assembly contains some extension methods that allow the creation of mutable IList and IDictionary results.</p>\r\n<p>I guess you will need to create a similar extension to create IPagedCollectionView + etc&nbsp;results.&nbsp;When you have something working it may be a valuable addition to the Obtics code base.</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2011-10-13T06:41:37.333-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

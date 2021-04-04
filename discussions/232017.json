@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "511331",
+    "ThreadId": "232017",
+    "Html": "\r\n<p><span>Hi Throb,<br>\r\n<br>\r\n</span><span>I see that you are always developing Obtics, thank you, I use it in all my Silverlight projects.&nbsp;</span><span>It's incredibly powerful.&nbsp;</span><span>If you need help developing, please let me know.</span></p>\r\n<p>Best regards,<br>\r\nVincent BOUZON&nbsp;</p>\r\n",
+    "PostedDate": "2010-10-22T14:33:21.913-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "512662",
+    "ThreadId": "232017",
+    "Html": "\r\n<p>Hi Vincent,</p>\r\n<p>Good&nbsp;to hear that Obtics works well for you. :-) I hope it will keep on doing so in the future.</p>\r\n<p>Yes there is still a lot of development to do. One thing that is needed is&nbsp;unittests to check if&nbsp;value transformations handle exceptions properly.</p>\r\n<p>Regards,</p>\r\n<p>Thomas.</p>\r\n<p>&nbsp;</p>\r\n",
+    "PostedDate": "2010-10-26T05:26:43.363-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

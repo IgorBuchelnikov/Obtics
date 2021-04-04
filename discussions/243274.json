@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "555259",
+    "ThreadId": "243274",
+    "Html": "\r\n<p>What do you think about adding a check to see if newValue/oldValue are DependencyObjects before using the PropertyDescriptor instead of INotifyPropertyChanged?&nbsp; This would have prevented a memory leak in our case.&nbsp; Most of the objects we bind to\r\n are not WPF objects, so it's nice if the static reference caused by AddValueChanged is not present.&nbsp; Makes it easier to manage memory.&nbsp; Can you see any drawbacks to adding such a check?</p>\r\n",
+    "PostedDate": "2011-01-25T14:36:42.217-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "556918",
+    "ThreadId": "243274",
+    "Html": "\r\n<p>Hi,</p>\r\n<p>Yes, the use of a static reference when attaching via the PropertyDescriptor is very anoying. I really don't know why they designed it this way.&nbsp;It is the standard way though and all&nbsp;ms binding mechanisms&nbsp;make use of it. Using&nbsp;it has\r\n the advantage that all standard methods of 'making things&nbsp;observable' are reckognized. Even when a property is not observable but it's value is being set via its PropertyDescriptor (winforms/wpf bindings) obtics will be able to pick up the change.</p>\r\n<p>Obtics does use the strong reference chain&nbsp;from source to&nbsp;client to keep the transformation pipeline alive as long as clients are registered for change notifications.&nbsp;When clients remain registered then garbage collection will happen only\r\n when the&nbsp;whole of source and clients is being collected. This need prevents the use of&nbsp;weak event registrations in obtics internally.The STATIC strong reference is not needed at all and is a major pain.</p>\r\n<p>In the past&nbsp;obtics&nbsp;used to check for INotifyPropertyChanged first but this led to problems with some users who use hybrids of DependencyObjects and INotifyPropertyChanged.</p>\r\n<p>Also note that not all observable things work via DependencyObjects or INotifyPropertyChanged (for example&nbsp;Winforms components) and for those the memory leak problem would still exist.</p>\r\n<p>The best strategy may be to have&nbsp;your views&nbsp;register for change notification via the WeakEventManager or any other weak event mechanism. This is what WPF bindings do standard. If possible; always unregister&nbsp;any events&nbsp;when they are&nbsp;no\r\n longer needed.</p>\r\n<p>Regs,</p>\r\n<p>Thomas</p>\r\n<p>&nbsp;</p>\r\n",
+    "PostedDate": "2011-01-28T08:36:09.457-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

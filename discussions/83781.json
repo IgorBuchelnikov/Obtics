@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "287720",
+    "ThreadId": "83781",
+    "Html": "<p>Greetings. I've been running into performance bottlenecks using Obtics. We have a process that loads a few thousand objects and it ends up being much slower than I would expect. We process our original expression with ExpressionObserver.Compile and then cache that. The ExpressionObserver.Compile doesn't show up in the profiler, it's the execution of the compiled expression that's the problem. Here's a screen shot from the profiler that shows such a region. Any thoughts on how this might be improved? Click on the image to zoom.</p>\r\n<p><a href=\"http://patearl.net/files/obtics.png\"><img src=\"http://patearl.net/files/obtics.png\" alt=\"\" width=400 height=300></a></p>",
+    "PostedDate": "2010-02-09T08:58:19.58-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "288127",
+    "ThreadId": "83781",
+    "Html": "<p>Hi,</p>\r\n<p>Obtics needs to do a lot of administration to keep track of changeable items. So in case of really large datasets it may not be the best option.</p>\r\n<p>Nevertheless it should perform as well as possible. The carrousel is the element where most time is spent in when working with complex queries. The carrousel itself gives an enormous&nbsp;performance increase. Without it performance would be much worse. Best way to avoid the carrousel is by keeping queries structuraly simple. Avoid the use of 'let' in linq queries. Use immutable values when possible. Try to sort the final result and see if that gives an improvement (this allows the parts of the query before the sort to ignore&nbsp;item order).</p>\r\n<p>If you would have more details about the actual query you are trying to execute I would be very interested.</p>\r\n<p>Regards,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2010-02-10T02:25:06.34-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "288300",
+    "ThreadId": "83781",
+    "Html": "<p>The typical expressions are very simple.</p>\r\n<p>t =&gt; &quot;Name of Property Referring to &quot; + t.Target.Name<br>t =&gt; &quot;Description for &quot; + t.EffectiveSourcePropertyName</p>\r\n<p>Now I'm wondering about having an optimization path that involves such simply cases as only property access.</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2010-02-10T08:34:31.13-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

@@ -1,0 +1,74 @@
+﻿using System;
+using System.ComponentModel;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Obtics.Values;
+
+namespace TestProject1
+{
+	[TestClass]
+	public class UnitTest1
+	{
+		[TestMethod]
+		public void TestMethod1()
+		{
+			Simple s = new Simple();
+			Assert.AreEqual(s.AB, "");
+	
+			int count = 0;
+			s.PropertyChanged += (sender, args) => { if (args.PropertyName == "AB") count++; };
+
+			s.A = "hello";
+			Assert.AreEqual("hello", s.AB);
+			Assert.AreEqual(1, count);
+		}
+	}
+
+	public class Simple : INotifyPropertyChanged
+	{
+		public string A
+		{
+			get { return _a; }
+			set { _a = value; NotifyPropertyChanged("A"); }
+		}
+		private string _a;
+
+		public string B
+		{
+			get { return _b; }
+			set { _b = value; NotifyPropertyChanged("B"); }
+		}
+		private string _b;
+
+		private IValueProvider<string> _valueProvider;
+		public string AB
+		{
+			get
+			{
+				string result;
+				if (_valueProvider == null)
+				{
+					_valueProvider = ExpressionObserver.Execute(() => (A ?? "") + (B ?? ""));
+					result = _valueProvider.Value;
+					((INotifyPropertyChanged)_valueProvider).PropertyChanged += delegate { NotifyPropertyChanged("AB"); };
+				}
+				else
+				{
+					result = _valueProvider.Value;
+				}
+
+				return result;
+			}
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private void NotifyPropertyChanged(string propertyName)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}

@@ -1,0 +1,42 @@
+<div class="wikidoc">This implicitly observable object LINQ variation in this project allows very easy creation of fully observable LINQ statements. All that needs to be done is include the following using statement in the source code<br /><br /><pre>
+//using System.Linq;
+using Obtics.Collections.ImplicitObservable;
+</pre><br /><br />If you would have an (observable) collection of objects with on observable property like:<br /><br /><pre>
+    class Person : INotifyPropertyChanged
+    {
+        string _FirstName;
+
+        public const string FirstNamePropertyName = &quot;FirstName&quot;;
+
+        public string FirstName
+        {
+            get { return _FirstName; }
+            set
+            {
+                if (value != _FirstName)
+                {
+                    _FirstName = value;
+                    OnPropertyChanged(FirstNamePropertyName);
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        void OnPropertyChanged(string propName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+        }
+    }
+</pre><br /><br />Then a method like:<br /><br /><pre>
+    class Test 
+    {
+        public IEnumerable&lt;Person&gt; OrderedByFirstName( IEnumerable&lt;Person&gt; source )
+        {
+            from p in source
+            orderby p.FirstName
+            select p;
+        }
+    }
+</pre><br /><br />Will return an observable sequence (The result IEnumerable&lt;Person&gt; supports INotifyCollectionChanged and INotifyPropertyChanged) with it&#39;s items sorted by FirstName. The result sequence will be <u>reordered</u> whenever the FirstName property of any of it&#39;s items changes value. The developer doesn&#39;t have to do any event registration or create an IValueProvider out of the FirstName property.</div><div class="ClearBoth"></div>

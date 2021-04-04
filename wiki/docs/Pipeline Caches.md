@@ -1,0 +1,133 @@
+# Pipeline Caches
+
+When Obtics transformations are used to generate live property values and the getters of these properties are accessed often, it may be advantageous to cache the results of those transformations.
+
+The results could be stored in local fields but that will prevent the result from being garbage collected when it is no longer needed. Proposed here are two simple cache types that can be used to hold a weak reference to a transformation pipeline.
+
+**LocalPipelineCache**:
+This struct contains a WeakReference object that is used to hold a reference to the generated transformation pipeline. Disadvantage is that a WeakReference object will be created for every property that uses this struct. Even when the pipeline is GC'ed this WeakReference object will remain.
+ 
+{{
+    public struct LocalPipelineCache<TType> where TType : class
+    {
+        WeakReference _WR;
+
+        bool TryGetValue(out TType value)
+        {
+            if (_WR == null)
+            {
+                value = null;
+                return false;
+            }
+            else
+            {
+                value = (TType)_WR.Target;
+                return value != null;
+            }
+        }
+
+        TType SetValue(TType value)
+        {
+            if (_WR == null)
+                _WR = new WeakReference(value);
+            else
+                _WR.Target = value;
+
+            return value;
+        }
+
+        public TType Get(Func<TType> creator)
+        {
+            TType res;
+            return TryGetValue(out res) ? res : SetValue(creator());
+        }
+
+        public TType Get<Arg1>(Arg1 arg1, Func<Arg1, TType> creator)
+        {
+            TType res;
+            return TryGetValue(out res) ? res : SetValue(creator(arg1));
+        }
+    }
+}}
+
+LocalPipelineCache can be used as such:
+
+{{
+using Obtics.Values;
+ 
+class Test
+{
+        Person _Person = new Person("Glenn","Miller");
+ 
+        Person Person
+        { get { return _Person; } }
+ 
+        static readonly Func<Person,IValueProvider<int>> _PersonFullNameLengthF = 
+            ExpressionObserver.Compile( (Test t) => t.Person.FirstName.Length + t.Person.LastName.Length + 1);
+ 
+        LocalPipelineCache<IValueProvider<int>> _PersonFullNameLength;
+ 
+        public IValueProvider<int> PersonFullNameLength
+        {
+            get 
+            {
+                return _PersonFullNameLength.Get(this, _PersonFullNameLengthF) ;
+            }
+        }
+}
+}}
+
+**CachedFunc**:
+This class uses a static dictionary to map object instances to transformation pipelines. This method is slower than using a local reference but the advantage is that there are no idle costs per instance. So if you have many instances and you are accessing the properties of a relative few this may in fact be a cheaper aproach.
+
+It uses the ConcurrentWeakDictionary class from the ConcurrentHashtable library.
+{{
+    using TvdP.Collections;
+
+    public sealed class CachedFunc<TOwner,TType>
+        where TOwner : class
+        where TType : class
+    {
+        ConcurrentWeakDictionary<TOwner, TType> _Map = new ConcurrentWeakDictionary<TOwner, TType>();
+        Func<TOwner,TType> _Creator;
+
+        public CachedFunc(Func<TOwner,TType> creator)
+        { _Creator = creator; }
+
+        public static implicit operator CachedFunc<TOwner, TType>(Func<TOwner,TType> creator)
+        { return new CachedFunc<TOwner,TType>(creator); }
+
+        public TType Get(TOwner instance)
+        {
+            TType res;
+            return _Map.TryGetValue(instance, out res) ? res : _Map.GetOldest(instance, _Creator(instance));
+        }
+    }
+}}
+
+It can be used as such:
+
+{{
+using Obtics.Values;
+ 
+class Test
+{
+        Person _Person = new Person("Glenn","Miller");
+ 
+        Person Person
+        { get { return _Person; } }
+ 
+        static readonly CachedFunc<Person,IValueProvider<int>> _PersonFullNameLengthF = 
+            ExpressionObserver.Compile( (Test t) => t.Person.FirstName.Length + t.Person.LastName.Length + 1);
+  
+        public IValueProvider<int> PersonFullNameLength
+        {
+            get 
+            {
+                return PersonFullNameLengthF.Get(this);
+            }
+        }
+}
+}}
+
+See also: [Transformation Examples](Transformation-Examples)

@@ -1,0 +1,100 @@
+# CustomMapping
+
+See alse: [Rules for mappings](Rules-for-mappings)
+
+This is a sample project that explaines how custom member mappings can be added to the ExpressionObserver database.
+
+Standard the ExpressionObserver 'knows about' System.Linq.Enumerable methods. It knows how to translate these to Obtics.Collections.ObservableEnumerable methods. Thanks to this information it can generate live Linq expression out of standard static Linq expressions. This information also give it the opertuntiy analyse 'inner lambda functions' used by Linq methods for observable entities. Usualy such 'inner lambda functions' form a boundary because the ExpressionObserver doesn't know how the method uses that lambda.
+
+Part of the example describes a little bit of code that I find quite usefull and that object Linq (Enumerable) laks:
+
+{{
+    public static partial class MyEnumerable
+    {
+        struct Pair<T, K> : IComparable<Pair<T, K>>
+        {
+            public T _T;
+            public K _K;
+
+            public int CompareTo(Pair<T, K> other)
+            { return Comparer<K>.Default.Compare(_K, other._K); }
+        }
+
+        public static T ElementWithMax<T, K>(this IEnumerable<T> sequence, Func<T, K> keySelector)
+        { return sequence.Select(t => new Pair<T, K> { _T = t, _K = keySelector(t) }).Max()._T; }
+    }
+}}
+
+This bit of code declares an extension method that allows you to pick the element out of a sequence that has something the most. In the CustomMapping example it is the person with the latest birthdate.
+You could use the OrderBy() and First() methods from Enumerable to get the same effect but sorting an entire sequence takes time on average of the order 'n log n' where just taking the max value will take time of the order 'n'.
+
+Now when this method would be used in an expression passed to ExpressionObserver with the intention of getting a live expression it wouldn't work:
+
+{{
+        ObservableCollection<Person> _Persons = new ObservableCollection<Person>();
+
+        public ObservableCollection<Person> Persons { get { return _Persons; } }
+
+        public IValueProvider<Person> YoungestPerson
+        { get { return _YoungestPersonF(this); } }
+
+        static Func<Window1, IValueProvider<Person>> _YoungestPersonF =
+            ExpressionObserver.Compile(
+                (Window1 t) =>
+                    t.Persons.ElementWithMax( p => p.Birthdate )
+            );
+}} 
+
+Expression observer doesn't know about 'ElementWithMax'. It doesn't know how p => p.Birthdate is being used. Should it keep track of every Birthdate property accessed via this function? How often is it going to be accessed? The result of ElementWithMax is not observable. At what events from t.Persons should it let ElementWithMax recalculate the result?
+
+The result is that YoungestPerson is as dead as it would be with plain Linq.
+
+## ExpressionObserverMappingAttribute
+
+With the ExpressionObserverMappingAttribute it is easy to tell ExpressionObserver what it should do with ElementWithMax. First we need to create one or two live versions of ElementWithMax:
+
+{{
+    //NOT using System.Linq here !
+    using Obtics.Collections;
+
+    public static partial class MyEnumerable
+    {
+        public static partial class Observable
+        {
+            public static IValueProvider<T> ElementWithMax<T, K>(IEnumerable<T> sequence, Func<T, K> keySelector)
+            { return sequence.Select(keySelector, (t,ks) => new Pair<T, K> { _T = t, _K = ks(t) }).Max().Select(p => p._T); }
+
+            public static IValueProvider<T> ElementWithMax<T, K>(IEnumerable<T> sequence, Func<T, IValueProvider<K>> keySelector)
+            { return sequence.Select(keySelector, (t,ks) => ks(t).Select( ValueProvider.Static(t), (k, t2) => new Pair<T, K> { _T = t2, _K = k })).Max().Select(p => p._T); }
+        }
+    }
+}} 
+
+These are two live variants of ElementWithMax, the second more so than the first. You wouldn't just replace the original implementation with these versions. They have a cumbersome signature and are way to heavy to use in situations where [reactivity](reactivity) and [observability](observability) are not needed.
+
+The trick is to tell ExpressionObserver to use one of these versions instead of the original one when it rewrites an expression.
+
+{{
+    public static partial class MyEnumerable
+    {
+        struct Pair<T, K> : IComparable<Pair<T, K>>
+        {
+            public T _T;
+            public K _K;
+
+            public int CompareTo(Pair<T, K> other)
+            { return Comparer<K>.Default.Compare(_K, other._K); }
+        }
+
+        [ExpressionObserverMapping(typeof(MyEnumerable.Observable))](ExpressionObserverMapping(typeof(MyEnumerable.Observable)))
+        public static T ElementWithMax<T, K>(this IEnumerable<T> sequence, Func<T, K> keySelector)
+        { return sequence.Select(t => new Pair<T, K> { _T = t, _K = keySelector(t) }).Max()._T; }
+    }
+}}
+
+Here we tell ExpressionObserver to look for live versions of ElementWithMax in the class MyEnumerable.Observable. It will find here both ElementWithMax methods. When it rewrites an expression it will try to use the least live version possible. The more live an expression is the more entities need to be tracked for changes and therefore the more expensive the expression is.
+
+Now when the ExpressionObserver tries to rewrite the YoungestPerson expression it finds that it should use the second alternative. It doesn't need to wory how the method uses the lambda since the method itself takes care of that. This means that ExpressionObserver can safely fully analyse the inner lambda for observable entities. The result of the alternative is observable and the method knows how to respond to changes in the Persons collection.
+
+YoungestPerson will be reactive to changes in both the Persons collection and Birthdate properties of the individual elements.
+ 

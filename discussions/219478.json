@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "467444",
+    "ThreadId": "219478",
+    "Html": "<p>There has been no updates or forum replies in a while.</p>\r\n<p>Is this project still alive</p>",
+    "PostedDate": "2010-07-14T13:42:43.333-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "471353",
+    "ThreadId": "219478",
+    "Html": "<p>I have not been able to give it much attention in a while. The project is not dead but if people are interested in this library some help would be welcome in maintaining it. (bug fixes. porting to Silverlight 4.. Framework 4 etc..)</p>\r\n<p>Currently working on a revamp of the transformators that&nbsp;yield beter exception handling and improved performance. Progress is slow though because I'm quite&nbsp;involved&nbsp;with some 'real live' projects.</p>\r\n<p>Thomas&nbsp;</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2010-07-22T23:39:52.473-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

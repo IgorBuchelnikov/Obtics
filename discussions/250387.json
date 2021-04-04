@@ -1,0 +1,42 @@
+[
+  {
+    "Id": "583178",
+    "ThreadId": "250387",
+    "Html": "\r\n<p>I have this ordinary method:</p>\r\n<p></p>\r\n<div style=\"color:black; background-color:white\">\r\n<pre>[ExpressionObserverMapping(<span style=\"color:blue\">typeof</span>(Observable))]\r\n<span style=\"color:blue\">public</span> <span style=\"color:blue\">static</span> TResult Transform&lt;T, TResult&gt;(<span style=\"color:blue\">this</span> T obj, Func&lt;T, TResult&gt; selector)\r\n{\r\n\t<span style=\"color:blue\">return</span> selector(obj);\r\n}\r\n</pre>\r\n</div>\r\n<p></p>\r\n<p>I also have these two mapped methods in the Observable class.</p>\r\n<p>&nbsp;</p>\r\n<div style=\"color:black; background-color:white\">\r\n<pre><span style=\"color:blue\">public</span> <span style=\"color:blue\">static</span> IValueProvider&lt;TResult&gt; Transform&lt;TSource, TResult&gt;(TSource source, Func&lt;TSource, TResult&gt; selector)\r\n{\r\n\t<span style=\"color:blue\">return</span> ValueProvider.Static(selector(source));\r\n}\r\n\r\n<span style=\"color:blue\">public</span> <span style=\"color:blue\">static</span> IValueProvider&lt;TResult&gt; Transform&lt;TSource, TResult&gt;(TSource source, Func&lt;TSource, IValueProvider&lt;TResult&gt;&gt; selector)\r\n{\r\n\t<span style=\"color:blue\">return</span> ObservableGeneric&lt;TSource, TResult&gt;.Transform(source, selector);\r\n}\r\n</pre>\r\n</div>\r\n<p>&nbsp;</p>\r\n<div style=\"color:black; background-color:white\">If I delete the first mapped method, will Obtics figure out that it can use the ordinary method when there are no live parameters? &nbsp;Or will it always use the second mapped method at that point?</div>\r\n<div style=\"color:black; background-color:white\"></div>\r\n<div style=\"color:black; background-color:white\">If the first mapped method should not be deleted for performance reasons, is that a good way to write it?</div>\r\n<div style=\"color:black; background-color:white\"></div>\r\n<div style=\"color:black; background-color:white\">Thanks for your help understanding this.</div>\r\n",
+    "PostedDate": "2011-03-19T19:16:31.16-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "583180",
+    "ThreadId": "250387",
+    "Html": "<p>Okay, I found my own answer to the first question. &nbsp;It always uses the second mapped method if the first is missing.</p>\r\n<p>The second question is still relevant.</p>\r\n<p>Also, I now have a third question. &nbsp;Will the second mapped method do the same thing as the first mapped method when there are no live parameters and the chain is built using the ExpressionObserver?</p>\r\n<p>Is there some way to contribute this sort of info to the docs? &nbsp;I wouldn't mind helping out that way. &nbsp;No big deal though... the forum also acts as documentation.</p>\r\n<p>Thanks!</p>",
+    "PostedDate": "2011-03-19T19:26:08.817-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "583876",
+    "ThreadId": "250387",
+    "Html": "<p>In case the expression observer can not rewrite the 'selector' expression to an observable expression (or only&nbsp;in a&nbsp;trivial way) then it will choose the first method. In any other case it will choose the second.</p>\r\n<p>In case only the first method was provided it would never try to rewrite any part of the 'selector' expression that depends on its one and only (TSource) parameter. Therefore it is best to at least implement the second variation.</p>\r\n<p>All the less reactive variations&nbsp;(like the first method)&nbsp;may be left out <strong>without loss of functionality</strong> though they may lead to a performance increase when they <strong>are</strong>&nbsp;implemented.</p>\r\n<p>Wether the second method would do the same thing as the first naturally depends on the implementation. They <strong>should </strong>do the same thing (the second only more change aware).</p>",
+    "PostedDate": "2011-03-21T11:19:26.86-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "583905",
+    "ThreadId": "250387",
+    "Html": "<p>Thanks for your thoughts on this.&nbsp; There was one question that remained unanswered.&nbsp; If I implemented the second only, would Obtics internally produce something as performant as the first if it sees the selector expression doesn't require an IValueProvider?&nbsp; In other words, does Obtics figure out that the IValueProvider isn't really needed and then just use something like ValueProvider.Static(value)?</p>\r\n<p>Kind of a convoluted question. :(</p>",
+    "PostedDate": "2011-03-21T12:10:32.553-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "585557",
+    "ThreadId": "250387",
+    "Html": "<p>It will not be as performant as your first method.&nbsp;Obtics will call your second method with a trivialy rewritten 'selector' parameter ( <em>Func&lt;TSource,IValueProvider&lt;TResult&gt;&gt; rewrittenSelector =&nbsp;s =&gt;&nbsp;ValueProvider.Static( selector(s) )</em>&nbsp;)</p>\r\n<p>The second method&nbsp;will be heavier because it offers more functionality (is more change aware).</p>\r\n<p>Obtics can not be more clever because it does not know what happens inside your Transform method.&nbsp;The method&nbsp;is already compiled into incomprehensable IL code.</p>",
+    "PostedDate": "2011-03-24T02:19:22.763-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

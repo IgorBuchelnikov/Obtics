@@ -1,0 +1,23 @@
+# On Well-behaved functions, lambda expressions, reference types and values.
+
+Any functions or lamba expressions, objects and values need to meet certain criteria for them to work well with Obtics. These requirements are some common sense rules. Adhering to them will not only make your code work well with Obtics but should improve the overall quality of your code as well. 
+
+Values and objects have a type (say T) and a default equality comparer can be found by {{System.Collections.Generic.EqualityComparer<T>.Default}}.
+
+**values**
+# The hashcode of a value must always be the same hashcode. It must hold that if for any value V, {{H = comparer.GetHashCode(V)}} then {{comparer.GetHashCode(V) == H}} always. 
+# Two values can not be equal and yield different hashcodes. Note that the reverse need not be true. It must hold that for any values V1 and V2 where {{comparer.Equals(V1,V2) == true}} then {{comparer.GetHashCode(v1) == comparer.GetHashCode(v2)}} always. 
+# Values can not be equal at one stage and unequal at a different stage. It must hold that any values V1 and V2, {{x = comparer.Equals(V1,V2)}} then {{comparer.Equals(V1,V2) == x}} and {{comparer.Equals(V2,V1) == x}} always. 
+
+**reference types**
+The same rules must hold for reference types (heap objects) as for values with some exceptions for null references. Null references don't have a hashcode and are equal to no other reference except another null reference. Note that for two object references to be equal they do not necessarily need to refer to the same object instance.
+
+**Functions and lambda expressions**
+For any equal set of input parameters a function or lambda expression should always return an equal result, Where 'equal' is defined by the default EqualityComparer. Let M1 and M2 be two sets of input parameters for a function F and every object or value in the sets denoted by an index. Suppose that for every legal value of i, {{comparer.Equals(M1[i](i)(i),M2[i](i)(i)) == true}}. Then {{comparer.Equals(F(M1),F(M2)) == true}} as well.  
+
+All values, reference types and functions that are used with or passed through an Obtics transformation should adhere to these rules. If they do not then obtics may yield unpredictable results.
+
+Most of the standard reference and value types (int, string, DateTime, Object etc.) are well behaved. Creating well behaved functions and expressions is not hard but may take some care.
+
+For example:
+Where {{from v in sequence select new Object()}} would be perfectly legal, allbeit slightly useless Linq. This function is not well behaved since two different instances of Object are never equal. That means that at every call this function yields a different result. When used with obtics you may receive a CollectionChanged event to add one object and later an event to remove a different object where actualy the same object is meant.

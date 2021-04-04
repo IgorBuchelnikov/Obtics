@@ -1,0 +1,34 @@
+[
+  {
+    "Id": "645706",
+    "ThreadId": "266094",
+    "Html": "\r\n<p>Hi Throb,</p>\r\n<p>I have updated this Issue&nbsp; : <a href=\"http://obtics.codeplex.com/workitem/7639\">\r\nhttp://obtics.codeplex.com/workitem/7639</a></p>\r\n<p>Have you an idea ?</p>\r\n<p>Regs,<br>\r\nVincent</p>\r\n",
+    "PostedDate": "2011-07-21T11:21:01.457-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "650074",
+    "ThreadId": "266094",
+    "Html": "<p>Ok, checked in some code that should fix your problem.</p>\r\n<p>Regs,</p>\r\n<p>Thomas</p>",
+    "PostedDate": "2011-07-30T16:26:14.53-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "650419",
+    "ThreadId": "266094",
+    "Html": "<p><span class=\"hps\">Thank you very much</span><span>,</span> <span class=\"hps\">but I have a</span> <span class=\"hps\">regression (<span class=\"hps\"><span class=\"hps\">I have lots of</span> <span class=\"hps\">NullReferenceException</span> <span class=\"hps\">in</span> <span class=\"hps\">GetValueFromItm</span><span>.)</span></span></span>&nbsp;<span class=\"hps\">from the</span> <span class=\"hps\">version</span> <span class=\"hps\">I used (<a href=\"http://obtics.codeplex.com/discussions/215764\">http://obtics.codeplex.com/discussions/215764</a>)</span><span>.</span> <span class=\"hps\">And I</span> <span class=\"hps\">approach</span> <span class=\"hps\">a delivery</span> <span class=\"hps\">so I can</span> <span class=\"hps\">not afford</span> <span class=\"hps\">to change</span> <span class=\"hps\">all my code</span> <span class=\"hps\">for now.</span> <span class=\"hps\">So I'll</span> <span class=\"hps\">put the</span> <span class=\"hps\">fix</span> <span class=\"hps\">in my version</span><span>.</span><br /><br /><span class=\"hps\">What is</span> <span class=\"hps\">the reason</span> <span class=\"hps\">not to use</span> <span class=\"hps\">this trick</span> <span class=\"hps\">(<a href=\"http://grahammurray.wordpress.com/2010/05/30/binding-to-anonymous-types-in-silverlight/\">http://grahammurray.wordpress.com/2010/05/30/binding-to-anonymous-types-in-silverlight/</a>)</span> <span class=\"hps\">instead of</span> <span class=\"hps\">Concrete</span> <span class=\"hps\">()</span> <span class=\"hps\">in</span> <span class=\"hps\">Silverlight?</span></p>\r\n<p><span class=\"hps\"><span class=\"hps\">I would like to</span> <span class=\"hps\">chat</span> <span class=\"hps\">with you</span> <span class=\"hps\">to better understand</span> <span class=\"hps\">the code and</span> <span class=\"hps\">help</span> <span class=\"hps\">to improve </span><span class=\"hps\">Obtics.</span></span></p>\r\n<p><span class=\"hps\"><span class=\"hps\">Thanks.</span></span></p>\r\n<p><span class=\"hps\"><span class=\"hps\">Vincent</span></span></p>",
+    "PostedDate": "2011-08-01T01:24:05.027-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "654555",
+    "ThreadId": "266094",
+    "Html": "<p>Hi Vincent,</p>\r\n<p>The null ref exceptions would be possible. Previously Obtics all the time implicitly checked for null values. It was necessairy because Obtics would break if such an exception was raised. If all is right&nbsp;this sort of exceptions shoudn't break the Obtics kernal anymore and since&nbsp;the&nbsp;implicit checks weren't&nbsp;helpfull for performance I removed them. Now programmer should check for null references (like in normal code) and/or handle the resulting Exceptions via new extension methods.</p>\r\n<p>I think the trick you mention specifically deals with binding to anonymous types. Using anonymous types in transformed expressions leads to problems in partially trusted invironments. The trick would help but it would require the DEFINING assembly (not the obtics assembly) to give 'internals visible permission'.</p>\r\n<p>The Concrete methods deal with another problem that is specific for Silverlight (and less so for WPF). Both systems look in the object hierarchy for a given property to bind to. In WPF you can specifically indicate that it should bind to a property on an interface but in Silverlight this is not possible. I don't want to expose the internals of Obtics (make all transformation object classes and hierarchies&nbsp;public) so the solution was to use an explicit and public patch object that would&nbsp;proxy an interface and pass it's properties through via concrete and public&nbsp;class properties.&nbsp;</p>\r\n<p>It could be an idea to expose the internal classes of obtics to the WPF or Silverlight assemblies so that they can bind to the internal properties. I need to experiment with that; thanks for the tip.. :-)</p>\r\n<p>Grtz,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2011-08-08T07:47:04.547-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

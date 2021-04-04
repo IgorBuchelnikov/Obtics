@@ -1,0 +1,111 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": null,
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "Hi Thomas -\n \nI would really appreciate a fix for this.  We've put several days into this issue.\n \nBackground:\n--------------------------\nWe are using Obtics with LLBLGen Pro, one of the strongest ORMs for .NET (also from the Netherlands).  All our Calculations are performed server-side in real-time (not on the client as with Silverlight).  Thus - ConcurrentHashtable is EXTREMELY important so users are isolated from eachother's Calculations on the server.\n \nProblem:\n--------------------------\nObtics is not always using the ObticsEqualityComparerAttribute to do comparisons.  Our breakpoints in our custom Comparer are firing, so we know we are hooked in correctly.  However, Obtics is still calling .Equals or .GetHashCode on the objects themselves - instead of our Comparer.  This is causing major problems.\n \nUnwanted Side Effects, either:\n1.) With Custom Comparer:  Only calculations in the first screen work, no calculations in any successive screens or dialogs will function.\n2.) Without Custom Comparer:  All Calculations for an Entity are shared across all user sessions!!  If User #1 views Entity A1, and another User #2 views Entity A2... User #1's calculations are displayed on User #2's screen.\n \nLLBLGen Pro\n--------------------------\n.Equals() method is based solely on PrimaryKeys.\n.GetHashCode() method is based solely on all matching field values.\n \nUsing the methods above, cloning an Entity will result in the clone & original being \"equal\".  Also, fetching the same entity twice from the DB... both instances are considered \"equal\" in the LLBLGen world.  Thus, Obtics will not listen to a cloned entity or a re-fetched entity - because Obtics thinks it is already listening to it, when really it's only listening to the first entity.\n \nThis is severely limiting & does not allow for multiple instances of an Entity to be calculated independently on separate screens.\n \nWe are using deep cloning extensively for child screens / dialog windows where Calculations must be made.  Thus - the main screen's Calculations must be kept /completely/ separate from the child screen's Calculations.  For our cloned entities to Calculate independently of the original entities, we need to enforce ReferenceEquals() comparison in Obtics.  Anything less will result in disastrous cross-screen & cross-session calculations.  As you can imagine - horror stories for both our users and the development team.\n \nAfter days of work, we have narrowed it down to a simple unit test, which I am more than happy to provide you with.\n \nAlso, We do not create any anonymous types in our Expressions, as you have mentioned in other posts.  We have read up on:\n* http://obtics.codeplex.com/wikipage?title=Well-behaved&ProjectName=obtics\n* http://obtics.codeplex.com/WorkItem/View.aspx?WorkItemId=5208\n \nIn Summary, We simply need Obtics to */always/* use the custom IEqualityComparer.\n \nPlease help, Thomas!  You are greatly appreciated here - we hold Obtics in high regard.  Look forward to hearing from you.\n \nThank you very much.  Sincerely,\n \nRyan D. Hatch\n \n \nCustom Comparer - Used to keep each object instance separate, so calculations are able to fire separately on two cloned entities:\n---\npublic class RyansObticsEntityComparer : IEqualityComparer<CommonEntityBase>\n{\n    public bool Equals(CommonEntityBase x, CommonEntityBase y)\n    {\n        // Require Same Instance\n        return ReferenceEquals(x, y);\n    }\n \n    public int GetHashCode(CommonEntityBase obj)\n    {\n        // Return Unique Instance Guid\n        byte[] guidBytes = obj.UniqueInstanceID.ToByteArray();\n        return BitConverter.ToInt32(guidBytes, 0);\n    }\n}\n \n[Obtics.ObticsEqualityComparer(typeof(RyansObticsEntityComparer))]\npublic class CommonEntityBase\n{ ...",
+    "LastUpdatedDate": "2013-06-14T00:53:24.417-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-12-14T18:38:10.833-08:00",
+    "Status": {
+      "Name": "Resolved",
+      "Id": 7
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "ConcurrentHashtable : Custom Comparer Madness!",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 2,
+    "Id": 5603
+  },
+  "FileAttachments": [
+    {
+      "FileId": 1843,
+      "FileName": "Obtics Compare Test.zip",
+      "DownloadUrl": ".\\1843"
+    },
+    {
+      "FileId": 1849,
+      "FileName": "Obtics.dll",
+      "DownloadUrl": ".\\1849"
+    }
+  ],
+  "Comments": [
+    {
+      "Message": "Hi Ryan,\r\n\r\nWhen Obtics manipulates your naked objects it should use the comparer specified with the ObticsEqualityComparer always. If it doesn't it means there is a bug. Could you provide more details about the circumstanses in which Obtics gets it wrong?  Could you upload your unit test?\r\n\r\nIf there is a bug it needs to be fixed; but is it not possible for LLBLGen to take the session/transaction/other context into account when comparing entities? I have a tendensy to see it as a shortcomming that it declares two entities equal when in fact they are not.\r\n\r\nRegards,\r\n\r\nThomas.",
+      "PostedDate": "2009-12-15T01:15:58.923-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Hi Thomas -\r\n\r\nThank you very much for taking a look at this.  Please find the attached .zip file.  These 3 tests cover everything we need.\r\n\r\nAgain, Thank you very much!\r\n\r\nRyan",
+      "PostedDate": "2009-12-15T14:21:57.1-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-12-15T14:22:09.763-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Associated with changeset 32502.",
+      "PostedDate": "2009-12-16T13:07:11.987-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-12-16T13:07:48.443-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Hi Ryan,\r\n\r\nThe fault was caused by the ComponentModel.PropertyDescriptor class. It uses a (static) dictionary to store registrations for ChangeEvents (PropertyDescriptor.AddValueChanged). This component naturaly doesn't take ObticsEqualityComparerAttribute into account and since the default equality comparer for the Entities is not well behaved the component fails.\r\n\r\nCode has been changed so that if an ObticsEqualityComparerAttribute has been specified on a type it will not use PropertyDescriptor for change notifications. This in turn means that the only property change notification mechanism for such types can be INotifyPropertyChanged.\r\n\r\nI have uploaded an Obtics.dll with the patch built in.\r\n\r\nTx for reporting the issue,\r\n\r\nThomas.",
+      "PostedDate": "2009-12-16T13:15:08.2-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-12-16T13:15:11.257-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "All tests pass successfully.  Thank you very much, Thomas!\r\n\r\nYou are greatly appreciated!\r\n\r\nRyan D. Hatch",
+      "PostedDate": "2009-12-16T13:53:01.703-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:05.717-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:52.767-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:52.893-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-06-14T00:53:24.417-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

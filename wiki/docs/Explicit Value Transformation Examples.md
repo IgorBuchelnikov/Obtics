@@ -1,0 +1,80 @@
+# Explicit Value Transformation Examples
+
+This method is usefull when you know exactly which properties of your objects are mutable and observable and you don't want to waste resources by having a valuetransformation pipeline listening for changes that will never occur. This means that it is upto the developer to decide where the pipeline should be change aware and not. This last requirement goes against the idea that a developer should be able to simply state what should be calculated and not wory about when. For a care-free value transformation use Implicit Value Transformations.
+
+Class Person in these examples is an observable class. That means an instance of this class sends change notifications whenever a property changes value. See [http://www.codeplex.com/Obtics/SourceControl/FileView.aspx?itemId=209671&changeSetId=14599](http://www.codeplex.com/Obtics/SourceControl/FileView.aspx?itemId=209671&changeSetId=14599) for a possible implementation.
+
+{{
+using Obtics.Values;
+
+class Test
+{
+        Person _Person = new Person("Glenn","Miller");
+
+        Person Person
+        { get { return _Person; } }
+
+        public IValueProvider<int> PersonFirstNameLength
+        {
+            get 
+            {
+                return
+                    //select the never changing Person property make a (static) IValueProvider for it.
+                    ValueProvider.Static(Person) 
+                        //select the FirstName property of Person. This is a classic
+                        //property and observably mutable
+                        .Property<Person, string>(Person.FirstNamePropertyName)
+                        //Calculate the result 
+                        .Select(
+                            //fn is a string and Length is an
+                            //immutable property of string
+                            fn => fn.Length 
+                        );
+            }
+        }
+}
+}}
+
+In the above example the pipeline listens for changes in the FirstName property of the Person only. If ever the field _Person would change value then the result of PersonFirstNameLength would not be correct.
+
+Note that the PersonFirstNameLength property will return a 'new' IValueProvider at every call. All returned IValueProviders are equivalent and {{Object.Equals(PersonFirstNameLength,PersonFirstNameLength)}} should always return true. Depending on the Obtics build a carrousel mechanism is being used and PersonFirstNameLength will always or in most cases return the same IValueProvider instance. 
+
+Since there is no strong reference from the Test object to the transformation pipeline, the Garbage Collector can reclaim the generated pipeline object when the caller is done with it. This is a great advantage when we have many Test instances and the PersonFirstNameLength property is not needed very often. 
+
+It is however possible to store the created IValueProvider in a field and return that with every call to PersonFirstNameLength.
+
+{{
+using Obtics.Values;
+
+class Test
+{
+       Person _Person = new Person("Glenn","Miller");
+
+        Person Person
+        { get { return _Person; } }
+
+        //field
+        IValueProvider<int> _PersonFirstNameLength;
+
+        public IValueProvider<int> PersonFirstNameLength
+        {
+            get 
+            {
+                return 
+                    //if field has a value return that, 
+                    //otherwise assign a new value and return that
+                    _PersonFirstNameLength ?? ( _PersonFirstNameLength =
+                        ValueProvider.Static(Person) 
+                            .Property<Person, string>(Person.FirstNamePropertyName)
+                            .Select(
+                                fn => fn.Length 
+                            ) 
+                    );
+            }
+        }
+}
+}}
+
+If objects of type Test are rare and PersonFirstNameLength gets called often this is a good strategy. However the created IValueProvider pipeline won't get discarded before the owning Test object is. So, if there are many Test object instances and PersonFirstNameLength doesn't get used very often the first version is probably beter. (See [Exposure Strategies](Exposure-Strategies))  
+
+See also: [Transformation Examples](Transformation-Examples)

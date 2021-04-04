@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "521112",
+    "ThreadId": "234472",
+    "Html": "\r\n<p>Hi Throb,</p>\r\n<p>I am trying to migrate to the last version, and I just discovered that the <em>\r\n<strong>NullReferenceException </strong></em>in the lambda expressions are now thrown.</p>\r\n<p>Is<em><strong>&nbsp;OnException((NullReferenceException ex) =&gt; false)</strong></em>&nbsp;the only way to handle this ?</p>\r\n<p>Regs,<br>\r\nVincent BOUZON&nbsp;</p>\r\n",
+    "PostedDate": "2010-11-12T07:08:04.437-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "521183",
+    "ThreadId": "234472",
+    "Html": "\r\n<p>Hi Vincent,</p>\r\n<p>The latest source version is way not stable yet. If you are looking for a fix for the ConcurrentHashtable libraries you can just use the new ones with the existing 'official' Obtics release, or your adapted one (for silverlight 4).</p>\r\n<p>The obtics version i'm working on now will support exception handling. In line with that the automatically inserted code to check for null references will be removed. Two reasons to remove this code is that 1 it had quite a negative impact on performance\r\n and 2 it assumed that the default value of the returned type&nbsp;would always be the proper fallback value in case a null reference was encountered.</p>\r\n<p>The OnException((ExceptionType e) =&gt; fallbackValue) method will be the way to handle exceptions. Better still is not to allow exceptions to happen.</p>\r\n<p>In case of null reference exceptions it is best to prevent properties, fields or function return values from becomming null in the first place. Second best would be to check for null values in code. Only as last resort I would use OnException((NullReferenceException\r\n ex)=&gt;false). This is because throwing and catching exceptions is a very expensive process.</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>\r\n",
+    "PostedDate": "2010-11-12T09:44:36.04-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "521706",
+    "ThreadId": "234472",
+    "Html": "\r\n<p>Hi Thomas,</p>\r\n<p>Thank you for your reply, I remain so on version &quot;hacked&quot; provided on this topic :<br>\r\n<a href=\"http://obtics.codeplex.com/Thread/View.aspx?ThreadId=215764\">http://obtics.codeplex.com/Thread/View.aspx?ThreadId=215764</a></p>\r\n<p>Regs,</p>\r\n<p>Vincent&nbsp;</p>\r\n",
+    "PostedDate": "2010-11-14T05:22:06.587-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

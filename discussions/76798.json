@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "262562",
+    "ThreadId": "76798",
+    "Html": "<p>Is there an easy way to determine which methods don't have mappings registered yet?</p>\r\n<p>When we built our framework, we decided to throw exceptions when method mappings weren't found.&nbsp;&nbsp; We had exceptions when the target object and arguments were immutable, and that made it rare to see the exceptions come up in practice.&nbsp; This allowed us to find out right away if an expression was going to work without testing each expression by itself.</p>\r\n<p>It would be nice of there was a way to get some sort of debug output on failed observability when ExpressionObserver is used to build an observer tree.</p>",
+    "PostedDate": "2009-12-01T19:21:16.363-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "262884",
+    "ThreadId": "76798",
+    "Html": "<p>I guess it&nbsp;may be a good&nbsp;idea to build some tracers in the&nbsp;ExpressionRewriter. An external tool could analyse the results and detect problematic methods. I might also be possible to build a mapping from the generated transformation&nbsp;pipelines to the original expression tree. That would help a lot when debuging lambda expressions made observable.</p>",
+    "PostedDate": "2009-12-02T12:15:50.347-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "485274",
+    "ThreadId": "76798",
+    "Html": "<p>Thomas - any updates on this? &nbsp;Debugging traceability would really help us to know exactly why things are firing.</p>\r\n<p>Please let us know. &nbsp;Thank you very much!</p>",
+    "PostedDate": "2010-08-26T09:39:16.173-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

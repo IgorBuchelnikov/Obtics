@@ -1,0 +1,65 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": null,
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "I've tracked down another bug related to a class that both inherits from the DependencyObject and implements INotifyPropertyChanged.  If I use ExpressionObserver on an Expression which references the property (which uses INotifyPropertyChanged) of a property (say which uses either INotifyPropertyChanged *or* DependencyProperty) on a DependencyObject that also implements INotifyPropertyChanged (say ObjectA) then any changes to PropertyB will not update the result of the ExpressionObserver.\nIf, however, I create a property wrapper to PropertyB (say PropertyC) directly on ObjectA (which means handling the property change event for PropertyB and assigning the new value to PropertyC and re-raising any change events direction on ObjectA), then the result from ExpressionObserver works as expected.\n \nHere it is as a code example:\nNot working:\n<code>\nFunction(source As ObjectA) _\n From model In source.Property1.Collection1 _\n Where source.PropertyA.PropertyB > model.Property2 _\n Select model _\n)\n</code>\n \nWorking:\n<code>\nFunction(source As ObjectA) _\n From model In source.Property1.Collection1 _\n Where source.PropertyC > model.Property2 _\n Select model _\n)\n</code>",
+    "LastUpdatedDate": "2013-02-13T18:41:07.02-08:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-10-05T09:30:35.82-07:00",
+    "Status": {
+      "Name": "Proposed",
+      "Id": 1
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "SubProperty change of Dependency Object will not cause Obtics collection to update.",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 5051
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Associated with changeset 28009.",
+      "PostedDate": "2009-10-06T11:41:15.5-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Associated with changeset 28014.",
+      "PostedDate": "2009-10-06T11:57:39.703-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "I verified the reported issue as I understood it from your description in unittest ObticsUnitTest.Obtics.Regression.Regression7. I do get the expected proper updates. I'm a missing some details?\r\n\r\n",
+      "PostedDate": "2009-10-06T11:57:50.1-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "I'll get more info to you on this as soon as I figure out the current bug I'm stuck on.",
+      "PostedDate": "2009-10-08T10:36:31.48-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:07.02-08:00",
+      "Id": -2147483648
+    }
+  ]
+}

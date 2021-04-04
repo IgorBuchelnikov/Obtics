@@ -1,0 +1,71 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": null,
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "This does work in standard LINQ.  Perhaps a dummy placeholder could be used in the dictionary when the null value is encountered.",
+    "LastUpdatedDate": "2013-02-13T18:41:04.95-08:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2010-03-03T20:29:08.113-08:00",
+    "Status": {
+      "Name": "Active",
+      "Id": 2
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "GroupBy on a null value doesn't work",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 2,
+    "Id": 6119
+  },
+  "FileAttachments": [
+    {
+      "FileId": 2023,
+      "FileName": "GroupByNull.patch",
+      "DownloadUrl": ".\\2023"
+    }
+  ],
+  "Comments": [
+    {
+      "Message": "Since the internal dictionary is generic, a dummy value won't work.  The attached patch file has a new dictionary implementation that handles null values.  Using it for the CacheClass fixes the GroupBy behavior in our simple unit test.  Hopefully this is helpful in some way.\r\n\r\nI also had the vague idea that you could create a dictionary that accepted a new type of equality comparer that handled nulls, but certainly just using a different equality comparer doesn't work with the default dictionary... it still won't allow nulls.",
+      "PostedDate": "2010-03-03T23:36:45.39-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2010-03-03T23:36:57.533-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2010-03-11T15:22:10.82-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2010-11-08T22:49:15.02-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:04.95-08:00",
+      "Id": -2147483648
+    }
+  ]
+}

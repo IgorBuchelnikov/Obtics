@@ -1,0 +1,29 @@
+﻿<Window x:Class="CustomMapping.Window1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:CustomMapping"
+    Title="Window1" Height="577" Width="517"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        >
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type local:Person}">
+            <StackPanel Orientation="Horizontal">
+                <Label>Name:</Label>
+                <TextBox Text="{Binding Name}"/>
+                <Label>Birthdate:</Label>
+                <TextBox Text="{Binding Birthdate}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid IsEnabled="True">
+        <ListBox Margin="0,26,0,0" Name="PersonsBox" Height="192" VerticalAlignment="Top" ItemsSource="{Binding Persons}"/>
+        <Button Height="23" HorizontalAlignment="Left" Margin="12,224,0,0" Name="button1" VerticalAlignment="Top" Width="75" Click="button1_Click">Add</Button>
+        <Button Height="23" Margin="0,224,309,0" Name="button2" VerticalAlignment="Top" Click="button2_Click" HorizontalAlignment="Right" Width="93">Remove</Button>
+        <Label HorizontalAlignment="Left" Margin="0,253,0,258" Name="label1" Width="120">Youngest person:</Label>
+        <ContentControl Name="contentControl1" VerticalAlignment="Bottom" Content="{Binding YoungestPerson.Value}" IsEnabled="False" Margin="0,0,0,218" Height="34" />
+        <Label Height="28" HorizontalAlignment="Left" Name="label2" VerticalAlignment="Top" Width="120">Persons:</Label>
+        <Label Height="28" HorizontalAlignment="Left" Margin="0,0,0,184" Name="label3" VerticalAlignment="Bottom" Width="120">Names starting with:</Label>
+        <TextBox Height="23" Margin="126,0,172,189" Name="NamesStartingWithBox" VerticalAlignment="Bottom" />
+        <ListBox Height="178" Name="listBox1" VerticalAlignment="Bottom" ItemsSource="{Binding NamesStartingWithPersons}"/>
+    </Grid>
+</Window>

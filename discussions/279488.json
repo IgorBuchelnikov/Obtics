@@ -1,0 +1,66 @@
+[
+  {
+    "Id": "698299",
+    "ThreadId": "279488",
+    "Html": "\r\n<p>Hi Throb,</p>\r\n<p>I have a strange behavior with Obtics in latest build (before too ?), how it's possible a collection after StandardPatch give not the same result ? Bad cache ?</p>\r\n<p>Regs,<br>\r\nVincent</p>\r\n",
+    "PostedDate": "2011-11-15T02:15:17.233-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "698430",
+    "ThreadId": "279488",
+    "Html": "<p>Hi Vincent,</p>\r\n<p>Sorry, it is not clear to me what you mean. Could you be more specific?</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2011-11-15T07:08:09.66-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "698470",
+    "ThreadId": "279488",
+    "Html": "<p>Hi throb,</p>\r\n<p>Thanks for your answser. In fact, i have a collection with entities, i do a Where clause with LINQ, it returns the good result, but with the Where clause from Obtics, it return an empty enumeration.</p>\r\n<p>After analyzing the code of obtics, i find out that the result is empty after myCollection.Patched().</p>\r\n<p>Have you got an idea about this issue ?</p>\r\n<p>Regs,<br />Vincent</p>",
+    "PostedDate": "2011-11-15T08:16:31.743-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "698892",
+    "ThreadId": "279488",
+    "Html": "<p>Ok, my initial response is that this should not happen.</p>\r\n<p>myCollection.Patched() returns an object. can you find out what the type is of that object?</p>\r\n<p>Which exact version are you using? The stable release or a build from sourcecode?</p>\r\n<p>Are you registering for change notifications?</p>\r\n<p>Regs,</p>\r\n<p>Thomas</p>",
+    "PostedDate": "2011-11-16T04:03:35.567-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "699491",
+    "ThreadId": "279488",
+    "Html": "<p>Hi Throb,</p>\r\n<p>I have an other important&nbsp;bug&nbsp;:(</p>\r\n<p>System.InvalidOperationException was unhandled by user code<br />&nbsp; Message=Operation is not valid due to the current state of the object.<br />&nbsp; StackTrace:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.Collections.ObservableEnumerable.&lt;_SingleBase&gt;b__73[TSource](Tuple`2 acc, TSource elt)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at System.Linq.Enumerable.Aggregate[TSource,TAccumulate,TResult](IEnumerable`1 source, TAccumulate seed, Func`3 func, Func`2 resultSelector)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.Collections.Transformations.AccumulativeAggregate`3.GetValueDirect()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.Collections.Transformations.AggregateBase`2.InitializeBuffer()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.Values.Transformations.CachedTransformationBase`2.GetValueEvent()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.NCSourcedObjectToVP`2.get_Value()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.Values.Transformations.UnarySelectTransformation`2.GetValue()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.Values.Transformations.ConvertTransformationBase`2.GetValueEvent()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.NCSourcedObjectToVP`2.get_Value()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.Values.Transformations.CascadeTransformation`2.GetValueFromItm(IInternalValueProvider`1 itm)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.Values.Transformations.CascadingTransformationBase`3.GetValueEvent()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.NCSourcedObjectToVP`2.get_Value()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.Values.Transformations.CascadeTransformation`2.GetValueFromItm(IInternalValueProvider`1 itm)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.Values.Transformations.CascadingTransformationBase`3.GetValueEvent()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.NCSourcedObjectToVP`2.get_Value()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.Values.Transformations.PipelineResultTransformation`3.GetValue()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.Values.Transformations.ConvertTransformationBase`2.GetValueEvent()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.NCSourcedObjectToVP`2.get_Value()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.NCSourcedObjectToVP`2.Obtics.Values.IValueProvider.get_Value()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.NCToNPC.add_PropertyChanged(PropertyChangedEventHandler value)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Obtics.NCSourcedObjectToVP`2.add_PropertyChanged(PropertyChangedEventHandler value)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.Services.Obtics.CachedValueWithExceptionSendedProvider`1.set_Obsvervable(IValueProvider`1 value)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.Services.Obtics.CachedValueWithExceptionSendedProvider`1..ctor(Expression expression, IValueProvider`1 obsvFunc)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.Services.Obtics.ExpressionObserverExtensions.&lt;&gt;c__DisplayClass10`4.&lt;CompileDirectObservable&gt;b__b(P1 p1, P2 p2, P3 p3)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at c0ding.Silverlight.Obtics.Carrousel.&lt;&gt;c__DisplayClass8`4.&lt;Create&gt;b__5(Tuple`3 t)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at c0ding.Silverlight.Obtics.Carrousel.InternalCarrousel`2.Get(TKey key)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at c0ding.Silverlight.Obtics.Carrousel.&lt;&gt;c__DisplayClass8`4.&lt;Create&gt;b__7(TK1 k1, TK2 k2, TK3 k3)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.Services.Obtics.ExpressionObserverExtensions.&lt;&gt;c__DisplayClass10`4.&lt;CompileDirectObservable&gt;b__f(P1 p1, P2 p2, P3 p3)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.Models.DynamicWorkDay.get_WorkDay()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.Models.DynamicWorkDay.get_WorkTimeSlots()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.ViewModels.Schedules.Cells.Async.AsyncEmployeeProjectedDayCellViewModel.InitProviders()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.ViewModels.Schedules.Cells.Async.EmployeeProjectedDayCellViewModel..ctor(Employee employee, DateTime day, IEnumerable`1 publicHolidays)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.ViewModels.Schedules.Cells.Async.AsyncEmployeeProjectedDayCellViewModel..ctor(Employee employee, DateTime day, IEnumerable`1 publicHolidays)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.ViewModels.Schedules.Cells.Async.AsyncEmployeeProjectedDayCellViewModel.&lt;.cctor&gt;b__0(Employee employee, DateTime date, IEnumerable`1 publicHolidays)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at c0ding.Silverlight.Obtics.Carrousel.&lt;&gt;c__DisplayClass8`4.&lt;Create&gt;b__5(Tuple`3 t)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at c0ding.Silverlight.Obtics.Carrousel.InternalCarrousel`2.Get(TKey key)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at c0ding.Silverlight.Obtics.Carrousel.&lt;&gt;c__DisplayClass8`4.&lt;Create&gt;b__7(TK1 k1, TK2 k2, TK3 k3)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.ViewModels.Schedules.EmployeesSchedulesViewModel.GetOrCreateDayCellViewModel(Employee employee, DateTime dateTime)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.ViewModels.Schedules.EmployeesSchedulesViewModel.&lt;&gt;c__DisplayClass7.&lt;GetItem&gt;b__6(Object o)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at Arcan.Planning.Infrastructure.LowProfileWorkQueue.WorkerThreadProc(Object unused)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at System.Threading.ThreadHelper.ThreadStart_Context(Object state)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean ignoreSyncCtx)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at System.Threading.ThreadHelper.ThreadStart(Object obj)<br />&nbsp; InnerException:</p>\r\n<hr />\r\n<p>&nbsp;</p>\r\n<p>get_WorkDay :</p>\r\n<div style=\"color: black; background-color: white;\">\r\n<pre><span style=\"color: blue;\">public</span> IValueProvider&lt;WorkDay&gt; WorkDay { <span style=\"color: blue;\">get</span> { <span style=\"color: blue;\">return</span> <span style=\"color: blue;\">this</span>._workDay ?? (<span style=\"color: blue;\">this</span>._workDay = WorkDayProvider(<span style=\"color: blue;\">this</span>.Employee, <span style=\"color: blue;\">this</span>.Date, <span style=\"color: blue;\">this</span>.IsRealized)); } } </pre>\r\n<pre>&nbsp;</pre>\r\nWorkDayProvider:</div>\r\n<div style=\"color: black; background-color: white;\">\r\n<pre><div style=\"color: black; background-color: white;\"><pre><span style=\"color: blue;\">private</span> <span style=\"color: blue;\">static</span> <span style=\"color: blue;\">readonly</span> Func&lt;Employee, DateTime, <span style=\"color: blue;\">bool</span>, IValueProvider&lt;WorkDay&gt;&gt; WorkDayProvider = ExpressionObserverExtensions.CompileDirectObservable((Employee e, DateTime dt, <span style=\"color: blue;\">bool</span> r) =&gt; e.WorkDays == <span style=\"color: blue;\">null</span> ? <span style=\"color: blue;\">null</span> : e.WorkDays.SingleOrDefault(wd =&gt; wd != <span style=\"color: blue;\">null</span> &amp;&amp; wd.Date == dt &amp;&amp; wd.IsRealized == r));\r\n\r\n</pre>\r\n</div>\r\n</pre>\r\n</div>\r\n<div style=\"color: black; background-color: white;\">&nbsp;</div>\r\n<div style=\"color: black; background-color: white;\">WorkDays is a EntityCollection (WCF RIA Services)&nbsp;with 200-300 entities in my case.</div>\r\n<div style=\"color: black; background-color: white;\">\r\n<hr />\r\n</div>\r\n<div style=\"color: black; background-color: white;\">Have you an idea ?</div>\r\n<div style=\"color: black; background-color: white;\">Thanks.</div>\r\n<div style=\"color: black; background-color: white;\">Vincent</div>",
+    "PostedDate": "2011-11-17T03:21:34.287-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "699497",
+    "ThreadId": "279488",
+    "Html": "<p>I use the build 61362, there are no stable version declared&nbsp;for Silverlight =(</p>",
+    "PostedDate": "2011-11-17T03:31:30.247-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "709011",
+    "ThreadId": "279488",
+    "Html": "<p>Hi Throb,</p>\r\n<p>Have you an idea about my issue ?</p>\r\n<p>Thanks</p>\r\n<p>Vincent</p>",
+    "PostedDate": "2011-12-07T13:29:56.11-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "709603",
+    "ThreadId": "279488",
+    "Html": "<p>Hi Vincent,</p>\r\n<p>Haven't found the time yet to find out what is going on.</p>\r\n<p>I hope to have an answer for you soon,</p>\r\n<p>Regs</p>\r\n<p>Thomas.</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2011-12-08T15:58:50.01-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

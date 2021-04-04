@@ -1,0 +1,18 @@
+These projects are for testing Obtics under partial trust. MSTest can work only 
+under FullTrust and Microsoft.VisualStudio.QualityTools.UnitTestFramework does not
+allow PartiallyTrusted callers. To run the unit tests under partial trust replace the 
+"Microsoft.VisualStudio.QualityTools.UnitTestFramework" reference in the ObticsUnitTest 
+project with a reference to "UnitTestStub". ObticsUnitTestRunner can then be used to 
+run all or any individual tests under partial trust.
+
+ObticsUnitTestRunner takes a single parameter. This parameter is a regular expression to 
+select the unit tests in ObticsUnitTest to run. The regex is matched against the full 
+name of all test methods and the methods that match will be run.
+
+X:\>ObticsUnitTestRunner "^.*(?<!ConcurrencyTest.?)$"
+
+Would run all TestMethods except the concurrency tests.
+
+X:\>ObticsUnitTestRunner "^ObticsUnitTest\.Obtics\.Regression\.Regression5$"
+
+Would run only the Regression5 test method of the ObticsUnitTest.Obtics.Regression test class.

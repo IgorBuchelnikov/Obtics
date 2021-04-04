@@ -1,0 +1,90 @@
+[
+  {
+    "Id": "566761",
+    "ThreadId": "246179",
+    "Html": "\r\n<p>This may seem like a strange idea given that there don't seem to be many contributors, but have you considered moving to a DVCS like git?&nbsp; Such as on github?&nbsp; It would make the barrier to contribution a bit lower.</p>\r\n<p>I'm going to try the trunk against our suite of unit tests and see how it goes.&nbsp; I'm looking to eliminate that deadlock error, and if I have to add a bunch of debugging code to print out transformations, I'd rather contribute that back.&nbsp; I figured\r\n it would make sense to do the changes against the trunk.</p>\r\n",
+    "PostedDate": "2011-02-15T14:21:00.927-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "566819",
+    "ThreadId": "246179",
+    "Html": "<p>Well, maybe you already knew this would happen, but a great many tests failed.&nbsp; Are there significant blocks of missing code, or is it just that the new code base is untested?&nbsp; Basically I'm asking if it would be fruitful to try and find bugs, or if it's more a matter of implementing some sort of predefined plan to progress the new version.</p>",
+    "PostedDate": "2011-02-15T16:21:35.447-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "567100",
+    "ThreadId": "246179",
+    "Html": "<p>No, that is not right. The unit tests should not fail. Make sure you are&nbsp;doing a Debug build and not a Parallel build&nbsp;version.</p>\r\n<p>If the tests still fail is there any pattern in the failures? Like all Concurrency tests or Correctnes tests?</p>",
+    "PostedDate": "2011-02-16T05:52:16.753-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "567357",
+    "ThreadId": "246179",
+    "Html": "<p>Looks like a Debug build with your default project file.&nbsp; I'll do some poking around to come up with a test case.</p>",
+    "PostedDate": "2011-02-16T11:45:37.237-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "568769",
+    "ThreadId": "246179",
+    "Html": "<p>It seems that some files were missing from the unittest project. For some reason this happens sometimes. I Added them to source control.</p>",
+    "PostedDate": "2011-02-18T14:14:43.423-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "568779",
+    "ThreadId": "246179",
+    "Html": "<p>Just got a latest version of the trunk on a different machine. It compiles and the unittests succeed. Hope it does the same for you.</p>",
+    "PostedDate": "2011-02-18T14:34:13.14-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "568788",
+    "ThreadId": "246179",
+    "Html": "<p>I was referring to our internal unit tests, not to the ones included with Obtics anyways.</p>",
+    "PostedDate": "2011-02-18T15:05:54.963-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "570013",
+    "ThreadId": "246179",
+    "Html": "<p>I tracked down one of the problems and submitted a bug report for it. &nbsp;Hopefully this is helpful.</p>",
+    "PostedDate": "2011-02-21T21:24:01.953-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "571412",
+    "ThreadId": "246179",
+    "Html": "<p>Thanks for submitting this and it is an issue that reoccurs regularly. This reason that it occurs is obscure but is in fact by design and can be explained.</p>\r\n<p>First: Transformation pipelines do not build up the event machinery before the first client registers for events and break down this machinery immediately when the last client unregisters. This is because the whole chain of event handlers from source to client will keep the transformation pipeline allive and in memory. This is nice when clients are registerd but must not happen unneeded.</p>\r\n<p>Second: Value transformations will send new change notifications only after some client has read it's latest value. So when they send a change notification but nobody seems interested in the actual value (by getting the Value property)&nbsp;they will not send any subsequent change notifications. This is a nice optimization that reduces the number of change notifications sent and is an escape hatch for the infamous X problem. That is a problem where say you have 3 transformations (A, B and C)&nbsp;chained together, where A depends twice on its source, B depends twice on A and C twice on B. Then a change in the source would cause 2 events to arrive at A. This would cause 2 x 2&nbsp;= 4 events to arrive at B. That would cause 4 x 2 = 8 events to arrive at C.&nbsp;The number of events would grow exponentialy. The escape is that if the eventual client does not get the value for C immediately when an event arrives ( for example by using .Async() ). Then one event wil travel from Source -&gt; A -&gt; B -&gt; C and A, B and C will block any further events. Only later, when the client gets the new value, new events will be passed through.</p>\r\n<p>First and Second combined means that if you <strong>first</strong> get the Value of a transformation pipeline and&nbsp;<strong>second </strong>register for change notifications you <strong>may not receive any</strong> change notifications.</p>\r\n<p>And last in a multithreaded environment the procedure of first getting the value and second registering for changes would be just plain wrong. In that case you would miss all the significant change events that might occur between the moment of getting the value and registering for changes.</p>\r\n<p>So: <strong>first register for change notifications</strong> and <strong>second get the value.</strong></p>\r\n<p>Regs,</p>\r\n<p>Thomas</p>",
+    "PostedDate": "2011-02-24T03:29:33.92-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "571568",
+    "ThreadId": "246179",
+    "Html": "<p>Registering first and getting the value second is problematic for us.&nbsp;&nbsp; Registering first causes the get method on properties to fire, where we have lazy logic to hook up additional change notification and such.&nbsp; This causes deadlocks.&nbsp; We avoided this by reading from the properties first and then starting to monitor for changes later.</p>\r\n<p>It sounds like a viable work-around would be to get the value, hook up for property changed, and then get the value again.&nbsp; I do recall dealing with this problem previously, but didn't realize that we had introduced it inadvertently again.&nbsp; Thanks for your thoughts on this one... it's not the first time it's bitten us. :(</p>",
+    "PostedDate": "2011-02-24T08:14:15.89-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "571674",
+    "ThreadId": "246179",
+    "Html": "<p>In that case you might be interested in some experimental code I posted in this thread <a href=\"http://obtics.codeplex.com/discussions/236924\">http://obtics.codeplex.com/discussions/236924</a></p>\r\n<p>It is actually meant to improve startup time. It offers an alternative CompileObservable method named CompileDelayedObservable. The result will use the original, fast&nbsp;expression to calculate the value&nbsp;initially (even when clients register for events) and only later, asynchronously, will build up the complex transformation pipeline with all event registrations.</p>",
+    "PostedDate": "2011-02-24T11:12:27.483-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

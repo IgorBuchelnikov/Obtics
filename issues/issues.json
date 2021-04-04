@@ -1,0 +1,150 @@
+[
+  {
+    "Id": 2169,
+    "Title": "Make Transformation objects internal"
+  },
+  {
+    "Id": 2170,
+    "Title": "Correctness and Deterministic tests for Value transformation objects"
+  },
+  {
+    "Id": 2171,
+    "Title": "Untit test excercises for Equivalence tests"
+  },
+  {
+    "Id": 2172,
+    "Title": "Remove Equatable<> interface from transformation objects. (Equivalence only via object.Equals override)"
+  },
+  {
+    "Id": 2506,
+    "Title": "FindFirst and FindLast collection aggregates not correct."
+  },
+  {
+    "Id": 2762,
+    "Title": "Improve JoinTransformation (Collection)"
+  },
+  {
+    "Id": 3544,
+    "Title": "Let ExpressionObserver choose for less reactive collection transformation methods when possible."
+  },
+  {
+    "Id": 3545,
+    "Title": "Enable return paths for all value transformation methods where feasable."
+  },
+  {
+    "Id": 3546,
+    "Title": "Regard actual type of source when creating transformation elements."
+  },
+  {
+    "Id": 3547,
+    "Title": "POC for using Select methods instead Convert with ExpressionObserver."
+  },
+  {
+    "Id": 4124,
+    "Title": "Obtics, Binding, and Microsoft Expression Blend"
+  },
+  {
+    "Id": 4128,
+    "Title": "ExpressionObserver & base type property"
+  },
+  {
+    "Id": 4571,
+    "Title": "Certain LINQ expression does not work with Obtics"
+  },
+  {
+    "Id": 4660,
+    "Title": "Obtics with ClickOnce Security set to Internet"
+  },
+  {
+    "Id": 4797,
+    "Title": "ExpressionObserver.Execute doesn't expose INotifyPropertyChanged"
+  },
+  {
+    "Id": 4931,
+    "Title": ".Cascade() not returning same results as .Value"
+  },
+  {
+    "Id": 4976,
+    "Title": "CollectionChanged not firing after first fire unless collection \"accessed\"."
+  },
+  {
+    "Id": 4987,
+    "Title": "Exception"
+  },
+  {
+    "Id": 4990,
+    "Title": "ExpressionObserver.Execute expression broken when expression has type differences"
+  },
+  {
+    "Id": 5051,
+    "Title": "SubProperty change of Dependency Object will not cause Obtics collection to update."
+  },
+  {
+    "Id": 5105,
+    "Title": "Collection does not update... because of CascadeTransformation?"
+  },
+  {
+    "Id": 5203,
+    "Title": "No exception thrown when observed expression is passed argument with invalid type"
+  },
+  {
+    "Id": 5208,
+    "Title": "Overriding GetHashCode on object used in observed expression causes expression to not update after its INotifyCollectionChanged.CollectionChanged event has a handler"
+  },
+  {
+    "Id": 5379,
+    "Title": "Decimal madness (incorrect calculation values using ExpressionObserver, no decimal places??)"
+  },
+  {
+    "Id": 5483,
+    "Title": "Multithreading & DependencyObject"
+  },
+  {
+    "Id": 5558,
+    "Title": "Very strange bug seemingly related to OfType"
+  },
+  {
+    "Id": 5603,
+    "Title": "ConcurrentHashtable : Custom Comparer Madness!"
+  },
+  {
+    "Id": 5674,
+    "Title": "IValueProvider.Value is incorrect unless IValueProvider is being observed !?"
+  },
+  {
+    "Id": 5687,
+    "Title": "Obtics : Serialization"
+  },
+  {
+    "Id": 6113,
+    "Title": "Aggregate Observability Broken"
+  },
+  {
+    "Id": 6119,
+    "Title": "GroupBy on a null value doesn't work"
+  },
+  {
+    "Id": 7639,
+    "Title": "ArgumentNullException"
+  },
+  {
+    "Id": 7689,
+    "Title": "Cannot build Obtics"
+  },
+  {
+    "Id": 7950,
+    "Title": "PropertyChanged not firing"
+  },
+  {
+    "Id": 8600,
+    "Title": "NullReferenceException in ProviderFinder"
+  },
+  {
+    "Id": 8602,
+    "Title": "Mapping Error"
+  },
+  {
+    "Id": 8605,
+    "Title": "ProviderFinder and concurrency"
+  }
+]

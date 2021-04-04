@@ -1,0 +1,344 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3787E582-A65F-48D5-9E1F-73B6F52943FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ObticsUnitTest</RootNamespace>
+    <AssemblyName>ObticsUnitTest_PartialTrust</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>dev.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug PartialTrust|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug PartialTrust\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;VERIFY_INT_ARGS_NOT_NULL TVDP_UNITTESTING</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Helpers\AsyncFrameIEnumerableRunner.cs" />
+    <Compile Include="Helpers\AsyncFrameIValueProviderRunner.cs" />
+    <Compile Include="Helpers\AsynCollectionTransformationClientRunner.cs" />
+    <Compile Include="Helpers\AsyncTestRunnerForCollectionTransformation.cs" />
+    <Compile Include="Helpers\AsyncTestRunnerForValueTransformation.cs" />
+    <Compile Include="Helpers\AsynValueTransformationClientRunner.cs" />
+    <Compile Include="Helpers\AsyncTestRunnerForCollectionAggregate.cs" />
+    <Compile Include="Helpers\BindingListFrame.cs" />
+    <Compile Include="Helpers\EqualityRunner.cs" />
+    <Compile Include="Helpers\TestHelper.cs" />
+    <Compile Include="Helpers\ValueProviderDeterministicEventRegistrationRunnerForValueProvider.cs" />
+    <Compile Include="Helpers\ValueProviderDeterministicEventRegistrationRunnerForSequence.cs" />
+    <Compile Include="Helpers\ValueProviderDeterministicEventRegistrationRunner.cs" />
+    <Compile Include="Helpers\FrameIValueProviderNPC.cs" />
+    <Compile Include="Helpers\ValueProviderClient.cs" />
+    <Compile Include="Helpers\ValueProviderClientNPC.cs" />
+    <Compile Include="Helpers\CollectionDeterministicEventRegistrationRunnerForAggregate.cs" />
+    <Compile Include="Helpers\CollectionTestSequenceRunnerForAggregate.cs" />
+    <Compile Include="Helpers\CollectionTestSequenceRunnerForTransformation.cs" />
+    <Compile Include="Helpers\CollectionTransformationClient.cs" />
+    <Compile Include="Helpers\CollectionTransformationClientNPC.cs" />
+    <Compile Include="Helpers\CollectionTransformationClientSNCC.cs" />
+    <Compile Include="Helpers\CollectionDeterministicEventRegistrationRunner.cs" />
+    <Compile Include="Helpers\CollectionDeterministicEventRegistrationRunnerForTransformation.cs" />
+    <Compile Include="Helpers\FrameIEnumerable.cs" />
+    <Compile Include="Helpers\FrameIEnumerableNPC.cs" />
+    <Compile Include="Helpers\FrameIEnumerableNPCNCC.cs" />
+    <Compile Include="Helpers\CollectionTransformationClientNCC.cs" />
+    <Compile Include="Helpers\CollectionTestSequenceRunner.cs" />
+    <Compile Include="Helpers\FrameIValueProvider.cs" />
+    <Compile Include="Helpers\ValueProviderTestSequenceRunner.cs" />
+    <Compile Include="ObticsToDataSet\DataSet1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ObticsToDataSet\ObservableExtensionsTest.cs" />
+    <Compile Include="ObticsToXml\ObservableExtensionsTest.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.OnException.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Repeat.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Range.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Async.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.ToList.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.ToLookup.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.ToDictionary.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.ThenByDescending.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.ThenBy.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.TakeWhile.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Take.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.SkipWhile.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Skip.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.SingleOrDefault.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Single.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.SequenceEqual.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.SelectMany.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Select.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Reverse.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.OrderByDescending.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.OrderBy.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.OfType.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Min.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Max.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.LongCount.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.LastOrDefault.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Last.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Join.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Intersect.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.GroupJoin.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.GroupBy.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.FirstOrDefault.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.First.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Except.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.ElementAtOrDefault.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.ElementAt.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Distinct.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.DefaultIfEmpty.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Count.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Contains.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Concat.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Cast.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Cap.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Union.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Where.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.AsEnumerable.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Any.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.All.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Aggregate.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.Average.cs" />
+    <Compile Include="Obtics\Collections\ExplicitObservable\ObservableEnumerableTest.cs" />
+    <Compile Include="Obtics\Collections\ObservableDictionaryTest.cs" />
+    <Compile Include="Obtics\Collections\Patches\VersionedPatchTest.cs" />
+    <Compile Include="Obtics\Collections\SortedSkiplistTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AsyncTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\ExceptionTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\LongCountAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\UnorderedLookupTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\UnorderedNotifyVpcTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\UnorderedDistinctTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\UnorderedDictionaryTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\UnorderedCascadeTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\UnorderedBoundGroupFilterDispenserTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\UnorderedFilterTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\WeightedSkiplistTest.cs" />
+    <Compile Include="Obtics\ObticsEqualityComparerTest.cs" />
+    <Compile Include="Obtics\Regression.cs" />
+    <Compile Include="Obtics\Values\ExpressionObserverMappingAttributeTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\BufferTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\ExceptionTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\RangeTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\ReturnPathTransformationTest.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.Property.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.ReadOnly.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.Static.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.GetValueOrDefault.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.Dynamic.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.Select.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.Convert.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.Cast.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.Cascade.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.boolean_ops.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.AsValueProvider.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.AsEnumerable.cs" />
+    <Compile Include="Obtics\Values\ValueProviderTest.cs" />
+    <Compile Include="Obtics\Values\VPFinderTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\DependencyPropertyTransformationTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Obtics\Collections\CollectionCapTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AccumulativeAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AllAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AverageAggregateNullableDecimalTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\BoundGroupFilterDispenserTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\BoundGroupFilterTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\ConvertPairsGroupingTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\ConvertToPairsTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\ConvertTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AnyAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AverageAggregateDecimalTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AverageAggregateNullableDoubleTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AverageAggregateDoubleTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AverageAggregateNullableSingleTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AverageAggregateSingleTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AverageAggregateNullableInt32Test.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AverageAggregateInt32Test.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AverageAggregateNullableInt64Test.cs" />
+    <Compile Include="Obtics\Collections\Transformations\AverageAggregateInt64Test.cs" />
+    <Compile Include="Obtics\Collections\Transformations\LastAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\IsNotEmptyAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\IndexOfFirstAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SumAggregateDecimalTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SumAggregateDoubleTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SumAggregateInt32Test.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SumAggregateInt64Test.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SumAggregateNullableDecimalTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SumAggregateNullableDoubleTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SumAggregateNullableInt32Test.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SumAggregateNullableInt64Test.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SumAggregateNullableSingleTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SumAggregateSingleTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SequenceHashAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\MinAggregateNullableValueTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\MinAggregateSpecificTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\MinAggregateSpecificWithDefaultTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\MinAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\MaxAggregateSpecificWithDefaultTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\MaxAggregateSpecificTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\MaxAggregateNullableValueTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\FindLastAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\CountAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\ElementAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\FindFirstAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\MaxAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SequenceEqualsAggregateTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\DictionaryTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\DistinctTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\DynamicSortTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\FilterTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\GroupFilterConverterTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\GroupingTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\IndexedConvertTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\CascadeTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\LookupTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\NotifyVpcTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\ReverseTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SequencingPatchTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SkipTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SortTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\SpecificDistinctTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\TakeTransformationTest.cs" />
+    <Compile Include="Obtics\Collections\Transformations\TypeConvertTransformationTest.cs" />
+    <Compile Include="Obtics\Values\DynamicValueProviderTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\BinaryTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\UnarySelectTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\AsCollectionNullableTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\UnaryTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\TypeConvertTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\TertiaryTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\SetReadOnlyTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\QuartaryTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\MultiTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\CascadeTransformationTest.cs" />
+    <Compile Include="Obtics\Values\Transformations\PropertyTransformationTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AuthoringTests.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ObticsBindingHelper\ObticsBindingHelper.csproj">
+      <Project>{DF82CBA8-8FC0-41D2-98D9-4FC202102E10}</Project>
+      <Name>ObticsBindingHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObticsToDataSet\ObticsToDataSet.csproj">
+      <Project>{656F1AEF-43F2-4E91-8920-227B0E4484A6}</Project>
+      <Name>ObticsToDataSet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObticsToXml\ObticsToXml.csproj">
+      <Project>{4875061B-4D32-4F61-9EAF-4BE99219300E}</Project>
+      <Name>ObticsToXml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObticsWindowsBaseExtensions\ObticsWindowsBaseExtensions.csproj">
+      <Project>{E38BBD29-050F-41AD-9D94-176DE3328E7D}</Project>
+      <Name>ObticsWindowsBaseExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Obtics\Obtics.csproj">
+      <Project>{CF254A7D-7651-456C-BDD8-27D830571FBD}</Project>
+      <Name>Obtics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitTestStub\UnitTestStub_PartialTrust.csproj">
+      <Project>{BD18A7A9-A2FA-492A-9C8D-8D5CA9664D9C}</Project>
+      <Name>UnitTestStub_PartialTrust</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dev.snk" />
+    <None Include="ObticsToDataSet\DataSet1.xsc">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </None>
+    <None Include="ObticsToDataSet\DataSet1.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ObticsToDataSet\DataSet1.xss">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

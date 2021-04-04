@@ -1,0 +1,74 @@
+[
+  {
+    "Id": "87442",
+    "ThreadId": "26145",
+    "Html": "\r\nWell I didn't think Program.cs in the Test project was a very good introduction. I improved it (Added some comments, made it a bit less abstract/obscure). And it can be downloaded from 'Source Code'. I hope this is better? What would be a good example? EXAML?<br />",
+    "PostedDate": "2008-04-17T14:20:54.293-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "169340",
+    "ThreadId": "26145",
+    "Html": "Hi all.<div><br></div><div>I'm not sure I can understand the whole code in Program.cs :-( to be able to apply it to my code. Consider next situation - we have 2 classes - Book &amp; Shelf. Each Book has an Id and is placed on 1 Shelf. Shelves have their own Id's. All Books &amp; Shelves are stored in static collections. Using relation Book.ShelfId = Shelf.Id we can define 2 properties: Book.Shelf and Shelf.Books. Can you advise me what classes from Obtics to use to implement these properties that will be updated each time both collections and Id's of Books &amp; Shelves are changed?</div><div>Thanx in advance to any reply.</div><div><br></div><div>Regards, </div><div>allexey</div><div><div><br></div></div>",
+    "PostedDate": "2009-03-18T03:09:07.49-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "172379",
+    "ThreadId": "26145",
+    "Html": "Hi Allexey,<br>\r\n<br>\r\nI'm not completely sure what you mean; but the ObservableEnumerable.ToLookup() or ObservableEnumerable.ToDictionary() methods come to mind. <br>\r\nSay in pseudo code:<br>\r\n<br>\r\n<em>using Obtics.Collections;<br>\r\n<br>\r\nclass Root<br>\r\n{<br>\r\n    internal ObservableShelfCollection _Shelves; //observable collection with shelves<br>\r\n<br>\r\n    internal IObservableDictionary&lt;TShelfId,Shelf&gt; _ShelveDict = _Shelves.ToDictionary( shelf =&gt; shelf.Id ); //auto updating map from shelf ids to shelves.<br>\r\n}<br>\r\n<br>\r\nclass Shelf<br>\r\n{<br>\r\n    public TShelfId Id { get; }<br>\r\n}<br>\r\n<br>\r\nclass Book<br>\r\n{<br>\r\n    IValueProvider&lt;TShelfId&gt; _ShelfId = ValueProvider.Dynamic&lt;TShelfId&gt;() ; //just a place to store the shelf id<br>\r\n<br>\r\n    public IValueProvider&lt;Shelf&gt; Shelf //Shelf.Value property will return the shelf<br>\r\n    {<br>\r\n        get<br>\r\n        {<br>\r\n            return Root._ShelveDict[_ShelfId]; <br>\r\n        }        <br>\r\n    }<br>\r\n<br>\r\n    public Shelf CurrentShelf { get{ return Shelf.Value; } }<br>\r\n}<br>\r\n</em><br>\r\nDoes this help?<br>\r\n<br>\r\nProgram.cs is not a very good example. It is more an OLD piece of testing code. If you get the latest sources there are 3 better ones; ObticsExaml, GroupingTest and RegexTool. <br>\r\n<br>\r\nRegs,<br>\r\n<br>\r\nThomas.\r\n",
+    "PostedDate": "2009-03-26T09:02:21.74-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "172395",
+    "ThreadId": "26145",
+    "Html": "Also; including the other way (still pseudo):<br>\r\n<br>\r\n<em>using Obtics.Collections;<br>\r\n<br>\r\nclass Root<br>\r\n{<br>\r\n    static internal ObservableShelfCollection _Shelves; //observable collection with shelves<br>\r\n    static internal ObservableBookCollection _Books; //<em>observable collection with </em>books<br>\r\n<br>\r\n<em>    //auto updating map from shelf ids to shelves.</em><br>\r\n    static internal IObservableDictionary&lt;TShelfId,Shelf&gt; _ShelveDict = _Shelves.ToDictionary( shelf =&gt; shelf.Id ); <br>\r\n<br>\r\n<em><em>    //auto updating map from shelf ids to books.</em><br>\r\n    //note that here ShelfId is of type IValueProvider&lt;TShelfId&gt;</em><br>\r\n    static internal IObservableLookup&lt;TShelfId,Book&gt; _BookLookup = _Books.ToLookup( book =&gt; book.ShelfId ); <br>\r\n}<br>\r\n<br>\r\nclass Shelf<br>\r\n{<br>\r\n    public TShelfId Id { get; }<br>\r\n<br>\r\n    //books on the shelf<br>\r\n    IEnumerable&lt;Book&gt; Books<br>\r\n    {<br>\r\n        get<br>\r\n        {<br>\r\n            return Root.<em>_BookLookup</em>[Id];<br>\r\n        }<br>\r\n    }<br>\r\n}<br>\r\n<br>\r\nclass Book<br>\r\n{<br>\r\n    <em>//just a place to store the shelf id</em><br>\r\n    IValueProvider&lt;TShelfId&gt; _ShelfId = ValueProvider.Dynamic&lt;TShelfId&gt;() ; <br>\r\n<br>\r\n    IValueProvider&lt;TShelfId&gt; ShelfId { get{ return _ShelfId; } }<br>\r\n<br>\r\n    <em>//Shelf.Value property will return the shelf</em><br>\r\n    public IValueProvider&lt;Shelf&gt; Shelf <br>\r\n    {<br>\r\n        get<br>\r\n        {<br>\r\n            return Root._ShelveDict[ShelfId]; <br>\r\n        }        <br>\r\n    }<br>\r\n<br>\r\n    public Shelf CurrentShelf { get{ return Shelf.Value; } }<br>\r\n}</em><br>\r\n",
+    "PostedDate": "2009-03-26T09:26:35.15-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "172827",
+    "ThreadId": "26145",
+    "Html": "Hi Throb,<div><br></div><div>thank you for provided examples. I hope I got the idea how to implement those relations. But I've got another question regarding ability to implement joins using Obtics. </div><div>Suggest that we have a library with several rooms in it, each having shelves with books. Is it possible to implement such properties like Book.Room and Room.Books?</div><div>I guess that these relations between books and Rooms will require use of Join 2 collections ('Books join Shelves' in case of Room &amp; 'Rooms join Shelves' in case of Book).</div><div><br></div><div>Thanx in advance</div><div><br></div>",
+    "PostedDate": "2009-03-27T09:20:25.93-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "172847",
+    "ThreadId": "26145",
+    "Html": "Hi Allexey,<br>\r\n<br>\r\nWell yes; that would be easy: Assuming you have Room, Shelf and Book classes implemented similarly as described in the previous examples with shelves and books. That means you will have:<br>\r\n<br>\r\n<em>class Room <br>\r\n{<br>\r\n    IEnumerable&lt;Shelf&gt; Shelves { get; }<br>\r\n}<br>\r\n<br>\r\nclass Shelf<br>\r\n{<br>\r\n    IValueProvider&lt;Room&gt; Room { get; }<br>\r\n    IEnumerable&lt;Books&gt; Books { get; }<br>\r\n}<br>\r\n<br>\r\nclass Book<br>\r\n{<br>\r\n    IValueProvider&lt;Shelf&gt; Shelf { get; }<br>\r\n}<br>\r\n</em><br>\r\nThen it is easy to add a property to Room and Bool classes:<br>\r\n<br>\r\nusing Obtics.Collections;<br>\r\n<br>\r\n<em>class Room<br>\r\n{<br>\r\n    IEnumerable&lt;Book&gt; Books<br>\r\n    {<br>\r\n        get<br>\r\n        {<br>\r\n            return Shelves.SelectMany{ shelf =&gt; shelf.Books };<br>\r\n        }<br>\r\n    } <br>\r\n}<br>\r\n<br>\r\nclass Book<br>\r\n{<br>\r\n    IValueProvider&lt;Room&gt; Room<br>\r\n    {<br>\r\n        get<br>\r\n        {<br>\r\n            return Shelf.Select( shelf =&gt; shelf.Room );<br>\r\n        }<br>\r\n    }<br>\r\n}<br>\r\n</em><br>\r\nJust make sure you use the right version of the extension methods (the Obtics.Collections.ObservableEnumerable ones and not the System.Linq.Enumerable ones)<br>\r\n<br>\r\nRegs,<br>\r\n<br>\r\nThomas.\r\n",
+    "PostedDate": "2009-03-27T10:23:07.697-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "173406",
+    "ThreadId": "26145",
+    "Html": "Hi Thomas,<div><br></div><div>I'm quite ashamed that I only now tried to really implement the code you provided before, because I've got a question that i should have asked right after the first answer of yours - if the collection of Books in Shelves is declared as IEnumerable how does it raise an event that it was updated? Meaning - if a Book that belongs to one Shelf changes its ShelfId to another - when the change of Books collection of that another is raised? On next access to Shelf.Books property?</div><div><br></div><div>Regards,</div><div>Allexey</div>",
+    "PostedDate": "2009-03-30T03:40:44.467-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "173479",
+    "ThreadId": "26145",
+    "Html": "Hi Allexey,<br>\r\n<br>\r\nThough the result of Shelf.Books is declared just as IEnumerable&lt;Book&gt; the returned instance will also implement INotifyCollectionChanged and INotifyPropertyChanged. Just cast the result to either of these interfaces to register for change notifications. Using Obtics though I rarely find need to handle change notifications manually. <br>\r\n<br>\r\n<strong>Important</strong>: <br>\r\nWhen manually handling change events, don't forget to unregister when you are done listening. Register for changes on the same instance as where you get your elements from and unregister from that very same instance.<br>\r\n(you are not quaranteed to receive the same object instance during multiple calls to Shelf.Books)<br>\r\n<br>\r\nSo don't do this:<br>\r\n<br>\r\n<em>//register<br>\r\n((INotifyCollectionChanged)Shelf.Books).CollectionChanged += new NotifyCollectionChangedEventArgs( yourHandler );<br>\r\n<br>\r\n//done listening<br>\r\n((INotifyCollectionChanged)Shelf.Books).CollectionChanged -= new NotifyCollectionChangedEventArgs( yourHandler );<br>\r\n<br>\r\nvoid yourHandler( object sender, NotifyCollectionChangedEventArgs args)<br>\r\n{<br>\r\n    foreach(Book book in Shelf.Books)<br>\r\n    {<br>\r\n        //your thing<br>\r\n    }<br>\r\n}<br>\r\n<br>\r\n</em>But this:<br>\r\n<br>\r\n<em>//keep a reference to the IEnumerable instance</em><br>\r\n<em>IEnumerable&lt;Book&gt; books = Shelf.Books;<br>\r\n<br>\r\n//register<br>\r\n((INotifyCollectionChanged)books).CollectionChanged += new NotifyCollectionChangedEventArgs( yourHandler );<br>\r\n<br>\r\n//done listening<br>\r\n((INotifyCollectionChanged)books).CollectionChanged -= new NotifyCollectionChangedEventArgs( yourHandler );<br>\r\n<br>\r\nvoid yourHandler( object sender, NotifyCollectionChangedEventArgs args)<br>\r\n{<br>\r\n    foreach(Book book in books)<br>\r\n    {<br>\r\n        //your thing<br>\r\n    }<br>\r\n}<br>\r\n</em><br>\r\nWhen binding directly to Shelf.Books from XAML you don't need to worry about anything.<br>\r\n<br>\r\nHope this helps?<br>\r\n<br>\r\nRegs,<br>\r\n<br>\r\nThomas.\r\n",
+    "PostedDate": "2009-03-30T07:26:55.727-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "173481",
+    "ThreadId": "26145",
+    "Html": "Just a small correction; Only the result of ObservableEnumerable.ToList and Cap methods can be cast to INotifyPropertyChanged since they return IList objects. <br>\r\n<br>\r\nIValueProvider objects usually can be cast to INotifyPropertyChanged and not to INotifyCollectionChanged.<br>\r\n<br>\r\nRegs,<br>\r\n<br>\r\nThomas.\r\n",
+    "PostedDate": "2009-03-30T07:34:06-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

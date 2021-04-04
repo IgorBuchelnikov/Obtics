@@ -1,0 +1,254 @@
+Index: Collections/Transformations/BoundGroupFilterDispenser.cs
+===================================================================
+--- Collections/Transformations/BoundGroupFilterDispenser.cs	(revision 8133)
++++ Collections/Transformations/BoundGroupFilterDispenser.cs	(working copy)
+@@ -68,7 +68,7 @@
+ 
+         WeakReference _Cache;
+ 
+-        internal class CacheClass : System.Collections.Generic.Dictionary<TKey, List<ItemIndexPair<Tuple<TType, TKey>>>>
++        internal class CacheClass : NullableDictionary<TKey, List<ItemIndexPair<Tuple<TType, TKey>>>>
+         {
+             public VersionNumber _ContentVersion;
+ 
+Index: NullableDictionary.cs
+===================================================================
+--- NullableDictionary.cs	(revision 0)
++++ NullableDictionary.cs	(revision 0)
+@@ -0,0 +1,215 @@
++﻿using System;
++using System.Collections.Generic;
++using System.Collections.ObjectModel;
++using System.Linq;
++using System.Text;
++
++namespace Obtics
++{
++    /// <summary>
++    /// The IDictionary interface contract doesn't like nulls, so this class doesn't implement it.
++    /// </summary>
++    /// <typeparam name="TKey"></typeparam>
++    /// <typeparam name="TValue"></typeparam>
++    internal class NullableDictionary<TKey, TValue> : ICollection<KeyValuePair<TKey, TValue>>
++    {
++        public NullableDictionary()
++        {
++            _Dictionary = new Dictionary<TKey, TValue>();
++        }
++
++        public NullableDictionary(IEqualityComparer<TKey> equalityComparer)
++        {
++            _Dictionary = new Dictionary<TKey, TValue>(equalityComparer);
++        }
++
++        private bool _HaveValueForNullKey;
++        private TValue _ValueForNullKey;
++        private readonly Dictionary<TKey, TValue> _Dictionary = new Dictionary<TKey, TValue>();
++
++        #region IDictionary<TKey,TValue> Members
++
++        public void Add(TKey key, TValue value)
++        {
++            if (ContainsKey(key))
++                throw new ArgumentException("NullableDictionary: The same key cannot be added more than once.");
++
++            this[key] = value;
++        }
++
++        public bool ContainsKey(TKey key)
++        {
++            if (ReferenceEquals(key, null))
++                return _HaveValueForNullKey;
++            else
++                return _Dictionary.ContainsKey(key);
++        }
++
++        public ICollection<TKey> Keys
++        {
++            get
++            {
++                List<TKey> keys = _Dictionary.Keys.ToList();
++                if (_HaveValueForNullKey) keys.Add(default(TKey));
++                return new ReadOnlyCollection<TKey>(keys);
++            }
++        }
++
++        public bool Remove(TKey key)
++        {
++            if (ReferenceEquals(key, null))
++            {
++                if (_HaveValueForNullKey)
++                {
++                    _HaveValueForNullKey = false;
++                    // Don't keep reference to removed objects.
++                    _ValueForNullKey = default(TValue);
++                    return true;
++                }
++                else
++                {
++                    return false;
++                }
++            }
++            else
++            {
++                return _Dictionary.Remove(key);
++            }
++        }
++
++        public bool TryGetValue(TKey key, out TValue value)
++        {
++            bool containsKey = ContainsKey(key);
++
++            if (containsKey)
++                value = this[key];
++            else
++                value = default(TValue);
++
++            return containsKey;
++        }
++
++        public ICollection<TValue> Values
++        {
++            get
++            {
++                List<TValue> values = _Dictionary.Values.ToList();
++                if (_HaveValueForNullKey) values.Add(_ValueForNullKey);
++                return new ReadOnlyCollection<TValue>(values);
++            }
++        }
++
++        public TValue this[TKey key]
++        {
++            get
++            {
++                if (ReferenceEquals(key, null))
++                    return _ValueForNullKey;
++
++                return _Dictionary[key];
++            }
++            set
++            {
++                if (ReferenceEquals(key, null))
++                {
++                    _HaveValueForNullKey = true;
++                    _ValueForNullKey = value;
++                }
++                else
++                {
++                    _Dictionary[key] = value;
++                }
++            }
++        }
++
++        #endregion
++
++        #region ICollection<KeyValuePair<TKey,TValue>> Members
++
++        public void Add(KeyValuePair<TKey, TValue> item)
++        {
++            Add(item.Key, item.Value);
++        }
++
++        public void Clear()
++        {
++            if (_HaveValueForNullKey)
++            {
++                _HaveValueForNullKey = false;
++                _ValueForNullKey = default(TValue);
++            }
++            _Dictionary.Clear();
++        }
++
++        public bool Contains(KeyValuePair<TKey, TValue> item)
++        {
++            if (!ContainsKey(item.Key))
++                return false;
++
++            return EqualityComparer<TValue>.Default.Equals(this[item.Key], item.Value);
++        }
++
++        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
++        {
++            ((ICollection<KeyValuePair<TKey,TValue>>)_Dictionary).CopyTo(array, arrayIndex);
++            arrayIndex += _Dictionary.Count;
++            if (_HaveValueForNullKey)
++                array[arrayIndex] = new KeyValuePair<TKey, TValue>(default(TKey), _ValueForNullKey);
++        }
++
++        public int Count
++        {
++            get
++            {
++                return _Dictionary.Count + (_HaveValueForNullKey ? 1 : 0);
++            }
++        }
++
++        public bool IsReadOnly
++        {
++            get { return false; }
++        }
++
++        public bool Remove(KeyValuePair<TKey, TValue> item)
++        {
++            if (Contains(item))
++            {
++                Remove(item.Key);
++                return true;
++            }
++            else
++            {
++                return false;
++            }
++        }
++
++        #endregion
++
++        #region IEnumerable<KeyValuePair<TKey,TValue>> Members
++
++        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
++        {
++            return GetPairs().GetEnumerator();
++        }
++
++        private IEnumerable<KeyValuePair<TKey, TValue>> GetPairs()
++        {
++            IEnumerator<KeyValuePair<TKey, TValue>> enumerator = _Dictionary.GetEnumerator();
++            while (enumerator.MoveNext())
++                yield return enumerator.Current;
++            if (_HaveValueForNullKey)
++                yield return new KeyValuePair<TKey, TValue>(default(TKey), _ValueForNullKey);
++        }
++
++        #endregion
++
++        #region IEnumerable Members
++
++        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
++        {
++            return GetEnumerator();
++        }
++
++        #endregion
++    }
++}
+Index: Obtics.csproj
+===================================================================
+--- Obtics.csproj	(revision 8133)
++++ Obtics.csproj	(working copy)
+@@ -2,7 +2,7 @@
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+-    <ProductVersion>9.0.21022</ProductVersion>
++    <ProductVersion>9.0.30729</ProductVersion>
+     <SchemaVersion>2.0</SchemaVersion>
+     <ProjectGuid>{CF254A7D-7651-456C-BDD8-27D830571FBD}</ProjectGuid>
+     <OutputType>Library</OutputType>
+@@ -279,6 +279,7 @@
+     <Compile Include="Configuration\ExtendObticsPermission.cs" />
+     <Compile Include="Configuration\ObticsConfigurationSection.cs" />
+     <None Include="FunctionResultCache.cs" />
++    <Compile Include="NullableDictionary.cs" />
+     <Compile Include="ObticsEqualityComparerAttribute.cs" />
+     <Compile Include="NotifyChangedReceiverTable.cs" />
+     <Compile Include="Resources.Designer.cs">

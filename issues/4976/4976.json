@@ -1,0 +1,70 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "As expected and by design. ",
+    "ClosedDate": "2009-10-07T16:11:10.027-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "I ran into this problem before, but I made a bunch of changes (mostly removing generics from a bunch of my types), and the problem went away.\n \nBasically, I have a class with a property (say, VolatileProperty), which uses INotifyPropertyChanged, and that property is in turn used in an ExpressionObserver.Execute line which is assigned to a field (say, _Result).\n \nI have an event handler that subscribes to the INotifyPropertyChanged event of VolatileProperty called OnVolatilePropertyChanged.\nI have also an event handler that subscribes to the INotifyCollectionChanged event of _Result called OnResultCollectionChanged.\n \nIf I put a breakpoint in both event handlers I would expect the following behavior:\n1) I change the value of VolatileProperty\n2) OnVolatilePropertyChanged gets called.\n3) OnResultCollectionChanged gets called.\n \n4) I change the value of VolatileProperty\n5) OnVolatilePropertyChanged gets called.\n6) OnResultCollectionChanged gets called.\n \nThe problem is that #6 never happens.\n \nHowever, if on step #3 or #5, I type the following in the immediate window:\n?_Result.ToList()\nor else do a myriad of other things that causes _Result to do its Obtics magic, then #6 DOES happen.\n \nCould you point me in the direction of what to look for to diagnose the problem (e.g. property values on the obtics collection).  I see properties such as \"ContentVersion\" that I'm sure could help me figure out at least which object is causing the problem.",
+    "LastUpdatedDate": "2013-05-15T21:55:53.483-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-09-23T07:18:49.24-07:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "CollectionChanged not firing after first fire unless collection \"accessed\".",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 4976
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Hi,\r\n\r\nThis sounds like the same problem as discussed on the Discussion board under \"Notifications for simple queries are not fired\". This behaviour is actually by design. On number 3 you probably received a Reset event. \r\n\r\nThe events are meant to propagate incremental changes to a base collection. Since after a Reset and without reading the contents you can not have a valid base collection Obtics may decide not to bother sending you any incremental changes. In the discussion it is explained in more detail.\r\n\r\nRegards,\r\n\r\nThomas.",
+      "PostedDate": "2009-09-23T14:11:50.407-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Why would I receive a Reset event on #3?\r\n\r\nSo tell me if this sounds correct:\r\nI access my property like so, calling ExpressionObserver.Execute only once per class instance.  The result is stored and return by subsequent calls to the property.\r\n\r\nProperty Result as IEnumerable(Of T)\r\nGet\r\nIf _Result is Nothing then\r\n_Result = ExpressionObserver.Execute(Me, function(........))\r\nEnd If\r\nreturn _Result\r\nEnd Get\r\nEnd Property\r\nprivate _Result as IEnumerable(Of T)\r\n\r\nNow, if I understand correctly, the problem is that after a Reset, _Result is no longer a valid reference to the ExpressionObserver.Execute result.\r\nAs such, I should either set the field _Result = null on the collection change when the source is a collection Reset, or else I should recalculate the value of _Result on each call to the Result property instead of storing the first calculation and reusing it.\r\n",
+      "PostedDate": "2009-09-23T17:49:20.28-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Wether you would receive a Reset or not depends on the exact transformation. It is just my geuss because that would explain the phenomena that you are seeing.\r\n\r\nWhen you receive a Reset event it doesn't mean that your reference (_Result) is invalidated; It means that the contents of the IEnumerable have been replaced with completely new contents.\r\n\r\nIf you were a grid on a form, you would have created a visual representation based on the contents of the IEnumerable. If you would then receive a Reset event it means that you should erase your old representation, read the contents of the IEnumerable again (GetEnumerator) and build a new visual representation based on those new contents.\r\n\r\nUntill someone has read the new contents Obtics will not bother sending more change events. This is because the events have meaning only in relation to the new contents.\r\n\r\nRegs,\r\n\r\nThomas.",
+      "PostedDate": "2009-09-24T02:14:46.773-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-10-07T16:11:10.027-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:07.603-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:53.483-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

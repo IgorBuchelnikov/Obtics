@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "662582",
+    "ThreadId": "270194",
+    "Html": "<p>Hello,</p>\n<p>I've got a problem here with one of my projects. In another project that I use Obtics in, there is a Cascade() method available for a call like this:</p>\n<p style=\"padding-left: 30px;\">public IEnumerable&lt;Blah&gt; Blahs<br /> {</p>\n<p style=\"padding-left: 60px;\">get {</p>\n<p style=\"padding-left: 90px;\"><span style=\"text-decoration: line-through;\">return ExpressionObserver.Execute(from p in _blahs select p).Cascade(); </span></p>\n<p style=\"padding-left: 90px;\">return ExpressionObserver.Execute(this, q =&gt; from p in _blahs select p).Cascade();</p>\n<p><span style=\"text-decoration: line-through;\"> </span></p>\n<p style=\"padding-left: 60px;\">}</p>\n<p style=\"padding-left: 30px;\">}</p>\n<p>But in one project this method appears to be missing. In both projects there's only one reference to obtics.dll (well, aside from all the other .NET 4.0 references that are included by default). Both projects are WPF applications. The main difference is  the target framework. The project for which Cascade() is available targets the .NET 4.0 framework client profile and the other one with no Cascade() method targets the bigger .NET 4.0 framework profile (don't know how it's actually called). Can this be the  cause of the missing Cascade() method? I don't think so. I'd have understood it, if it had been vice versa (missing in client profile). But it's not.</p>\n<p>The referenced DLLs are the same in both projects.</p>\n<p>What might have gone wrong here? What prerequisites are there to have the Cascade() method available?</p>\n<p>Thanks!</p>\n<p>Hendrik</p>\n<p>&nbsp;</p>\n<p>// edit: aahh... damn! (sorry) I've just found the major difference that probably causes the missing Cascade() method: the collection I linq to is not of type ObservableCollection&lt;...&gt;. It's an ObjectSet&lt;...&gt; from the System.Data.SQLite assembly. Can anybody confirm or refute that I cannot use Obtics with collections other than ObservableCollection&lt;...&gt;?</p>",
+    "PostedDate": "2011-08-24T02:58:27.9-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "662955",
+    "ThreadId": "270194",
+    "Html": "<p>Hi Hendrik,</p>\r\n<p>Out of the box&nbsp;Obtics understands collections that implement INotifyCollectionChanged (like ObservableCollection&lt;&gt;) and BindingList. If a collection is observable through&nbsp;any other&nbsp;mechanisme obtics can be instructed how to&nbsp;understand it via a CollectionAdapter that you will need to create and register with Obtics.</p>\r\n<p>Another issue could be that the Select method for ObjectSet&lt;&gt; is not the Enumerable.Select() extension method. Obtics then does not know how to translate that method. Again you can instruct Obtics how to translate any specific method. Check out the CustomMapping, ObticsToXml&nbsp;and ObticsToDataSet&nbsp;projects on how to do this.</p>\r\n<p>The ObticsToDataSet project can also be used as an example&nbsp;on how to provide&nbsp;a CollectionAdapter.</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2011-08-24T15:42:23.333-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

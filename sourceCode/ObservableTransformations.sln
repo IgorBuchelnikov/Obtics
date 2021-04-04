@@ -1,0 +1,325 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A7783145-B77F-4B7C-BF3D-F9CDE3E1C0E4}"
+	ProjectSection(SolutionItems) = preProject
+		ObservableTransformations20.vsmdi = ObservableTransformations20.vsmdi
+		TestRunConfig1.testrunconfig = TestRunConfig1.testrunconfig
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{25603209-CAAD-48B4-90B0-D6C672CED0AD}"
+	ProjectSection(SolutionItems) = preProject
+		ConcurrentHashtable License.txt = ConcurrentHashtable License.txt
+		lib\ConcurrentHashtable.dll = lib\ConcurrentHashtable.dll
+		lib\ConcurrentHashtable_Silverlight.dll = lib\ConcurrentHashtable_Silverlight.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{890002FD-079F-4E97-9B8E-BB2327AAE176}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code Snippets", "Code Snippets", "{FFF6A5CD-C317-4486-8A14-6BCD55576668}"
+	ProjectSection(SolutionItems) = preProject
+		Code Snippets\obsmeth0.snippet = Code Snippets\obsmeth0.snippet
+		Code Snippets\obsmeth1.snippet = Code Snippets\obsmeth1.snippet
+		Code Snippets\obsprop.snippet = Code Snippets\obsprop.snippet
+		Code Snippets\obvmeth1.snippet = Code Snippets\obvmeth1.snippet
+		Code Snippets\obvmeth2.snippet = Code Snippets\obvmeth2.snippet
+		Code Snippets\obvmeth3.snippet = Code Snippets\obvmeth3.snippet
+		Code Snippets\obvprop.snippet = Code Snippets\obvprop.snippet
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PartialTrustTest", "PartialTrustTest", "{143C877F-F310-49B4-B113-47D6F3538325}"
+	ProjectSection(SolutionItems) = preProject
+		PartialTrustTest.txt = PartialTrustTest.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SilverlightTest", "SilverlightTest", "{CE5B719C-E653-4D0C-8103-349D7F4631E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Obtics", "Obtics\Obtics.csproj", "{CF254A7D-7651-456C-BDD8-27D830571FBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{31870257-40C7-423C-8BE7-0E8D38F6D1DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsUnitTest", "ObticsUnitTest\ObticsUnitTest.csproj", "{86E7CA67-A85B-4F1F-93CB-DA7FA5F3D9A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsExaml", "ObticsExaml\ObticsExaml.csproj", "{0CD63B7D-0F51-4D32-BFF6-81E0EF5035EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsRaytracer", "ObticsRaytracer\ObticsRaytracer.csproj", "{443F43DB-9704-4EB6-BAD0-56AE2A029094}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsWpfHelper", "ObticsWpfHelper\ObticsWpfHelper.csproj", "{2A151222-6E2D-4526-B7D9-6DECD1CE2CDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupingTest", "GroupingTest\GroupingTest.csproj", "{10413536-4578-4A41-9E7C-A8C04E4600C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomMapping", "CustomMapping\CustomMapping.csproj", "{A0DEE249-93B3-4AEA-BD43-C1BE74626374}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsToXml", "ObticsToXml\ObticsToXml.csproj", "{4875061B-4D32-4F61-9EAF-4BE99219300E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsToDataSet", "ObticsToDataSet\ObticsToDataSet.csproj", "{656F1AEF-43F2-4E91-8920-227B0E4484A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsUnitTestRunner_PartialTrust", "ObticsUnitTestRunner\ObticsUnitTestRunner_PartialTrust.csproj", "{94475869-972F-4067-987F-7530869333AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestStub_PartialTrust", "UnitTestStub\UnitTestStub_PartialTrust.csproj", "{BD18A7A9-A2FA-492A-9C8D-8D5CA9664D9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsBindingHelper", "ObticsBindingHelper\ObticsBindingHelper.csproj", "{DF82CBA8-8FC0-41D2-98D9-4FC202102E10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegexTool", "RegexTool\RegexTool.csproj", "{D3A4E3E3-FBAC-48D2-A252-093FCD0C6DA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Obtics_Silverlight", "Obtics\Obtics_Silverlight.csproj", "{76BC859C-5935-4910-8C70-D57D3C9EAF49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsUnitTest_PartialTrust", "ObticsUnitTest\ObticsUnitTest_PartialTrust.csproj", "{3787E582-A65F-48D5-9E1F-73B6F52943FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestStub_Silverlight", "UnitTestStub\UnitTestStub_Silverlight.csproj", "{1344E86A-A03E-4B54-A538-F5A7531F49D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsUnitTest_Silverlight", "ObticsUnitTest\ObticsUnitTest_Silverlight.csproj", "{D066D2D3-7A8A-4F08-8E95-8FF67898A3A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsUnitTestRunner_SilverLight", "ObticsUnitTestRunner_SilverLight\ObticsUnitTestRunner_SilverLight.csproj", "{78729D69-A875-4952-9102-BE00D2F6948D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsWpfHelper_Silverlight", "ObticsWpfHelper\ObticsWpfHelper_Silverlight.csproj", "{0B7BE212-5072-400F-8CE0-26933A8D3578}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsBindingHelper_Silverlight", "ObticsBindingHelper\ObticsBindingHelper_Silverlight.csproj", "{B2ED387A-713E-4BAA-9B7C-AD5FC3BEB6E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObticsWindowsBaseExtensions", "ObticsWindowsBaseExtensions\ObticsWindowsBaseExtensions.csproj", "{E38BBD29-050F-41AD-9D94-176DE3328E7D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug - Parallel|Any CPU = Debug - Parallel|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release - Parallel|Any CPU = Release - Parallel|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF254A7D-7651-456C-BDD8-27D830571FBD}.Debug - Parallel|Any CPU.ActiveCfg = Debug - Parallel|Any CPU
+		{CF254A7D-7651-456C-BDD8-27D830571FBD}.Debug - Parallel|Any CPU.Build.0 = Debug - Parallel|Any CPU
+		{CF254A7D-7651-456C-BDD8-27D830571FBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF254A7D-7651-456C-BDD8-27D830571FBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF254A7D-7651-456C-BDD8-27D830571FBD}.Release - Parallel|Any CPU.ActiveCfg = Release - Parallel|Any CPU
+		{CF254A7D-7651-456C-BDD8-27D830571FBD}.Release - Parallel|Any CPU.Build.0 = Release - Parallel|Any CPU
+		{CF254A7D-7651-456C-BDD8-27D830571FBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF254A7D-7651-456C-BDD8-27D830571FBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31870257-40C7-423C-8BE7-0E8D38F6D1DB}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{31870257-40C7-423C-8BE7-0E8D38F6D1DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31870257-40C7-423C-8BE7-0E8D38F6D1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31870257-40C7-423C-8BE7-0E8D38F6D1DB}.Release - Parallel|Any CPU.ActiveCfg = Release|Any CPU
+		{31870257-40C7-423C-8BE7-0E8D38F6D1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31870257-40C7-423C-8BE7-0E8D38F6D1DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86E7CA67-A85B-4F1F-93CB-DA7FA5F3D9A5}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{86E7CA67-A85B-4F1F-93CB-DA7FA5F3D9A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86E7CA67-A85B-4F1F-93CB-DA7FA5F3D9A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86E7CA67-A85B-4F1F-93CB-DA7FA5F3D9A5}.Release - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{86E7CA67-A85B-4F1F-93CB-DA7FA5F3D9A5}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CD63B7D-0F51-4D32-BFF6-81E0EF5035EA}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CD63B7D-0F51-4D32-BFF6-81E0EF5035EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CD63B7D-0F51-4D32-BFF6-81E0EF5035EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CD63B7D-0F51-4D32-BFF6-81E0EF5035EA}.Release - Parallel|Any CPU.ActiveCfg = Release|Any CPU
+		{0CD63B7D-0F51-4D32-BFF6-81E0EF5035EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CD63B7D-0F51-4D32-BFF6-81E0EF5035EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{443F43DB-9704-4EB6-BAD0-56AE2A029094}.Debug - Parallel|Any CPU.ActiveCfg = Debug - Parallel|Any CPU
+		{443F43DB-9704-4EB6-BAD0-56AE2A029094}.Debug - Parallel|Any CPU.Build.0 = Debug - Parallel|Any CPU
+		{443F43DB-9704-4EB6-BAD0-56AE2A029094}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{443F43DB-9704-4EB6-BAD0-56AE2A029094}.Release - Parallel|Any CPU.ActiveCfg = Release - Parallel|Any CPU
+		{443F43DB-9704-4EB6-BAD0-56AE2A029094}.Release - Parallel|Any CPU.Build.0 = Release - Parallel|Any CPU
+		{443F43DB-9704-4EB6-BAD0-56AE2A029094}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A151222-6E2D-4526-B7D9-6DECD1CE2CDA}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A151222-6E2D-4526-B7D9-6DECD1CE2CDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A151222-6E2D-4526-B7D9-6DECD1CE2CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A151222-6E2D-4526-B7D9-6DECD1CE2CDA}.Release - Parallel|Any CPU.ActiveCfg = Release|Any CPU
+		{2A151222-6E2D-4526-B7D9-6DECD1CE2CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A151222-6E2D-4526-B7D9-6DECD1CE2CDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10413536-4578-4A41-9E7C-A8C04E4600C4}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{10413536-4578-4A41-9E7C-A8C04E4600C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10413536-4578-4A41-9E7C-A8C04E4600C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10413536-4578-4A41-9E7C-A8C04E4600C4}.Release - Parallel|Any CPU.ActiveCfg = Release|Any CPU
+		{10413536-4578-4A41-9E7C-A8C04E4600C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10413536-4578-4A41-9E7C-A8C04E4600C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0DEE249-93B3-4AEA-BD43-C1BE74626374}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0DEE249-93B3-4AEA-BD43-C1BE74626374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0DEE249-93B3-4AEA-BD43-C1BE74626374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0DEE249-93B3-4AEA-BD43-C1BE74626374}.Release - Parallel|Any CPU.ActiveCfg = Release|Any CPU
+		{A0DEE249-93B3-4AEA-BD43-C1BE74626374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0DEE249-93B3-4AEA-BD43-C1BE74626374}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4875061B-4D32-4F61-9EAF-4BE99219300E}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{4875061B-4D32-4F61-9EAF-4BE99219300E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4875061B-4D32-4F61-9EAF-4BE99219300E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4875061B-4D32-4F61-9EAF-4BE99219300E}.Release - Parallel|Any CPU.ActiveCfg = Release|Any CPU
+		{4875061B-4D32-4F61-9EAF-4BE99219300E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4875061B-4D32-4F61-9EAF-4BE99219300E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{656F1AEF-43F2-4E91-8920-227B0E4484A6}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{656F1AEF-43F2-4E91-8920-227B0E4484A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{656F1AEF-43F2-4E91-8920-227B0E4484A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{656F1AEF-43F2-4E91-8920-227B0E4484A6}.Release - Parallel|Any CPU.ActiveCfg = Release|Any CPU
+		{656F1AEF-43F2-4E91-8920-227B0E4484A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{656F1AEF-43F2-4E91-8920-227B0E4484A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94475869-972F-4067-987F-7530869333AA}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{94475869-972F-4067-987F-7530869333AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94475869-972F-4067-987F-7530869333AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94475869-972F-4067-987F-7530869333AA}.Release - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{94475869-972F-4067-987F-7530869333AA}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD18A7A9-A2FA-492A-9C8D-8D5CA9664D9C}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD18A7A9-A2FA-492A-9C8D-8D5CA9664D9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD18A7A9-A2FA-492A-9C8D-8D5CA9664D9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD18A7A9-A2FA-492A-9C8D-8D5CA9664D9C}.Release - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD18A7A9-A2FA-492A-9C8D-8D5CA9664D9C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF82CBA8-8FC0-41D2-98D9-4FC202102E10}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF82CBA8-8FC0-41D2-98D9-4FC202102E10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF82CBA8-8FC0-41D2-98D9-4FC202102E10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF82CBA8-8FC0-41D2-98D9-4FC202102E10}.Release - Parallel|Any CPU.ActiveCfg = Release|Any CPU
+		{DF82CBA8-8FC0-41D2-98D9-4FC202102E10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF82CBA8-8FC0-41D2-98D9-4FC202102E10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3A4E3E3-FBAC-48D2-A252-093FCD0C6DA0}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3A4E3E3-FBAC-48D2-A252-093FCD0C6DA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3A4E3E3-FBAC-48D2-A252-093FCD0C6DA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3A4E3E3-FBAC-48D2-A252-093FCD0C6DA0}.Release - Parallel|Any CPU.ActiveCfg = Release|Any CPU
+		{D3A4E3E3-FBAC-48D2-A252-093FCD0C6DA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3A4E3E3-FBAC-48D2-A252-093FCD0C6DA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76BC859C-5935-4910-8C70-D57D3C9EAF49}.Debug - Parallel|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{76BC859C-5935-4910-8C70-D57D3C9EAF49}.Debug|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{76BC859C-5935-4910-8C70-D57D3C9EAF49}.Debug|Any CPU.Build.0 = Debug Silverlight|Any CPU
+		{76BC859C-5935-4910-8C70-D57D3C9EAF49}.Release - Parallel|Any CPU.ActiveCfg = Release Silverlight|Any CPU
+		{76BC859C-5935-4910-8C70-D57D3C9EAF49}.Release|Any CPU.ActiveCfg = Release Silverlight|Any CPU
+		{76BC859C-5935-4910-8C70-D57D3C9EAF49}.Release|Any CPU.Build.0 = Release Silverlight|Any CPU
+		{3787E582-A65F-48D5-9E1F-73B6F52943FE}.Debug - Parallel|Any CPU.ActiveCfg = Debug PartialTrust|Any CPU
+		{3787E582-A65F-48D5-9E1F-73B6F52943FE}.Debug|Any CPU.ActiveCfg = Debug PartialTrust|Any CPU
+		{3787E582-A65F-48D5-9E1F-73B6F52943FE}.Debug|Any CPU.Build.0 = Debug PartialTrust|Any CPU
+		{3787E582-A65F-48D5-9E1F-73B6F52943FE}.Release - Parallel|Any CPU.ActiveCfg = Debug PartialTrust|Any CPU
+		{3787E582-A65F-48D5-9E1F-73B6F52943FE}.Release|Any CPU.ActiveCfg = Debug PartialTrust|Any CPU
+		{1344E86A-A03E-4B54-A538-F5A7531F49D3}.Debug - Parallel|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{1344E86A-A03E-4B54-A538-F5A7531F49D3}.Debug|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{1344E86A-A03E-4B54-A538-F5A7531F49D3}.Debug|Any CPU.Build.0 = Debug Silverlight|Any CPU
+		{1344E86A-A03E-4B54-A538-F5A7531F49D3}.Release - Parallel|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{1344E86A-A03E-4B54-A538-F5A7531F49D3}.Release|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{D066D2D3-7A8A-4F08-8E95-8FF67898A3A9}.Debug - Parallel|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{D066D2D3-7A8A-4F08-8E95-8FF67898A3A9}.Debug|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{D066D2D3-7A8A-4F08-8E95-8FF67898A3A9}.Debug|Any CPU.Build.0 = Debug Silverlight|Any CPU
+		{D066D2D3-7A8A-4F08-8E95-8FF67898A3A9}.Release - Parallel|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{D066D2D3-7A8A-4F08-8E95-8FF67898A3A9}.Release|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{78729D69-A875-4952-9102-BE00D2F6948D}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{78729D69-A875-4952-9102-BE00D2F6948D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78729D69-A875-4952-9102-BE00D2F6948D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78729D69-A875-4952-9102-BE00D2F6948D}.Release - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{78729D69-A875-4952-9102-BE00D2F6948D}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B7BE212-5072-400F-8CE0-26933A8D3578}.Debug - Parallel|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{0B7BE212-5072-400F-8CE0-26933A8D3578}.Debug|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{0B7BE212-5072-400F-8CE0-26933A8D3578}.Debug|Any CPU.Build.0 = Debug Silverlight|Any CPU
+		{0B7BE212-5072-400F-8CE0-26933A8D3578}.Release - Parallel|Any CPU.ActiveCfg = Release Silverlight|Any CPU
+		{0B7BE212-5072-400F-8CE0-26933A8D3578}.Release|Any CPU.ActiveCfg = Release Silverlight|Any CPU
+		{0B7BE212-5072-400F-8CE0-26933A8D3578}.Release|Any CPU.Build.0 = Release Silverlight|Any CPU
+		{B2ED387A-713E-4BAA-9B7C-AD5FC3BEB6E1}.Debug - Parallel|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{B2ED387A-713E-4BAA-9B7C-AD5FC3BEB6E1}.Debug|Any CPU.ActiveCfg = Debug Silverlight|Any CPU
+		{B2ED387A-713E-4BAA-9B7C-AD5FC3BEB6E1}.Debug|Any CPU.Build.0 = Debug Silverlight|Any CPU
+		{B2ED387A-713E-4BAA-9B7C-AD5FC3BEB6E1}.Release - Parallel|Any CPU.ActiveCfg = Release Silverlight|Any CPU
+		{B2ED387A-713E-4BAA-9B7C-AD5FC3BEB6E1}.Release|Any CPU.ActiveCfg = Release Silverlight|Any CPU
+		{B2ED387A-713E-4BAA-9B7C-AD5FC3BEB6E1}.Release|Any CPU.Build.0 = Release Silverlight|Any CPU
+		{E38BBD29-050F-41AD-9D94-176DE3328E7D}.Debug - Parallel|Any CPU.ActiveCfg = Debug|Any CPU
+		{E38BBD29-050F-41AD-9D94-176DE3328E7D}.Debug - Parallel|Any CPU.Build.0 = Debug|Any CPU
+		{E38BBD29-050F-41AD-9D94-176DE3328E7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E38BBD29-050F-41AD-9D94-176DE3328E7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E38BBD29-050F-41AD-9D94-176DE3328E7D}.Release - Parallel|Any CPU.ActiveCfg = Release|Any CPU
+		{E38BBD29-050F-41AD-9D94-176DE3328E7D}.Release - Parallel|Any CPU.Build.0 = Release|Any CPU
+		{E38BBD29-050F-41AD-9D94-176DE3328E7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E38BBD29-050F-41AD-9D94-176DE3328E7D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{31870257-40C7-423C-8BE7-0E8D38F6D1DB} = {890002FD-079F-4E97-9B8E-BB2327AAE176}
+		{0CD63B7D-0F51-4D32-BFF6-81E0EF5035EA} = {890002FD-079F-4E97-9B8E-BB2327AAE176}
+		{443F43DB-9704-4EB6-BAD0-56AE2A029094} = {890002FD-079F-4E97-9B8E-BB2327AAE176}
+		{10413536-4578-4A41-9E7C-A8C04E4600C4} = {890002FD-079F-4E97-9B8E-BB2327AAE176}
+		{A0DEE249-93B3-4AEA-BD43-C1BE74626374} = {890002FD-079F-4E97-9B8E-BB2327AAE176}
+		{94475869-972F-4067-987F-7530869333AA} = {143C877F-F310-49B4-B113-47D6F3538325}
+		{BD18A7A9-A2FA-492A-9C8D-8D5CA9664D9C} = {143C877F-F310-49B4-B113-47D6F3538325}
+		{D3A4E3E3-FBAC-48D2-A252-093FCD0C6DA0} = {890002FD-079F-4E97-9B8E-BB2327AAE176}
+		{3787E582-A65F-48D5-9E1F-73B6F52943FE} = {143C877F-F310-49B4-B113-47D6F3538325}
+		{1344E86A-A03E-4B54-A538-F5A7531F49D3} = {CE5B719C-E653-4D0C-8103-349D7F4631E4}
+		{D066D2D3-7A8A-4F08-8E95-8FF67898A3A9} = {CE5B719C-E653-4D0C-8103-349D7F4631E4}
+		{78729D69-A875-4952-9102-BE00D2F6948D} = {CE5B719C-E653-4D0C-8103-349D7F4631E4}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 23
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs06
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Test\\Test.csproj
+		SccProjectTopLevelParentUniqueName1 = ObservableTransformations.sln
+		SccProjectName1 = Test
+		SccLocalPath1 = Test
+		SccProjectUniqueName2 = Obtics\\Obtics.csproj
+		SccProjectName2 = Obtics
+		SccLocalPath2 = Obtics
+		SccProjectUniqueName3 = ObticsUnitTest\\ObticsUnitTest.csproj
+		SccProjectName3 = ObticsUnitTest
+		SccLocalPath3 = ObticsUnitTest
+		SccProjectUniqueName4 = ObticsExaml\\ObticsExaml.csproj
+		SccProjectTopLevelParentUniqueName4 = ObservableTransformations.sln
+		SccProjectName4 = ObticsExaml
+		SccLocalPath4 = ObticsExaml
+		SccProjectUniqueName5 = ObticsRaytracer\\ObticsRaytracer.csproj
+		SccProjectTopLevelParentUniqueName5 = ObservableTransformations.sln
+		SccProjectName5 = ObticsRaytracer
+		SccLocalPath5 = ObticsRaytracer
+		SccProjectUniqueName6 = ObticsWpfHelper\\ObticsWpfHelper.csproj
+		SccProjectName6 = ObticsWpfHelper
+		SccLocalPath6 = ObticsWpfHelper
+		SccProjectUniqueName7 = GroupingTest\\GroupingTest.csproj
+		SccProjectTopLevelParentUniqueName7 = ObservableTransformations.sln
+		SccProjectName7 = GroupingTest
+		SccLocalPath7 = GroupingTest
+		SccProjectUniqueName8 = CustomMapping\\CustomMapping.csproj
+		SccProjectTopLevelParentUniqueName8 = ObservableTransformations.sln
+		SccProjectName8 = CustomMapping
+		SccLocalPath8 = CustomMapping
+		SccProjectUniqueName9 = ObticsToXml\\ObticsToXml.csproj
+		SccProjectName9 = ObticsToXml
+		SccLocalPath9 = ObticsToXml
+		SccProjectUniqueName10 = ObticsToDataSet\\ObticsToDataSet.csproj
+		SccProjectName10 = ObticsToDataSet
+		SccLocalPath10 = ObticsToDataSet
+		SccProjectUniqueName11 = ObticsBindingHelper\\ObticsBindingHelper.csproj
+		SccProjectName11 = ObticsBindingHelper
+		SccLocalPath11 = ObticsBindingHelper
+		SccProjectUniqueName12 = RegexTool\\RegexTool.csproj
+		SccProjectTopLevelParentUniqueName12 = ObservableTransformations.sln
+		SccProjectName12 = RegexTool
+		SccLocalPath12 = RegexTool
+		SccProjectUniqueName13 = Obtics\\Obtics_Silverlight.csproj
+		SccProjectName13 = Obtics
+		SccLocalPath13 = Obtics
+		SccProjectUniqueName14 = ObticsUnitTest\\ObticsUnitTest_PartialTrust.csproj
+		SccProjectTopLevelParentUniqueName14 = ObservableTransformations.sln
+		SccProjectName14 = ObticsUnitTest
+		SccLocalPath14 = ObticsUnitTest
+		SccProjectUniqueName15 = ObticsUnitTestRunner\\ObticsUnitTestRunner_PartialTrust.csproj
+		SccProjectTopLevelParentUniqueName15 = ObservableTransformations.sln
+		SccProjectName15 = ObticsUnitTestRunner
+		SccLocalPath15 = ObticsUnitTestRunner
+		SccProjectUniqueName16 = UnitTestStub\\UnitTestStub_PartialTrust.csproj
+		SccProjectTopLevelParentUniqueName16 = ObservableTransformations.sln
+		SccProjectName16 = UnitTestStub
+		SccLocalPath16 = UnitTestStub
+		SccProjectUniqueName17 = UnitTestStub\\UnitTestStub_Silverlight.csproj
+		SccProjectTopLevelParentUniqueName17 = ObservableTransformations.sln
+		SccProjectName17 = UnitTestStub
+		SccLocalPath17 = UnitTestStub
+		SccProjectUniqueName18 = ObticsUnitTest\\ObticsUnitTest_Silverlight.csproj
+		SccProjectTopLevelParentUniqueName18 = ObservableTransformations.sln
+		SccProjectName18 = ObticsUnitTest
+		SccLocalPath18 = ObticsUnitTest
+		SccProjectUniqueName19 = ObticsUnitTestRunner_SilverLight\\ObticsUnitTestRunner_SilverLight.csproj
+		SccProjectTopLevelParentUniqueName19 = ObservableTransformations.sln
+		SccProjectName19 = ObticsUnitTestRunner_SilverLight
+		SccLocalPath19 = ObticsUnitTestRunner_SilverLight
+		SccProjectUniqueName20 = ObticsWpfHelper\\ObticsWpfHelper_Silverlight.csproj
+		SccProjectName20 = ObticsWpfHelper
+		SccLocalPath20 = ObticsWpfHelper
+		SccProjectUniqueName21 = ObticsBindingHelper\\ObticsBindingHelper_Silverlight.csproj
+		SccProjectName21 = ObticsBindingHelper
+		SccLocalPath21 = ObticsBindingHelper
+		SccProjectUniqueName22 = ObticsWindowsBaseExtensions\\ObticsWindowsBaseExtensions.csproj
+		SccProjectName22 = ObticsWindowsBaseExtensions
+		SccLocalPath22 = ObticsWindowsBaseExtensions
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = ObservableTransformations20.vsmdi
+	EndGlobalSection
+EndGlobal

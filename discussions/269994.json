@@ -1,0 +1,34 @@
+[
+  {
+    "Id": "661739",
+    "ThreadId": "269994",
+    "Html": "\r\n<p>I'm trying to evaluate Obtics to keep a collection of view-models in sync with the underlying model collection as follows. &nbsp;The basic query would look something like this:</p>\r\n<p>ObticsItemList =&nbsp; Model.ItemList.Select(item =&gt; new ItemViewModel(item));</p>\r\n<p>In addition to keeping the set of items in the two lists in sync, it also needs to preserve the order, particularly when an &nbsp;item in Model.ItemList is moved from one position in the list to another (using RemoveAt() and Insert()).</p>\r\n<p>Are there any requirements on on the model and view-model items (e.g. Equals(), HashCode()) in order for this to work?</p>\r\n<p>I'm currently using Continuous Linq, but it doesn't seem to support the last requirement for moving an item in the source list.</p>\r\n<p>Could you provide a code example?</p>\r\n<p>&nbsp;</p>\r\n<p>Thanks,</p>\r\n<p>-Jeff</p>\r\n",
+    "PostedDate": "2011-08-22T12:39:25.407-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "662176",
+    "ThreadId": "269994",
+    "Html": "<p>The only thing that is important is that your lambda expression is 'well behaved'.</p>\r\n<p>The result of the lambda should always be the same if the input is the same.&nbsp;Wether two things&nbsp;are the&nbsp;same is determined by the default equality comparer. (EqualityComparer&lt;T&gt;.Default)</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2011-08-23T09:33:09.157-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "670880",
+    "ThreadId": "269994",
+    "Html": "<p>I'm getting unexpected behavior. &nbsp;My query is:</p>\n<p>Children = ExpressionObserver.Execute(this, t =&gt; Composite.Members.OfType&lt;Attribute&gt;().Select(member =&gt; new AttributeNode(member, this))).Cascade();</p>\n<p>When I add a new Attribute instance (e.g. attribute1) to Composite.Members, then 2 AttributeNodes containing attribute1 appear in Children.</p>\n<p>When I add a second instance (e.g. attribute2), the Children collection now (corrrectly) has a single instance of attribute1, but 2 instances of attribute2. &nbsp;Etc.</p>\n<p>However this problem only occurs when the Children collection is bound to a view, otherwise it works as expected.</p>\n<p>&nbsp;</p>\n<p>What could I be missing? &nbsp;Thanks.</p>",
+    "PostedDate": "2011-09-12T18:48:49.887-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "672491",
+    "ThreadId": "269994",
+    "Html": "<p>Well, that shouldn't happen. Could you post some code that demonstrates this behaviour? Then we can see if something is wrong with the code or if there is a bug in Obtics.</p>\r\n<p>Tx,</p>\r\n<p>Thomas</p>",
+    "PostedDate": "2011-09-15T16:23:32.51-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

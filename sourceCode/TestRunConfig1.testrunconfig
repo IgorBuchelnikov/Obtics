@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRunConfiguration name="TestRunConfig1" id="d29cc6ac-24ae-422c-a9ae-596d3e28fa8c" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Description>This is a default test run configuration for a local test run.</Description>
+  <CodeCoverage enabled="true" keyFile="Obtics\dev.snk">
+    <Regular>
+      <CodeCoverageItem binaryFile="Obtics\bin\Debug\Obtics.dll" pdbFile="Obtics\bin\Debug\Obtics.pdb" instrumentInPlace="true" />
+      <CodeCoverageItem binaryFile="ObticsToXml\bin\Debug\ObticsToXml.dll" pdbFile="ObticsToXml\bin\Debug\ObticsToXml.pdb" instrumentInPlace="true" />
+      <CodeCoverageItem binaryFile="ObticsToDataSet\bin\Debug\ObticsToDataSet.dll" pdbFile="ObticsToDataSet\bin\Debug\ObticsToDataSet.pdb" instrumentInPlace="true" />
+    </Regular>
+  </CodeCoverage>
+  <TestTypeSpecific />
+</TestRunConfiguration>

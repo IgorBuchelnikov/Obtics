@@ -1,0 +1,65 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": null,
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "It seems that Obtics requires PFX Beta for .NET 3.5.\n \nI can't build the library with .NET 3.5 and PFX release or with .NET 4.0\n \nCould you please upgrade it to release version of PFX?",
+    "LastUpdatedDate": "2013-02-13T18:41:04.493-08:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2010-12-15T12:34:23.297-08:00",
+    "Status": {
+      "Name": "Proposed",
+      "Id": 1
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "Cannot build Obtics",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 7689
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Currently working on a new release. It will be for .NET 4.0. Admittedly progress is slow. ",
+      "PostedDate": "2010-12-18T17:34:04.08-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "By the way; I think only the parallel versions of obtics require PFX. The non-parallel versions do not and are still threadsafe and concurrent.",
+      "PostedDate": "2010-12-19T03:41:03.163-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "I wanted to see how obtics raytracer works :)",
+      "PostedDate": "2010-12-19T07:52:16.883-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "If that is all you want to do then you can take the latest source files. These should compile with .Net framework 4.0.",
+      "PostedDate": "2010-12-22T03:29:40.323-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:04.493-08:00",
+      "Id": -2147483648
+    }
+  ]
+}

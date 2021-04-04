@@ -1,0 +1,459 @@
+[
+  {
+    "Id": "0",
+    "Name": "Obtics 1.0.12.0",
+    "DevelopmentStatus": "Beta",
+    "Description": "Obtics is a library that offers Functional Reactive Programming abilities to common .Net languages.\n\nThis version contains some small feature extensions and code improvements. The most important change is that this version runs under partial trust and most notably with limited reflection permissions. Running with limited reflection permissions does impose some limitations on the ExpressionObserver. Assuming that discovery of private types and members is not allowed the following limitations apply:\n\n# All members in the lambda expression passed to ExpressionObserver must be public.\n# Closures of local variables can not be used.\n# Anonymous types can not be used.\n\nBinding to interfaces (as returned by Obtics methods) in WPF also has limitations. When discovery of private types and members is not allowed; interface properties will need to be refered explicitly.\n\nThe RegexTool has been converted to an XBAP application to demonstrate the use of Obtics with limited priviliges.\n\nTwo projects have been added (ObticsUnitTestRunner and UnitTestStub) to allow execution of ObticsUnitTest tests under partial trust.\n\nAll libraries and some executables are now signed using the dev.snk key. Note that this key is *not secret* and you should sign the libraries with your own secret key before releasing a product.\n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\none or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe 0 2 3\n\nCheck out source code for details.",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2009-08-11T18:31:54.75-07:00",
+    "Files": [
+      {
+        "Id": "b8d176f9-134d-4fb5-9f49-df61855a39c5",
+        "FileName": "Obtics 1.0.12.0.zip",
+        "Url": "./0/b8d176f9-134d-4fb5-9f49-df61855a39c5",
+        "Type": "Source Code",
+        "UploadDate": "2009-08-11T18:03:08.843-07:00"
+      },
+      {
+        "Id": "38551db7-6ff5-4a59-b571-f1e20fcd108f",
+        "FileName": "Obtics binaries 1.0.12.0.zip",
+        "Url": "./0/38551db7-6ff5-4a59-b571-f1e20fcd108f",
+        "Type": "Application",
+        "UploadDate": "2009-08-11T18:03:08.903-07:00"
+      },
+      {
+        "Id": "79b4596e-ab93-47d1-9493-88700cc57d66",
+        "FileName": "Documentation.chm",
+        "Url": "./0/79b4596e-ab93-47d1-9493-88700cc57d66",
+        "Type": "Documentation",
+        "UploadDate": "2009-08-11T18:03:08.967-07:00"
+      }
+    ]
+  },
+  {
+    "Id": "1",
+    "Name": "Obtics 1.0.11.0",
+    "DevelopmentStatus": "Beta",
+    "Description": "This version contains some bugfixes and improvements over the previous version. Custom method mappings functionality is extended to include overloaded operators.\n\nA new library has been added 'ObticsToXml'. This library allows the creation of live expressions with Linq-to-Xml. This means that results from Linq-to-Xml expressions respond to changes in the Xml document they are based on. The library needs to be registered with an ExpressionObserverMaster (See ObticsUnitTest.ObticsToXml.ObservableExtensionsTest unit test) before live Linq-to-Xml expressions can be created.\n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\none or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe 0 2 3\n\nCheck out source code for details.\n",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2009-05-30T11:15:59.893-07:00",
+    "Files": [
+      {
+        "Id": "b10d2037-eb03-4c1a-a17b-336166ba7df2",
+        "FileName": "Obtics 1.0.11.0.zip",
+        "Url": "./1/b10d2037-eb03-4c1a-a17b-336166ba7df2",
+        "Type": "Source Code",
+        "UploadDate": "2009-05-30T11:14:05.517-07:00"
+      },
+      {
+        "Id": "f669abf4-6cd4-4b39-9a48-20b496ad6a99",
+        "FileName": "Obtics binaries 1.0.11.0.zip",
+        "Url": "./1/f669abf4-6cd4-4b39-9a48-20b496ad6a99",
+        "Type": "Application",
+        "UploadDate": "2009-05-30T11:14:05.563-07:00"
+      },
+      {
+        "Id": "42eab1f3-43a8-4d29-bdf5-b7d711d97cbd",
+        "FileName": "Documentation.chm",
+        "Url": "./1/42eab1f3-43a8-4d29-bdf5-b7d711d97cbd",
+        "Type": "Documentation",
+        "UploadDate": "2009-05-30T11:15:59.737-07:00"
+      }
+    ]
+  },
+  {
+    "Id": "2",
+    "Name": "Obtics 1.0.10.0",
+    "DevelopmentStatus": "Beta",
+    "Description": "This release has caching for pipeline generators constructed with ExpressionObserver. ExpressionObservers can create complex pipeline generators. The generator creates a transformation pipeline on the basis of relatively few input parameters. These parameters and the generator itself now form the key of a cache. \n\nExpressionObserver is now extendible. ExpressionObserverMappingAttribute or ExpressionObserverMaster can now be used to add custom method, property and field mappings to the expression observer database. The new [CustomMapping] sample project demonstrates how this can be done.\n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\none or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe 0 2 3\n\nCheck out source code for details.\n",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2009-05-14T10:28:51.807-07:00",
+    "Files": [
+      {
+        "Id": "00cc5cfa-c6ce-4cae-8a67-c0ab9472876c",
+        "FileName": "Obtics 1.0.10.0.zip",
+        "Url": "./2/00cc5cfa-c6ce-4cae-8a67-c0ab9472876c",
+        "Type": "Source Code",
+        "UploadDate": "2009-05-14T09:16:30.52-07:00"
+      },
+      {
+        "Id": "0222b3dc-bab6-479d-b458-7efa152ffdbc",
+        "FileName": "Obtics binaries 1.0.10.0.zip",
+        "Url": "./2/0222b3dc-bab6-479d-b458-7efa152ffdbc",
+        "Type": "Application",
+        "UploadDate": "2009-05-14T09:16:30.707-07:00"
+      },
+      {
+        "Id": "0f5424ef-b41a-4f12-8367-ec2d14653ad2",
+        "FileName": "Documentation.chm",
+        "Url": "./2/0f5424ef-b41a-4f12-8367-ec2d14653ad2",
+        "Type": "Documentation",
+        "UploadDate": "2009-05-14T09:16:30.897-07:00"
+      }
+    ]
+  },
+  {
+    "Id": "3",
+    "Name": "Obtics 1.0.9.0",
+    "DevelopmentStatus": "Beta",
+    "Description": "This release has quite a few changes. \n\n* The internal collection change propagation mechanism has changed. Internally only single item changes are handled. \n* IEnumerables that are results of Obtics transformation methods generally no longer support INotifyPropertyChanged. Only the results of ObservableEnumerable.ToList() and ObservableEnumerable.Cap(), both of which return IList objects and therefore have actually changing properties, support INotifyPropertyChanged.\n* ObservableEnumerable sorting methods no longer do a stable sort. That means that the original element order is no longer the final sorting criterium. Elements with an equal sorting key will appear in a random order in the result sequence.\n* Internally Obtics can use unordered sequences. It can do this when the final result does not depend on the original ordering of source sequence elements. Unordered sequences carry a lot less information (no index information) and are therefore a lot cheaper in resources. When creating complex queries on long source sequences, try to sort the end result for a performance boost. Equality comparison and hashing are very important for unordered sequences. Make sure all elements of your source sequences implement these properly.\n* ObticsRaytracer example has been optimized. Scene changes are processed much faster.\n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\none or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe 0 2 3\n\nCheck out source code for details.\n",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2009-03-03T02:55:30.513-08:00",
+    "Files": [
+      {
+        "Id": "5ab3df13-e546-4d93-8c74-a4568ea76f12",
+        "FileName": "Obtics 1.0.9.0.zip",
+        "Url": "./3/5ab3df13-e546-4d93-8c74-a4568ea76f12",
+        "Type": "Source Code",
+        "UploadDate": "2009-03-02T16:23:17.793-08:00"
+      },
+      {
+        "Id": "067f7b9a-b561-47ed-b327-ef40dbfd47c0",
+        "FileName": "Obtics binaries 1.0.9.0.zip",
+        "Url": "./3/067f7b9a-b561-47ed-b327-ef40dbfd47c0",
+        "Type": "Application",
+        "UploadDate": "2009-03-02T16:23:17.623-08:00"
+      },
+      {
+        "Id": "b7dd48fd-c84a-477f-80a8-fd02143bd1b6",
+        "FileName": "Documentation.chm",
+        "Url": "./3/b7dd48fd-c84a-477f-80a8-fd02143bd1b6",
+        "Type": "Documentation",
+        "UploadDate": "2009-03-02T16:23:17.997-08:00"
+      }
+    ]
+  },
+  {
+    "Id": "4",
+    "Name": "Obtics 1.0.8.2",
+    "DevelopmentStatus": "Beta",
+    "Description": "Added a demo app based on \"Luke Hoban's Raytracer in one line LINQ code\". Like Luke's code is not an example of how LINQ should be used; this is not an example of how obtics should be used! It was usefull just to prove that it can be done and for performance testing. It requires the parallel extension library and  the 'Debug - Parallel' or 'Release - Parallel' solution configuration needs to be used.\n\n[ObticsRaytracer] renders a 3d scene (builds it up out of transformation pipelines containing hundreds of transformation elements; that why it is slow!) and then changes the color and positions of the lights. The rendered scene is reactive to those changes and will reflect them automatically. The rendering and updating will be done on multiple cores if available.\n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\none or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe i 0 2 3\n\nCheck out source code for details.\n",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2009-01-10T03:23:14.277-08:00",
+    "Files": [
+      {
+        "Id": "091e571c-33ad-4d9f-9e85-dd8b43296f41",
+        "FileName": "Obtics 1.0.8.2.zip",
+        "Url": "./4/091e571c-33ad-4d9f-9e85-dd8b43296f41",
+        "Type": "Source Code",
+        "UploadDate": "2009-01-09T18:57:41.277-08:00"
+      },
+      {
+        "Id": "7fafb858-cfba-4614-b520-f9f3f605a3f2",
+        "FileName": "Obtics binaries 1.0.8.2.zip",
+        "Url": "./4/7fafb858-cfba-4614-b520-f9f3f605a3f2",
+        "Type": "Application",
+        "UploadDate": "2009-01-09T18:57:41.683-08:00"
+      },
+      {
+        "Id": "fe17a9ec-9073-4b1f-92ec-7d2e5b6c668e",
+        "FileName": "Documentation.chm",
+        "Url": "./4/fe17a9ec-9073-4b1f-92ec-7d2e5b6c668e",
+        "Type": "Documentation",
+        "UploadDate": "2009-01-09T18:57:41.887-08:00"
+      }
+    ]
+  },
+  {
+    "Id": "5",
+    "Name": "Obtics 1.0.8.0",
+    "DevelopmentStatus": "Alpha",
+    "Description": "New internal eventing mechanism. Performance improvements, especially for pivot values. Implicit Observable LINQ has been removed.\n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\none or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe i 0 2 3\n\nCheck out source code for details.\n",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2009-01-02T19:42:00.787-08:00",
+    "Files": [
+      {
+        "Id": "0abb982d-1824-4765-a520-95b36f7fe08b",
+        "FileName": "Obtics binaries 1.0.8.0.zip",
+        "Url": "./5/0abb982d-1824-4765-a520-95b36f7fe08b",
+        "Type": "Application",
+        "UploadDate": "2009-01-02T19:41:54.847-08:00"
+      },
+      {
+        "Id": "82232fe0-25f2-403d-a2de-281d0f071754",
+        "FileName": "Obtics 1.0.8.0.zip",
+        "Url": "./5/82232fe0-25f2-403d-a2de-281d0f071754",
+        "Type": "Source Code",
+        "UploadDate": "2009-01-02T19:42:00.037-08:00"
+      },
+      {
+        "Id": "bd805ff6-b882-46a7-a86a-1f80d3b3c90d",
+        "FileName": "Documentation.chm",
+        "Url": "./5/bd805ff6-b882-46a7-a86a-1f80d3b3c90d",
+        "Type": "Documentation",
+        "UploadDate": "2009-01-02T19:42:00.41-08:00"
+      }
+    ]
+  },
+  {
+    "Id": "6",
+    "Name": "Obtics 1.0.6.0",
+    "DevelopmentStatus": "Alpha",
+    "Description": "Code has been simplefied. Now support for multithreaded applications, transformations are threadsafe. (compile with MT compiler symbol). Some bugs have been fixed and the carrousel improved. Deeper analysis when comparing lambda functions for equality. This leads to a far better hitrate for the carrousel.\n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\neither one of or both of 'e' (for explicitly observable queries) and 'i' (implicitly observable queries) and one or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe i 0 2 3\n\nCheck out source code for details.\n",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2008-11-18T12:37:41.083-08:00",
+    "Files": [
+      {
+        "Id": "d1609fcd-574a-4858-bc6d-404ca08db162",
+        "FileName": "Obtics 1.0.6.0.zip",
+        "Url": "./6/d1609fcd-574a-4858-bc6d-404ca08db162",
+        "Type": "Source Code",
+        "UploadDate": "2008-11-18T12:37:39.74-08:00"
+      },
+      {
+        "Id": "bd63f4a7-f076-4ac3-a3ba-78e8b205e161",
+        "FileName": "Obtics binaries 1.0.6.0.zip",
+        "Url": "./6/bd63f4a7-f076-4ac3-a3ba-78e8b205e161",
+        "Type": "Application",
+        "UploadDate": "2008-11-18T12:37:40.133-08:00"
+      },
+      {
+        "Id": "5dc98dba-e2d2-4f2d-b1a2-a979af611b91",
+        "FileName": "Documentation.chm",
+        "Url": "./6/5dc98dba-e2d2-4f2d-b1a2-a979af611b91",
+        "Type": "Documentation",
+        "UploadDate": "2008-11-18T12:37:40.663-08:00"
+      }
+    ]
+  },
+  {
+    "Id": "7",
+    "Name": "Obtics 1.0.2.0",
+    "DevelopmentStatus": "Alpha",
+    "Description": "An extention has been added that allows asynchronous change propagation. Obtics.Collections.ImplicitObservable.ObservableEnumerable, Obtics.Collections.ExplicitObservable.ObservableEnumerable and Obtics.Values.ValueProvider have all been extended with an 'Async' extension method. With the new Obtics.ObticsConfigurationSection the default 'asynchronous event pump' can be configured. Without explicit configuration the System.Windows.Threading.Dispatcher.Current is used to queue and dispatch events.\n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\neither one of or both of 'e' (for explicitly observable queries) and 'i' (implicitly observable queries) and one or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe i 0 2 3\n\nCheck out source code for details.\n",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2008-11-18T12:38:40.867-08:00",
+    "Files": [
+      {
+        "Id": "355197ca-c393-47eb-97bf-506974444c9a",
+        "FileName": "Documentation.chm",
+        "Url": "./7/355197ca-c393-47eb-97bf-506974444c9a",
+        "Type": "Documentation",
+        "UploadDate": "2008-09-30T14:43:53.923-07:00"
+      },
+      {
+        "Id": "37c2ffdb-0bfb-46da-b383-bfe9e08d6160",
+        "FileName": "Obtics binaries 1.0.2.0.zip",
+        "Url": "./7/37c2ffdb-0bfb-46da-b383-bfe9e08d6160",
+        "Type": "Application",
+        "UploadDate": "2008-09-30T14:43:53.847-07:00"
+      },
+      {
+        "Id": "a969c507-68cf-463e-8cf9-5301a0942523",
+        "FileName": "Obtics 1.0.2.0.zip",
+        "Url": "./7/a969c507-68cf-463e-8cf9-5301a0942523",
+        "Type": "Source Code",
+        "UploadDate": "2008-09-30T14:43:53.877-07:00"
+      }
+    ]
+  },
+  {
+    "Id": "8",
+    "Name": "Obtics 1.0",
+    "DevelopmentStatus": "Stable",
+    "Description": "Release version 1.0\n\nThis includes binaries, sources and helpfile (thanks to the people who build SandCastle). The documentation still needs attention but that will grow over time. \n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\neither one of or both of 'e' (for explicitly observable queries) and 'i' (implicitly observable queries) and one or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe i 0 2 3\n\nCheck out source code for details.\n",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2008-11-18T12:39:43.163-08:00",
+    "Files": [
+      {
+        "Id": "57a35400-07cd-4711-bdfd-3c688278eed1",
+        "FileName": "Obtics 1.0.0.0.zip",
+        "Url": "./8/57a35400-07cd-4711-bdfd-3c688278eed1",
+        "Type": "Source Code",
+        "UploadDate": "2008-08-24T07:25:01.833-07:00"
+      },
+      {
+        "Id": "e7cd9e41-03a7-488f-a955-092d9a7b6618",
+        "FileName": "Obtics binaries 1.0.0.0.zip",
+        "Url": "./8/e7cd9e41-03a7-488f-a955-092d9a7b6618",
+        "Type": "Application",
+        "UploadDate": "2008-08-24T07:25:01.787-07:00"
+      },
+      {
+        "Id": "c1ffc1f4-57e8-4db9-a598-d3334b8f646d",
+        "FileName": "Documentation.chm",
+        "Url": "./8/c1ffc1f4-57e8-4db9-a598-d3334b8f646d",
+        "Type": "Documentation",
+        "UploadDate": "2008-08-24T07:25:01.863-07:00"
+      }
+    ]
+  },
+  {
+    "Id": "9",
+    "Name": "Beta 0.9.5.0",
+    "DevelopmentStatus": "None",
+    "Description": "Quite an overhaul of the ObservableEnumerable methods. They are now almost completely compatible with original Enumerable methods. This should not happen in a beta stage but it was too important. \nIt allowed a mechanism so that ExpressionObserver class can rewrite original non-observable object Linq queries into observable ones. This means it is no longer necessairy to replace System.Linq namespace with Obtics.Collections.ImplicitObservable to create observable linq queries.\n\nthe ObticsExaml project has been updated to reflect this possibility of rewriting standard object Linq queries into observable queries.\n\nFurther added many more unit tests and fixed some bugs with 'Cast', 'SequenceEquals' and expression rewriting.\n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\neither one of or both of 'e' (for explicitly observable queries) and 'i' (implicitly observable queries) and one or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe i 0 2 3\n\nCheck out source code for details.",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2008-08-10T10:32:40.71-07:00",
+    "Files": [
+      {
+        "Id": "7ea9e787-ccc6-412c-ad2c-70043a95820b",
+        "FileName": "Obtics 0.9.5.0.zip",
+        "Url": "./9/7ea9e787-ccc6-412c-ad2c-70043a95820b",
+        "Type": "Source Code",
+        "UploadDate": "2008-08-09T09:19:06.42-07:00"
+      },
+      {
+        "Id": "b1b701e5-2932-49f1-bbb3-810d924940f6",
+        "FileName": "Obtics binaries 0.9.5.0.zip",
+        "Url": "./9/b1b701e5-2932-49f1-bbb3-810d924940f6",
+        "Type": "Application",
+        "UploadDate": "2008-08-09T09:19:06.373-07:00"
+      }
+    ]
+  },
+  {
+    "Id": "10",
+    "Name": "Beta 0.9.0.0",
+    "DevelopmentStatus": "None",
+    "Description": "First Beta release. The public interface of Obtics.dll should now be stable untill version 1.0.0.0.  Added a 'silly shop' XAML application (ObticsExaml) as an example how complex observable LINQ queries and value transformations can be created and bound to from XAML. \n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\neither one of or both of 'e' (for explicitly observable queries) and 'i' (implicitly observable queries) and one or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe i 0 2 3\n\nCheck out source code for details.",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2008-07-19T17:54:15.48-07:00",
+    "Files": [
+      {
+        "Id": "317f89cf-68ee-4742-84cc-596ca6a3256e",
+        "FileName": "Obtics 0.9.0.0.zip",
+        "Url": "./10/317f89cf-68ee-4742-84cc-596ca6a3256e",
+        "Type": "Source Code",
+        "UploadDate": "2008-07-19T16:28:16.073-07:00"
+      },
+      {
+        "Id": "9aa3d33f-d572-4fa0-b428-509ba60b621f",
+        "FileName": "Obtics binaries 0.9.0.0.zip",
+        "Url": "./10/9aa3d33f-d572-4fa0-b428-509ba60b621f",
+        "Type": "Application",
+        "UploadDate": "2008-07-19T16:28:16.137-07:00"
+      }
+    ]
+  },
+  {
+    "Id": "11",
+    "Name": "Alpha 0.8.6.0",
+    "DevelopmentStatus": "None",
+    "Description": "DynamicValueProvider object is no longer public. Transformation methods no longer throw an exception when a required argument is passed null as value. The methods return null instead. A carrousel has been implemented. \n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\neither one of or both of 'e' (for explicitly observable queries) and 'i' (implicitly observable queries) and one or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe i 0 2 3\n\nCheck out source code for details.",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2008-07-14T16:24:25.793-07:00",
+    "Files": [
+      {
+        "Id": "ffdeca39-617d-4808-8739-080156faccb3",
+        "FileName": "Obtics 0.8.6.0.zip",
+        "Url": "./11/ffdeca39-617d-4808-8739-080156faccb3",
+        "Type": "Source Code",
+        "UploadDate": "2008-07-14T16:24:25.793-07:00"
+      },
+      {
+        "Id": "3d4c99f9-545e-453c-8ea5-20dd2aa4a5b8",
+        "FileName": "Obtics binaries 0.8.6.0.zip",
+        "Url": "./11/3d4c99f9-545e-453c-8ea5-20dd2aa4a5b8",
+        "Type": "Application",
+        "UploadDate": "2008-07-14T16:24:25.823-07:00"
+      }
+    ]
+  },
+  {
+    "Id": "12",
+    "Name": "Alpha 0.8.5.0",
+    "DevelopmentStatus": "None",
+    "Description": "Renamed the project and root namespace. More unit tests and some bug fixes.\n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\neither one of or both of 'e' (for explicitly observable queries) and 'i' (implicitly observable queries) and one or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe i 0 2 3\n\nCheck out source code for details.",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2008-06-25T15:48:03.69-07:00",
+    "Files": [
+      {
+        "Id": "40d6b6c2-24c3-4be9-82c5-c981d6529aea",
+        "FileName": "Obtics 0.8.5.0.zip",
+        "Url": "./12/40d6b6c2-24c3-4be9-82c5-c981d6529aea",
+        "Type": "Source Code",
+        "UploadDate": "2008-06-25T14:40:08.51-07:00"
+      },
+      {
+        "Id": "d873a621-d545-4ad2-ba4c-d9cc2901ac06",
+        "FileName": "Obtics binaries 0.8.5.0.zip",
+        "Url": "./12/d873a621-d545-4ad2-ba4c-d9cc2901ac06",
+        "Type": "Application",
+        "UploadDate": "2008-06-25T15:48:03.707-07:00"
+      }
+    ]
+  },
+  {
+    "Id": "13",
+    "Name": "Alpha 0.8.1.0",
+    "DevelopmentStatus": "None",
+    "Description": "Fixed a serious bug in ValueTransformations. The bug was bad enough to call for a new release.",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2008-06-07T18:02:33.117-07:00",
+    "Files": [
+      {
+        "Id": "724bd0ce-5368-4c65-b3c8-b5b38a5cdcef",
+        "FileName": "ObsTrans 0.8.1.0.zip",
+        "Url": "./13/724bd0ce-5368-4c65-b3c8-b5b38a5cdcef",
+        "Type": "Source Code",
+        "UploadDate": "2008-06-07T18:02:33.117-07:00"
+      }
+    ]
+  },
+  {
+    "Id": "14",
+    "Name": "Alpha 0.8.0.0",
+    "DevelopmentStatus": "None",
+    "Description": "Library is close to feature complete for the first version. Fully observable object Linq and value transformations. May still make some changes to naming.",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2008-05-20T15:52:21.373-07:00",
+    "Files": [
+      {
+        "Id": "167ab6fc-19d1-45ed-b809-d2b827636a59",
+        "FileName": "ObsTrans 0.8.0.0.zip",
+        "Url": "./14/167ab6fc-19d1-45ed-b809-d2b827636a59",
+        "Type": "Source Code",
+        "UploadDate": "2008-05-20T15:52:21.39-07:00"
+      }
+    ]
+  },
+  {
+    "Id": "15",
+    "Name": "Preview 0.5.0.0",
+    "DevelopmentStatus": "None",
+    "Description": "This is a preliminary release. Not completely tested and not completely implemented. Expect changes.\n\nCheckout Test\\Program.cs for a taste.",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2008-04-15T11:56:55.193-07:00",
+    "Files": [
+      {
+        "Id": "2ece6aa8-5279-4045-bbbe-26c26238db95",
+        "FileName": "ObsTrans 0.5.0.0.zip",
+        "Url": "./15/2ece6aa8-5279-4045-bbbe-26c26238db95",
+        "Type": "Source Code",
+        "UploadDate": "2008-04-15T11:56:55.383-07:00"
+      }
+    ]
+  },
+  {
+    "Id": "16",
+    "Name": "Obtics 1.0.13.0",
+    "DevelopmentStatus": "Beta",
+    "Description": "Obtics is a library that offers Functional Reactive Programming abilities to common .Net languages.\n\nThis version has support for Silverlight. A few Silverlight library versions have been added: {\"Obtics_Silverlight\"}, {\"ObticsBindingHelper_Silverlight\"} and {\"ObticsWpfHelper_Silverlight\"}.\n\nA project ObticsUnitTestRunner_SilverLight has been added that runs a subset of ObticsUnitTest as a silverlight application.\n\nSilverlight XAML doesn't seem to be able to resolve properties explicitly. This means the Concrete() extension method is needed to bind to IValueProvider properties in Silverlight.\n\nAll libraries and some executables are signed using the dev.snk key. Note that this key is not secret and you should sign the libraries with your own secret key before releasing a product.\n\nWhen downloading the binaries and running test.exe; the following parameters can be passed:\none or more of the numbers from 0 to 6 and 10 to 23\nspecifying a different test query.\nFor example:\ntest.exe 0 2 3\n\nCheck out source code for details.",
+    "ReleasedDatge": "0001-01-01T00:00:00",
+    "ModifiedDate": "2009-08-23T17:06:45.19-07:00",
+    "Files": [
+      {
+        "Id": "f32f52e7-434c-4658-9934-dcb861680f20",
+        "FileName": "Obtics 1.0.13.0.zip",
+        "Url": "./16/f32f52e7-434c-4658-9934-dcb861680f20",
+        "Type": "Source Code",
+        "UploadDate": "2009-08-23T16:50:28.277-07:00"
+      },
+      {
+        "Id": "58e20301-dec5-4417-b027-dddb20358ee4",
+        "FileName": "Obtics binaries 1.0.13.0.zip",
+        "Url": "./16/58e20301-dec5-4417-b027-dddb20358ee4",
+        "Type": "Application",
+        "UploadDate": "2009-08-23T16:50:28.34-07:00"
+      },
+      {
+        "Id": "6e5472c5-7dbf-4cfd-913a-8692031830a9",
+        "FileName": "Documentation.chm",
+        "Url": "./16/6e5472c5-7dbf-4cfd-913a-8692031830a9",
+        "Type": "Documentation",
+        "UploadDate": "2009-08-23T16:50:28.403-07:00"
+      }
+    ]
+  }
+]

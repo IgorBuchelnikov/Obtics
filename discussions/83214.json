@@ -1,0 +1,42 @@
+[
+  {
+    "Id": "286052",
+    "ThreadId": "83214",
+    "Html": "<p>Hi,</p>\r\n<p>I'm working on a project and we have quite a few Obtics queries daisy-chained together. &nbsp;I'm trying to improve performance of how we're using Obtics, as whilst we're getting the correct results, our implementation is not very performant, particularly on our target hardware. &nbsp;I will raise another discussion point for that shortly though when I can get a useful example together. &nbsp;Whilst trying to get a feel for how Obtics works, I saw some strange behaviour that didn't seem very intuitive to me. &nbsp;Like most of your code though, it's usually for a reason I just don't understand, so I was wondering if you could please explain it to me?</p>\r\n<p>One of the things I thought of when trying to speed up was some mechanism for implementing bulk changes to Observable collections. &nbsp;I created a class extending ObservableCollection with an AddRange method. &nbsp;This&nbsp;suppressed CollectionChanged events until all items were added, then fired one event for the whole changeset. &nbsp;Any regular additions, or additions of 1 item are processed normally.</p>\r\n<p>If I'm adding them in bulk, my assumption was that Obtics would treat them in the same manner, and I would only have one change notification. &nbsp;This proved to be incorrect, in fact when stepping into the Obtics code it actually changed the 1 NotifyCollectionChangedEventArgs for 50 added items, into 50 of the Obtics equivalent and handled them all individually.</p>\r\n<p>Can you please run me through why this happens? &nbsp;I would have assumed it would be more efficient in that instance where those items were changed to process them once together rather than each one individually? &nbsp;As I said though, there is usually a reason I just don't understand :P</p>\r\n<p>I've created a small test app which demonstrates what I'm talking about. &nbsp;It basically generates items and adds them in bulk to our ObservableCollections in the Cache, similar to how our app reacts to data being pushed from the database.</p>\r\n<p>Cheers,</p>\r\n<p>Nathan</p>",
+    "PostedDate": "2010-02-04T19:11:23.623-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "286054",
+    "ThreadId": "83214",
+    "Html": "<p>Hmm, I just realised I can't attach anything to a Discussion. &nbsp;I didn't want to raise it as an Issue, as I'm more curious as to how/why it works this way as opposed to raising a bug. &nbsp;</p>\r\n<p>If you need the example, can you please send me an e-mail address for which I could forward it to?</p>\r\n<p>Cheers,</p>\r\n<p>Nathan</p>",
+    "PostedDate": "2010-02-04T19:14:33.79-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "286175",
+    "ThreadId": "83214",
+    "Html": "<p>Hi Nathan,</p>\r\n<p>There are a few reasons why Obtics treats every item change individualy.</p>\r\n<p>The main is historical. In the past WPF (the original target platform) did not support multi-item change notifications and because single item updates are much simpler than multi item updates the choice was easy. The code to handle multi updates is more extensive and would increase the size of the library.</p>\r\n<p>Only in quite simple queries will multi item updates be possible from source to target. As soon as you use&nbsp;Sort, Distinct or Group or have more complex interdependencies will the bulk updated range have to be broken up into discontinous individual updates.</p>\r\n<p>I'm curious about the circumstances in which your queries do not perform well enough.</p>\r\n<p>If enough can be gained from&nbsp;ranged updates, they&nbsp;could be (re-)introduced.</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2010-02-05T04:33:03.71-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "286211",
+    "ThreadId": "83214",
+    "Html": "<p>Hi Thomas,</p>\r\n<p>Thanks for the prompt reply. &nbsp;I figured there would be a reason for it. &nbsp;To be honest, the way our stuff is currently setup, there isn't going to be a huge benefit. &nbsp;If you do happen to re-introduce it, there should be some benefit for us, but don't go out of your way on our account if you have more important things to do. &nbsp;The only reason I asked is because I noticed it on one of the first queries I was looking for, and as we get a bulk load of data into the cache on startup, it showed itself first.</p>\r\n<p>I'm currently working through a test application based on the original one I started with. &nbsp;We have a hierarchy of objects from which we display a subset depending on what item is selected in the parent. &nbsp; In the example I have been working on, there is a set of schools, which have a set of courses, which have a set of units, which in turn have students. &nbsp;Each unit has roughly 20 students and there are 6000 in the collection I'm filtering over. &nbsp;A straight LINQ query setting the visible students when a unit is selected takes around 12ms, but of course this doesn't react to changes, so it's no good to me. &nbsp;The equivalent driven by my Obtics query takes around 350-400ms. &nbsp;Initially, I was using a helper class that had been written already, which by default called Cascade() on the result. &nbsp;Functionally this was fine, but meant it always took 350-400ms, and even more when not on my dev PC. &nbsp;Once I removed the call to Cascade() and bound directly to the Value, initial changes were the same speed, but calls to previously visited nodes took ~6ms, effectively instant. &nbsp;All my queries are setup in the constructor, so are only changed in relation to property changes. &nbsp;Doing this was one of the initial changes I made and sped thinks up markedly. &nbsp;</p>\r\n<p>I'm out of the office until Monday, so I may post back when I've got something that would be useful to show you. &nbsp;I've tried using &quot;Compile&quot; instead of &quot;Execute&quot; but it didn't provide any huge differences given all the queries are hooked up up front, and Execute isn't called after the app is setup. &nbsp;I may get back to you with a test app if I can't achieve what I'm after. &nbsp;Have a good weekend!</p>\r\n<p>Cheers,</p>\r\n<p>Nathan</p>\r\n<p>&nbsp;</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2010-02-05T05:29:55.68-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "288133",
+    "ThreadId": "83214",
+    "Html": "<p>Hi Nathan,</p>\r\n<p>Great that you found ways to improve performance so significantly. I would like to know&nbsp;how the use or not of Cascade() gives such a hughe difference in your case. Could you&nbsp;provide some code examples?</p>\r\n<p>Tx,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2010-02-10T02:45:47.647-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

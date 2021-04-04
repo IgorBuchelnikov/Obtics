@@ -1,0 +1,55 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": "2009-01-07T15:22:28.863-08:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "Currently the ExpressionObserver translates LINQ methods to the most reactive ObservableEnumerable methods. This is never wrong but if it could choose for less reactive methods when dependencies for those methods are not observable anyway, then some performance improvements can be gained.",
+    "LastUpdatedDate": "2013-05-15T21:55:55.347-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Medium",
+      "Severity": 100,
+      "Id": 2
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-01-04T06:31:22.453-08:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "Let ExpressionObserver choose for less reactive collection transformation methods when possible.",
+    "Type": {
+      "Name": "Feature",
+      "Id": 1
+    },
+    "VoteCount": 0,
+    "Id": 3544
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Resolved with changeset 17873.",
+      "PostedDate": "2009-01-07T15:22:28.863-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:09.22-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:55.347-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

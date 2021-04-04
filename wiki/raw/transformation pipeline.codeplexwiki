@@ -1,0 +1,3 @@
+! transformation pipeline
+
+This is a sequence of [transformation]s where the output of one is the input of another. The whole creates one [transformation].

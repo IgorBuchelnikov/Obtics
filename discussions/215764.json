@@ -1,0 +1,66 @@
+[
+  {
+    "Id": "454589",
+    "ThreadId": "215764",
+    "Html": "Thomas,\r\n\r\nDo you have any plans of a Silverlight 4 build?\r\n\r\nThanks\r\nVinay",
+    "PostedDate": "2010-06-11T14:12:00.26-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "455259",
+    "ThreadId": "215764",
+    "Html": "<p>I tried to build the silverlight components of the framework in silverlight 4. I built the following libraries. ConcurrentHashtable_Silverlight.dll, ObticsBindingHelper_Silverlight.dll and Obtics_Silverlight.dll. I get the following exception on expressionobserver.execute. May be you would recognize it.</p>\r\n<div style=\"color:black;background-color:white\">\r\n<pre>System.TypeInitializationException was caught\r\n  Message=The type initializer <span style=\"color:blue\">for</span> <span style=\"color:#a31515\">'Obtics.Values.Transformations.PipelineResultTransformation`3'</span> threw an exception.\r\n  TypeName=Obtics.Values.Transformations.PipelineResultTransformation`3\r\n  StackTrace:\r\n       at Obtics.Values.Transformations.PipelineResultTransformation`3.ConstructPRT(Int32 hash, TKey key)\r\n       at Obtics.Carrousel.InternalCarrousel`2.Get(TKey key, Func`3 creator)\r\n       at Obtics.Carrousel.Get[TOut,TKey](TKey key, Func`3 creator)\r\n       at Obtics.Values.Transformations.PipelineResultTransformation`3.Create(TKey key)\r\n       at Obtics.Values.RewriterHelper.Cacher1[TArg1,TType](Func`2 generator, TArg1 arg1)\r\n       at lambda_method(Closure , SmartCollection`1 )\r\n       at Obtics.Values.ExpressionObserverObject.Execute[TPrm1,TResult](TPrm1 prm1, Expression`1 original)\r\n       at Obtics.Values.ExpressionObserver.Execute[TPrm1,TResult](TPrm1 prm1, Expression`1 original)\r\n       at SLSocketsApp1.MainPage.get_TotalRowCount()\r\n  InnerException: System.MethodAccessException\r\n       Message=Attempt <span style=\"color:blue\">by</span> method <span style=\"color:#a31515\">'Obtics.Values.Transformations.PipelineResultTransformation`3&lt;Obtics.Tuple`2&lt;System.__Canon,System.__Canon&gt;,System.Int32,System.__Canon&gt;..cctor()'</span> to access method <span style=\"color:#a31515\">'Obtics.Values.RewriterHelper+Generator`2&lt;System.__Canon,System.Int32&gt;..ctor()'</span> failed.\r\n       StackTrace:\r\n            at System.RuntimeTypeHandle.CreateInstance(RuntimeType type, Boolean publicOnly, Boolean noCheck, Boolean&amp; canBeCached, RuntimeMethodHandleInternal&amp; ctor, Boolean&amp; bNeedSecurityCheck)\r\n            at System.RuntimeType.CreateInstanceSlow(Boolean publicOnly, Boolean skipCheckThis, Boolean fillCache)\r\n            at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean skipCheckThis, Boolean fillCache)\r\n            at System.Activator.CreateInstance[T]()\r\n            at Obtics.Values.Transformations.PipelineResultTransformation`3..cctor()\r\n       InnerException: \r\n\r\n</pre>\r\n</div>\r\n<p>&nbsp;</p>\r\n<div id=\"_mcePaste\" style=\"left:-10000px;overflow:hidden;width:1px;top:0px;height:1px\">﻿</div>",
+    "PostedDate": "2010-06-14T08:53:53.3-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "455372",
+    "ThreadId": "215764",
+    "Html": "<p>I get the exception on calling ExpressionObserver.Execute</p>",
+    "PostedDate": "2010-06-14T13:44:42.89-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "471352",
+    "ThreadId": "215764",
+    "Html": "<p>I haven't been working with Silverlight 4 yet. Seems a pretty obscure message to me. Did you investigate the issue further?&nbsp;</p>",
+    "PostedDate": "2010-07-22T23:33:12.237-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "475742",
+    "ThreadId": "215764",
+    "Html": "<p>The problem is that</p>\r\n<p>\r\n<p><span style=\"font-family:Consolas;color:#0000ff;font-size:xx-small\"><span style=\"font-family:Consolas;color:#0000ff;font-size:xx-small\"><span style=\"font-family:Consolas;color:#0000ff;font-size:xx-small\">class</span></span></span><span style=\"font-family:Consolas;font-size:xx-small\"><span style=\"font-family:Consolas;font-size:xx-small\"> </span></span><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\"><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\"><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\">Generator</span></span></span><span style=\"font-family:Consolas;font-size:xx-small\"><span style=\"font-family:Consolas;font-size:xx-small\">&lt;TArg1, TType&gt; : </span></span><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\"><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\"><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\">IValueTransformationPipelineFactory</span></span></span><span style=\"font-family:Consolas;font-size:xx-small\"><span style=\"font-family:Consolas;font-size:xx-small\">&lt;</span></span><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\"><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\"><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\">Tuple</span></span></span><span style=\"font-family:Consolas;font-size:xx-small\"><span style=\"font-family:Consolas;font-size:xx-small\">&lt;</span></span><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\"><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\"><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\">Func</span></span></span><span style=\"font-family:Consolas;font-size:xx-small\"><span style=\"font-family:Consolas;font-size:xx-small\">&lt;TArg1, </span></span><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\"><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\"><span style=\"font-family:Consolas;color:#2b91af;font-size:xx-small\">IValueProvider</span></span></span><span style=\"font-family:Consolas;font-size:xx-small\"> </span></p>\r\n</p>\r\n<p>\r\n<p><span style=\"font-family:Consolas;font-size:xx-small\">&lt;TType&gt;&gt;, TArg1&gt;, TType&gt;</span></p>\r\n<p>Is not declared public, causing the exception noted above and the &quot;Access to method failed&quot; message.</p>\r\n<p>&nbsp;If you fix that along with all other variations of Generator, then</p>\r\n</p>\r\n<p>1. Now variations of Tuple() become the problem. My brute force approach was to declare these public, also.</p>\r\n<p>2. All assemblies that reference obtics must be recompiled.</p>\r\n<p><span>\r\n<p>\r\n<p><span>After these changes, obtics appears to work as normal for SL4.</span></p>\r\n</p>\r\n<p><span style=\"font-family:Consolas;font-size:xx-small\">&nbsp;</span></p>\r\n</span></p>",
+    "PostedDate": "2010-08-02T20:45:47.303-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "475911",
+    "ThreadId": "215764",
+    "Html": "<p>David, Wil it be possible for you to post a link to the changed src or compiled Sl4 libraries?</p>",
+    "PostedDate": "2010-08-03T05:32:41.953-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "476152",
+    "ThreadId": "215764",
+    "Html": "<p>Here is my hack version:</p>\r\n<p>&nbsp;</p>\r\n<p><a href=\"http://cid-165ee8545ec28f90.skydrive.live.com/redir.aspx?resid=165EE8545EC28F90!408&Bpub=SDX.Docs&Bsrc=GetSharingLink\">http://cid-165ee8545ec28f90.skydrive.live.com/redir.aspx?resid=165EE8545EC28F90!408&amp;Bpub=SDX.Docs&amp;Bsrc=GetSharingLink</a></p>\r\n<p>&nbsp;</p>\r\n<p>Note this requires a recompile of concurrent hash collection to sl4 as well. I included that project converted to SL4 in the folder.</p>",
+    "PostedDate": "2010-08-03T14:53:45.607-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "476153",
+    "ThreadId": "215764",
+    "Html": "<p>I didn't clean before zipping up, so both the binaries and the source should be included in the above. I didn't thoroughly test this BTW, just my own test app. Also, my changes are most definitely probably NOT the way throb will get this working for real, as this is extremely hacky.</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2010-08-03T14:56:07.517-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

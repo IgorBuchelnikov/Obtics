@@ -1,0 +1,34 @@
+[
+  {
+    "Id": "469899",
+    "ThreadId": "220224",
+    "Html": "<b>Problem:</b>\r\n&nbsp;&nbsp; I have a collection of models which I would like to wrap with viewmodels and then present them to the UI as a collectionview. It all worked well except when I attempted to remove a model from the source collection an exception would be thrown, no such object at position x; It appeared to be attempting to remove an object from the viewmodel collection twice.\r\n\r\n<br>\r\n<br>\r\n<b>Solution:</b>\r\n&nbsp;&nbsp;  Reading http://obtics.codeplex.com/wikipage?title=Well-behaved lead me to realize that for Obtics to function it needs a way to relate models to viewmodels after the expression was executed. My solution to this was to overload the Equals(object obj) function in the viewmodel and handle both cases of equality, viewmodel == viewmodel and model == viewmodel.\r\n<br>\r\n<br>\r\n-Peter",
+    "PostedDate": "2010-07-20T14:09:06.857-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "470290",
+    "ThreadId": "220224",
+    "Html": "...",
+    "PostedDate": "2010-07-21T06:30:36.43-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "471354",
+    "ThreadId": "220224",
+    "Html": "<p>? Ignore what ?</p>\r\n<p>If you had an issue and later found a solution other people might be interested.</p>\r\n<p>Regs,</p>\r\n<p>Thomas</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2010-07-22T23:45:06.277-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "471564",
+    "ThreadId": "220224",
+    "Html": "The solution was to read your documentation ;) but I guess I could put up a solution.",
+    "PostedDate": "2010-07-23T05:17:44.067-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

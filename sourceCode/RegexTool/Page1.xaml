@@ -1,0 +1,99 @@
+﻿<Page x:Class="RegexTool.Page1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:ov="clr-namespace:Obtics.Values;assembly=Obtics"
+    Title="Regex tool"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+      >
+    <!-- 
+        In this document we refer to the Value property of IValueProvider objects by explicit property reference. This means that WPF doesn't
+        have to search for public (which they are not) implementations of the Value property on the general object.
+    
+        WPF can now resolve the property at all and can do it more efficiently.
+    
+        In one case (MarkedString) the value provider is 'capped' with a concrete and public interface implementation. (using the Concrete extension method from BindingHelper)
+        This allows for more convenient but less efficient property reference by name alone.
+    -->
+    <DockPanel Margin="6">
+        <GroupBox DockPanel.Dock="Top" Header="Pattern">
+            <DockPanel Margin="6">
+                <TextBox DockPanel.Dock="Top" Margin="6" x:Name="PatternTextBox" AcceptsReturn="True" TextWrapping="Wrap"></TextBox>
+                <DockPanel DockPanel.Dock="Top">
+                    <Label DockPanel.Dock="Left">Options:</Label>
+                    <Grid Height="146">
+                        <CheckBox Height="16" Margin="6,6,0,0" x:Name="IgnoreCaseCheckBox" VerticalAlignment="Top" HorizontalAlignment="Left" Width="136">Ignore case</CheckBox>
+                        <CheckBox Height="16" Margin="6,28,0,0" x:Name="MultilineCheckBox" VerticalAlignment="Top" HorizontalAlignment="Left" Width="136">Multiline</CheckBox>
+                        <CheckBox IsEnabled="{Binding Path=EcmaExcludedOptionsEnabled.(ov:IValueProvider.Value)}" Margin="148,57,82,0" x:Name="ExplicitCaptureCheckBox" Height="16" VerticalAlignment="Top">Explicit capture</CheckBox>
+                        <CheckBox IsEnabled="{Binding Path=EcmaExcludedOptionsEnabled.(ov:IValueProvider.Value)}" Height="16" Margin="148.001,123,81.999,0" x:Name="SinglelineCheckBox" VerticalAlignment="Top">Singleline</CheckBox>
+                        <CheckBox IsEnabled="{Binding Path=EcmaExcludedOptionsEnabled.(ov:IValueProvider.Value)}" Margin="147.999,79,82,0" x:Name="IgnorePatternWhitespaceCheckBox" Height="16" VerticalAlignment="Top">Ignore pattern whitespace</CheckBox>
+                        <CheckBox IsEnabled="{Binding Path=EcmaExcludedOptionsEnabled.(ov:IValueProvider.Value)}" Margin="148,101,81.999,0" x:Name="RightToLeftCheckBox" Height="16" VerticalAlignment="Top">Righ to left</CheckBox>
+                        <CheckBox IsEnabled="{Binding Path=EcmaOptionEnabled.(ov:IValueProvider.Value)}" Height="16" Margin="148,6,82,0" x:Name="ECMAScriptCheckBox" VerticalAlignment="Top">ECMA script</CheckBox>
+                        <CheckBox IsEnabled="{Binding Path=EcmaExcludedOptionsEnabled.(ov:IValueProvider.Value)}" Height="16" Margin="148,35,82,0" x:Name="CultureInvariantCheckBox" VerticalAlignment="Top">Culture invariant</CheckBox>
+                        <Line Name="OptionsSeperator" X1="0" Y1="0" X2="160" Y2="0" Margin="148,28,82,0" Height="1" VerticalAlignment="Top" Stroke="Black"></Line>
+                    </Grid>
+                </DockPanel>
+                <TextBlock DockPanel.Dock="Top" Margin="6" x:Name="Message" TextWrapping="Wrap">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Text" >
+                                <Setter.Value>
+                                    <Binding Path="CurrentRegex.(ov:IValueProvider.Value).Value.Message" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Foreground" Value="Red"></Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=CurrentRegex.(ov:IValueProvider.Value).Value}" Value="{x:Null}">
+                                    <Setter Property="Foreground" Value="Green"></Setter>
+                                    <Setter Property="Text" >
+                                        <Setter.Value>
+                                            <s:String>Valid regex</s:String>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </DockPanel>
+        </GroupBox>
+        <GroupBox MinHeight="100" MaxHeight="170" DockPanel.Dock="Bottom" Header="Unique matches">
+            <ScrollViewer Margin="6" >
+                <ItemsControl ItemsSource="{Binding Path=TotalUniqueMatches}"></ItemsControl>
+            </ScrollViewer>
+        </GroupBox>
+        <GroupBox MinHeight="100" DockPanel.Dock="Top" Header="Test strings">
+            <DockPanel Margin="6">
+                <Button DockPanel.Dock="Bottom" x:Name="AddButton" Click="AddButton_Click" HorizontalAlignment="Left">Add</Button>
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding TestStrings}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <Line DockPanel.Dock="Bottom" Margin="6" Height="1" X2="{Binding RelativeSource={RelativeSource Self}, Path=ActualWidth}" HorizontalAlignment="Stretch" Stroke="Black"></Line>
+                                    <StackPanel DockPanel.Dock="Right">
+                                        <!-- not specific property type to demonstrate 'Concrete' extension method on IValueProvider -->
+                                        <ContentControl Margin="6" ToolTip="{Binding Path=MarkedString.Value}" Content="Match!" Foreground="Green">
+                                            <ContentControl.Style>
+                                                <Style TargetType="{x:Type ContentControl}">
+                                                    <Setter Property="Visibility" Value="Hidden"></Setter>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=Match.(ov:IValueProvider.Value).Success}" Value="true">
+                                                            <Setter Property="Visibility" Value="Visible"></Setter>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ContentControl.Style>
+                                        </ContentControl>
+                                        <Button Margin="6" x:Name="DeleteButton" Tag="{Binding}" Click="DeleteButton_Click" HorizontalAlignment="Left">Delete</Button>
+                                    </StackPanel>
+                                    <TextBox Margin="6" AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding Path=String.(ov:IValueProvider.Value), UpdateSourceTrigger=PropertyChanged}"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </GroupBox>
+    </DockPanel>
+</Page>

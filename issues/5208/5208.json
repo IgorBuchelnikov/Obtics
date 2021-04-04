@@ -1,0 +1,115 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": null,
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "Here is a unit test for a bug I found.  The test called \"Test_Control\" works as expected.  However, the \"Test_Broken\" uses an object that has an overridden GetHashCode method, which causes the observed expression to break.\n \nWhile this example uses the \"Custom GetHashCode\" object as a parameter to Enumerable.Range, I have a feeling that this is also the same bug that exists in several other places throughout my application that use a \"Custom GetHashCode\" object in other ways.\n \n<code>\nImports System.Collections.Generic\nImports System.ComponentModel\nImports System.Diagnostics\nImports Microsoft.VisualStudio.TestTools.UnitTesting\nImports Obtics.Values\nImports System.Collections.Specialized\n \n<TestClass()> Public Class ObticsBug_OverridingGetHashCodeBreaksEnumerable\n \n\t<TestMethod()> Public Sub Test_Control()\n\t\tDim testRange = New WorkingRange(0, 1)\n\t\tDim testRangeCollection = New WorkingRange() {testRange}\n\t\tDim originalCount = 1\n \n\t\tDim brokenCollection = ExpressionObserver.Execute(testRangeCollection, Function(source As IEnumerable(Of WorkingRange)) ( _\n\t\t From first In source _\n\t\t From generatedDay In Enumerable.Range(first.Start, first.End - first.Start) _\n\t\t Select generatedDay _\n\t\t )).Cascade()\n\t\tDim tryToBreakBrokenCollection = DirectCast(brokenCollection, INotifyCollectionChanged)\n\t\tAddHandler tryToBreakBrokenCollection.CollectionChanged, AddressOf OnResultCollectionChanged\n \n \n\t\tTrace.WriteLine(\"COUNT=\" & originalCount)\n\t\tAssert.AreEqual(originalCount, brokenCollection.Count())\n \n\t\tTrace.WriteLine(\"CHANGING START\")\n\t\ttestRange.Start = testRange.Start - 1\n \n\t\tAssert.AreEqual(originalCount + 1, brokenCollection.Count())\n\t\tTrace.WriteLine(\"COUNT=\" & (originalCount + 1))\n \n\tEnd Sub\n \n\t<TestMethod()> Public Sub Test_Broken()\n\t\tDim testRange = New BrokenRange(0, 1)\n\t\tDim testRangeCollection = New BrokenRange() {testRange}\n\t\tDim originalCount = 1\n \n\t\tDim brokenCollection = ExpressionObserver.Execute(testRangeCollection, Function(source As IEnumerable(Of BrokenRange)) ( _\n\t\t From first In source _\n\t\t From generatedDay In Enumerable.Range(first.Start, first.End - first.Start) _\n\t\t Select generatedDay _\n\t\t )).Cascade()\n\t\tDim tryToBreakBrokenCollection = DirectCast(brokenCollection, INotifyCollectionChanged)\n\t\tAddHandler tryToBreakBrokenCollection.CollectionChanged, AddressOf OnResultCollectionChanged\n \n \n\t\tTrace.WriteLine(\"COUNT=\" & originalCount)\n\t\tAssert.AreEqual(originalCount, brokenCollection.Count())\n \n\t\tTrace.WriteLine(\"CHANGING START\")\n\t\ttestRange.Start = testRange.Start - 1\n \n\t\tAssert.AreEqual(originalCount + 1, brokenCollection.Count())\n\t\tTrace.WriteLine(\"COUNT=\" & (originalCount + 1))\n \n\tEnd Sub\n \n\tProtected Overridable Sub OnResultCollectionChanged(ByVal sender As Object, ByVal e As System.Collections.Specialized.NotifyCollectionChangedEventArgs)\n\tEnd Sub\n \n\tPublic Class WorkingRange\n\t\tImplements INotifyPropertyChanged\n \n\t\tPublic Sub New(ByVal start As Integer, ByVal [end] As Integer)\n\t\t\t_End = [end]\n\t\t\t_Start = start\n\t\tEnd Sub\n \n\t\tPrivate _End As Integer\n\t\tPublic Property [End]() As Integer\n\t\t\tGet\n\t\t\t\tReturn _End\n\t\t\tEnd Get\n\t\t\tSet(ByVal value As Integer)\n\t\t\t\t_End = value\n\t\t\t\tRaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(\"End\"))\n\t\t\tEnd Set\n\t\tEnd Property\n \n \n\t\tPrivate _Start As Integer\n\t\tPublic Property Start() As Integer\n\t\t\tGet\n\t\t\t\tReturn _Start\n\t\t\tEnd Get\n\t\t\tSet(ByVal value As Integer)\n\t\t\t\t_Start = value\n\t\t\t\tRaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(\"Start\"))\n\t\t\tEnd Set\n\t\tEnd Property\n \n\t\tPublic Event PropertyChanged(ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged\n\tEnd Class\n \n\tPublic Class BrokenRange\n\t\tInherits WorkingRange\n \n\t\tPublic Sub New(ByVal start As Integer, ByVal [end] As Integer)\n\t\t\tMyBase.New(start, [end])\n\t\tEnd Sub\n \n\t\tPublic Overrides Function GetHashCode() As Integer\n\t\t\tDim code As String = \"\"\n\t\t\tcode += Me.Start.GetHashCode().ToString()\n\t\t\tcode += \"$\"\n\t\t\tcode += Me.End.GetHashCode().ToString()\n\t\t\tDim hashCode = code.GetHashCode()\n\t\t\tReturn hashCode\n\t\tEnd Function\n\tEnd Class\nEnd Class\n</code>",
+    "LastUpdatedDate": "2013-02-13T18:41:06.467-08:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-10-12T11:41:01.763-07:00",
+    "Status": {
+      "Name": "Proposed",
+      "Id": 1
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "Overriding GetHashCode on object used in observed expression causes expression to not update after its INotifyCollectionChanged.CollectionChanged event has a handler",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 2,
+    "Id": 5208
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "This problem is caused by un unpropper override of GetHashCode(). Note that the standard GetHashCode method (in combination with standard Equals method) is quite fundamental. It deals with the identity of your object. Usually the identity is determined (with reference types) by the instance of your object. In that case the simple rule is that objects are equals if and only if they are the same instance.\r\n\r\nGetHashCode and Equals allow you to override this simple rule and two objects to be equal even if they are not the same instance. The hashcode returned by GetHashCode serves as a hint to the objects identity. Hashtables use the hashcode to store and later retrieve values. To be able to do that an object should always return the same hashcode during its entire lifetime.\r\n\r\nIn your case the GetHashCode method depends on a mutable field and if the Start property gets changed the result of GetHashCode changes. This means that if Start changes no Hashtable can ever find your object back. This is not only a problem for Obtics. The ordinary BCL Dictionary class will have problems as well.\r\n\r\nI have written a small essay about 'well behaved' objects and functions (http://obtics.codeplex.com/Wiki/View.aspx?title=Well-behaved) in response to un earlier issue you reported. I realise that placing 'well behavedness' requirements on client code is in itself undesirable. It on the other hand is very important for the proper functioning of Obtics. (Foremost object identity is used to limit the resource footprint of transformation trees. Obtics is able to reckognize (sub)trees it created before and reuse them instead of creating new ones every time)",
+      "PostedDate": "2009-10-13T01:26:34.017-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "That's an interesting essay.\r\n\r\nMaybe you can tell me if there is fault in my reasoning for wanting the Range class to be the way it is (note that in my local, unsimplified code, it also implements IEquatable).  \r\n\r\nBy example, if you have the LINQ query:\r\nfrom dateInRange in Enumerable.Range(source.Range.Start, source.Range.End - source.Range.Start)\r\nthen I don't want the query to be reset if source.Range is set to a different instance of Range that has the same values for Start and End.\r\n\r\nFor what the Range class is used for, it should be a structure instead of a class except for a few reasons: most importantly, I want the properties to be individually updateable to improve performance (there is less calculation required if just End changes rather than both Start and End).\r\n\r\nJust like it would be if Range was a structure, I'd like any two instances to be equal as long as their members are equal.  This can happen if it has been serialized and then deserialized, or if two instances were pulled from two different queries.\r\n\r\nThis improves overall speed, since properties aren't raising change events as often; and it makes caching easier, since Dictionary lookups use the GetHashCode to create a key value.\r\n",
+      "PostedDate": "2009-10-13T05:24:08.863-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "And just to clarify.... System.Windows.CornerRadius would *not* be considered a \"well behaved\" object, right?  For example, BottomLeft is updateable and GethashCode depends on that value.",
+      "PostedDate": "2009-10-13T05:43:22.047-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "And it seems that System.Data.EntityKey is also not well behaved.",
+      "PostedDate": "2009-10-13T05:53:07.417-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Given the following query:\r\nfrom flattenedRange in Equatable.Range(source.Range.Start, source.Range.End - source.Range.Start)\r\n\r\nIf Obtics were to allow a mutable return value from GetHashCode then what would be the difference (as far as Obtics is concerned) between 1) allowing Range to have a mutable HashCode, which is dependent on the values of Start and End and then changing the value of source.Range.End or 2) giving Range an immutable HashCode, making Start and End read-only (which would be required to make Range \"well behaved\", and then changing the value of source.Range?\r\n\r\nTo me, it seems that in both cases, the identity of source.Range has changed and that the (sub)tree will have to be recreated.\r\n\r\nIf that is the case, then would it be possible to add a setting that caused Obtics to allow a mutable value from GetHashCode()?  Or maybe provide an interface that tells Obtics that an object has that behavior?\r\nOtherwise, my alternative would be to 1) accept the extra change events caused by updating source.Range when only source.Range.End actually changed and 2) make Start and End read-only and create data binding converters that converted between a read-only and a writable version of Range.",
+      "PostedDate": "2009-10-13T06:45:22.403-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "System.Windows.CornerRadius and System.Data.EntityKey indeed are not well-behaved. You can let them ACT like well-behaved. You can do this by after initalization not touching any state values that influence the GetHashCode() and Equals() methods. This is quite common. In WPF there are some classes that allow you to Freeze them (signaling end of initialization). Before the Freeze you can change some properties and after the Freeze you'll get an exception if you try.\r\n\r\nIt is not bad to have mutable state, as long as the identity of the item does not depend on it. The way you are using Range in your example i'd remove the override of GetHashCode (and Equals) and rely on instance equality. You'll have the disadvantage that if, as you described, you'd deserialize the same stream twice you'd end up with two different objects. But this is rightfully so since those two 'clones' are not tied and lead completely independent lives. The GetHashCode and Equals methods are not meant to indicate 'have the same content'. Its more like the label on a suitcase. That doesn't change if the contents of the suitcase changes.\r\n\r\nIf you plan on making your Range class a struct i'd definitely make it immutable. (in which case GetHashCode() can safely rely on Start and End). The relative price of moving two int's instead of one is negligable. Check out the Tuple structs in Obtics code. \r\n\r\nFor the answer as to why Obtics would rather want an immutable, completely replaced Range over a mutable, identity changing Range, i'd refer to the Dictionary example again. A Dictionary will work fine with the first version but fail with the second. \r\n\r\nIn your example the Range object is used in an 'inner transformation' enclosed in an 'outer transformation'. Every time testRangeCollection changes 'inner transformations' will be built for every changed item. If obtics can not rely on the identity of your Range object it can not reuse previously created 'inner transformations' since it can not reliably determine if two inner transformations are the same or not. With complex queries this can lead to an explosion of the transformation tree. Not only consuming memory but also processing power when traversing events through the bloated transformation tree.\r\n\r\nCreating a mechanism whereby alternative Hashing and Equality functions can be supplied to obtics may be doable. But I'd need to think about it a bit (Attributes or Configuration possibly). Still I'm of the oppinion that making your objects, values and functions well-behaved is good design practise in general.",
+      "PostedDate": "2009-10-13T13:38:03.16-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "As a work around, I changed the GetHashCode implementation to the following.  The OnHashCodePropertyChanged method is called after a property change that affects the HashCode, but before the property change event.  It is not ideal, since it will leak memory over time (until/unless I add reference counts and dispose code to remove entries from _HashCodeMap), but it seems to work at least on this unit test.  Do you foresee any other problems Obtics would have with the way this is done?\r\n\r\n\r\nPrivate _HashCode As Integer?\r\nProtected Shared _HashCodeMap As New Dictionary(Of Integer, Integer)()\r\n\r\nPublic Overrides Function GetHashCode() As Integer\r\n\tIf _HashCode Is Nothing Then\r\n\t\tDim hashCode = GenerateHashCode()\r\n\t\tSyncLock _HashCodeMap\r\n\t\t\tIf Not _HashCodeMap.TryGetValue(hashCode, hashCode) Then\r\n\t\t\t\t_HashCodeMap(hashCode) = hashCode\r\n\t\t\tEnd If\r\n\t\tEnd SyncLock\r\n\t\t_HashCode = hashCode\r\n\tEnd If\r\n\tReturn _HashCode.Value\r\nEnd Function\r\n\r\nProtected Function GenerateHashCode() As Integer\r\n\tDim code As String = \"\"\r\n\tcode += Me.Start.GetHashCode().ToString()\r\n\tcode += \"$\"\r\n\tcode += Me.End.GetHashCode().ToString()\r\n\tReturn code.GetHashCode()\r\nEnd Function\r\n\r\nProtected Sub OnHashCodePropertyChanged()\r\n\tIf _HashCode IsNot Nothing Then\r\n\t\tDim currentHashCode = GenerateHashCode()\r\n\t\tSyncLock _HashCodeMap\r\n\t\t\tIf Not _HashCodeMap.TryGetValue(currentHashCode, currentHashCode) Then\r\n\t\t\t\t_HashCodeMap(currentHashCode) = _HashCode.Value\r\n\t\t\tEnd If\r\n\t\tEnd SyncLock\r\n\r\n\t\t' Sanity check\r\n\t\tIf currentHashCode <> _HashCode.Value Then Throw New Exception(\"There is a thread bug with the hash generation.\")\r\n\tEnd If\r\nEnd Sub",
+      "PostedDate": "2009-10-13T14:43:33.297-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "I think you are being too complex. Getting a hashcode now becomes an expensive operation. Also I think your solution 'works' because you are always returning the same hashcode for all objects. (which is not strictly speaking illegal but totaly beats the purpose of hashcodes).\r\n\r\n ",
+      "PostedDate": "2009-10-14T01:00:48.45-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "I agree that it's not ideal, but in my case, I think it's still faster than the alternative.  I have a lot of \"nested\" enumerations (i.e. enumeration that uses enumeration that uses enumeration), and anytime an enumeration deep into the tree needs to be re-evaluated, that need for re-evaluation propagates up the tree.  Therefore, anything I can do to prevent a collection reset saves a lot of processing.\r\n\r\n> \"because you are always returning the same hashcode for all objects\"\r\nNot entirely true.  The hashcodes are only shared if an object's properties change.  So if you have 2 object states (s1, s2) and then change s1's properties to create a third state, s3, then s1 & s3 will share a hashcode, but s2 will be a different hashcode.",
+      "PostedDate": "2009-10-15T08:33:32.197-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "You can still use your Range class to prevent Resets without overriding GetHashCode and Equals. But I guess you need those for other purposes.\r\n\r\nUnless VB works differently than C# in this resect: _HashCodeMap.TryGetValue(hashCode, hashCode) will set a value in hashCode regardles if it can find one or not. If it can not find an entry it will set a default value in hashCode (because it is an out parameter).\r\n\r\nBusy with a mechanism to override the default equality compare functionality in Obtics. Will probably be finished after the weekend.",
+      "PostedDate": "2009-10-16T00:53:32.91-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Associated with changeset 29452.",
+      "PostedDate": "2009-10-17T17:32:51.54-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "In the commit notes for the custom obtics compare attribute you added for this issue, it says \"Note that when an object with an alternative equality comparer is wrapped inside another object then it has no effect.\"\r\n\r\nCould you explain this a little further and give an example?  I'm not quite sure what is meant by \"wrapped inside\".",
+      "PostedDate": "2009-11-18T05:09:15.373-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "If you would have a class:\r\n\r\n[ObticsEqualityComparer(typeof(MyAComparer))]\r\npublic class A\r\n{}\r\n\r\nAnd A would be the type of the result of a lambda function you pass to an ObservableEnumerable.Select method (either direct or via Linq and/or ExpressionObserver).\r\nThen OBtics will use an instance of your MyAComparer class to compare the returned A instances.\r\n\r\nIf however you would 'wrap' your instance in say an annonymous type. ( Your lambda would be something like x => new { x = x, a = new A(x) } ) then obtics will compare those instances of the anonymous type with the default equality comparer which in turn will use the DEFAULT equality comparer to comparer instances of A.\r\nSo in that case the ObticsEqualityComparerAttribute is without effect. The mentioned construct will be created by the compiler if you do something like this in LINQ:\r\n\r\nfrom x in XCollection\r\nlet a = new A(x) //creates anonymous class with x = x and a = new A(x)\r\nselect something(x,a)\r\n\r\n\r\n",
+      "PostedDate": "2009-11-19T07:56:09.143-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-12-14T17:09:43.373-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:06.467-08:00",
+      "Id": -2147483648
+    }
+  ]
+}

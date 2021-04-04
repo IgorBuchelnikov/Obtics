@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "654079",
+    "ThreadId": "268104",
+    "Html": "\r\n<p>Hi</p>\r\n<p>I tried to set-up Obtics in my SL4 project to display live projections from an ObservableCollection in a ListBox. Reading through the wiki-pages I set it up and got it to compile, however I can't get the UI to update. When I break and look at the output\r\n of the projection though, all values are there...</p>\r\n<p>Searching around for a solution, I found the POC-Project from another post, which runs perfectly. I then extended this to give me a list of values as an IEnumerable&lt;&gt; and bound them to a ListBox, which also works.</p>\r\n<p>But as soon as I switch to SL4 and update Obtics and its dependenies to the newest trunk version, the IEnumerable&lt;&gt;-binding has the same problem as my large project: no UI-updates anymore. Getting a single value per the original demo app still works\r\n though.</p>\r\n<p>Could anyone give me a solution/pointers/anything really?</p>\r\n<p>Thank you,<br>\r\nMichael</p>\r\n<p>Code&nbsp;I used in the Demo-Project:&nbsp;</p>\r\n<div style=\"color:black; background-color:white\">\r\n<pre><span style=\"color:blue\">public</span> IEnumerable&lt;<span style=\"color:blue\">string</span>&gt; Strings\r\n{\r\n\t<span style=\"color:blue\">get</span>\r\n\t{\r\n\t\t<span style=\"color:blue\">return</span> ExpressionObserver.Execute(_Integers, c =&gt; c.Select(v =&gt; <span style=\"color:#a31515\">&quot;value: &quot;</span> &#43; v.ToString())).Cascade();\r\n\t}\r\n}\r\n\r\n</pre>\r\n</div>\r\n",
+    "PostedDate": "2011-08-07T08:28:35.48-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "654674",
+    "ThreadId": "268104",
+    "Html": "<p>Hi,</p>\r\n<p>It seems like Silverlight first gets the sequence and only&nbsp;after registers for changes. Obtics in that case would not send any change notifications because it assumes the client doesn't know tha actual situation anyway (it having missed all change notifications in between getting the collection en registering for changes. This is real in mutithreaded situations but atmittedly hypothetical in singlethreaded situations).</p>\r\n<p>Now when a client registers for changes the value or enumerator will always be probed so that Obtics will always send at least one change notification after every new registration. (and assuming the client responds to these&nbsp;change notifications will continue to send them)</p>\r\n<p>Try the latest check-in.</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2011-08-08T09:57:55.99-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "654719",
+    "ThreadId": "268104",
+    "Html": "<p>Hi Thomas</p>\r\n<p>Thanks so much for the quick help and fix. As far as I can tell it works perfectly now :)</p>\r\n<p>Michael</p>",
+    "PostedDate": "2011-08-08T11:07:24.87-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

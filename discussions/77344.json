@@ -1,0 +1,58 @@
+[
+  {
+    "Id": "264363",
+    "ThreadId": "77344",
+    "Html": "<p>Let's say I do this...</p>\r\n<div style=\"color:Black;background-color:White\">\r\n<pre><div style=\"color:Black;background-color:White\"><pre>IValueProvider&lt;<span style=\"color:Blue\">int</span>&gt; vp = ExpressionObserver.Execute(() =&gt; X.SomeInteger);\r\nvp.PropertyChanged += SomeHandler;\r\n... Do stuff requiring observation ...<br>vp.PropertyChanged -= SomeHandler; \r\nvp = <span style=\"color:Blue\">null</span>;\r\n</pre>\r\n</div>\r\n</pre>\r\n</div>\r\n<p>Will the transformation chain get garbage collected, or will X.PropertyChanged still be pointing to it and prevent that from happening?&nbsp; I have long lived source objects in my application and I'm wondering if there's any way to get Obtics to truly disconnect itself from the source objects when I'm done observing.</p>\r\n<p>I'm concerned about the possibility for memory leaks here.</p>",
+    "PostedDate": "2009-12-07T00:30:11.673-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "264509",
+    "ThreadId": "77344",
+    "Html": "<p>Yes, it should get cleaned up. Unless it is used somewhere else.</p>\r\n<p>Also; the value providers tend to have a longer lifetime and can easily end up in the 3rd level heap. This means it may take some time before&nbsp;detached value providers&nbsp;get garbage collected. In the meantime they can always&nbsp;be reused.</p>\r\n<p>It is important to always detach any manualy added event handlers.</p>",
+    "PostedDate": "2009-12-07T08:07:35.633-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "264561",
+    "ThreadId": "77344",
+    "Html": "<p>Thanks for the help once again!&nbsp; Your time is much appreciated.&nbsp; We are enjoying Obtics more all the time.</p>\r\n<p>I'm wondering, how do you &quot;disconnect&quot; yourself from X in the above example?&nbsp; You mentioned that it's important to remove the event handler... is there some sort of cascade effect when the top level handlers are all disconnected?&nbsp; I'm just curious because this was one of the major problems we had from an implementation perspective in our own system.</p>",
+    "PostedDate": "2009-12-07T10:19:02.91-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "265048",
+    "ThreadId": "77344",
+    "Html": "<p>Along the same lines, if I have an object O that is observing object X, and I drop all references to O, will the transformation chain get garbage collected?</p>\r\n<p>If not, should I be adding a Dispose() to O that disconnects from the event handler manually?</p>\r\n<p>Appreciate your advice on this tricky subject.</p>",
+    "PostedDate": "2009-12-08T11:09:42.27-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "265249",
+    "ThreadId": "77344",
+    "Html": "<p>The transformation pipelines keep track of the number of registered event listeners. As soon as this number drops to 0 they themselves will unregister from any events they depend on. So yes; it is a cascade.</p>\r\n<p>You can get the same sort of memory leak as you would get with ordinary events. An event registration chain from X to O will keep O allive. If you have any manual event registrations in O you should always get rid of them before you let go of O. This will probably mean implementing IDispose on your object. You could also keep track of your own event&nbsp;listeners and unregister when all your clients have unregistered.&nbsp;A combination is also possible.</p>\r\n<p>It&nbsp;would be&nbsp;easier, though less classic, to 'just' return IValueProvider&lt;T&gt; s from your properties.</p>",
+    "PostedDate": "2009-12-09T02:14:18.063-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "265355",
+    "ThreadId": "77344",
+    "Html": "<p>I've also played with the possibility of using weak references to solve the problem.&nbsp; The idea I was testing was to disconnect from the source PropertyChanged handler if the target of the event is null.&nbsp; This enables automatic garbage collection but has the drawback of not disconnecting a handler unless a PropertyChanged event is actually thrown.</p>\r\n<p>It sounds like you've probably looked into this... does WPF disconnect its handlers when its windows go away?</p>",
+    "PostedDate": "2009-12-09T07:44:54.827-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "265452",
+    "ThreadId": "77344",
+    "Html": "<p>Obtics doesn't use weak events especially because WPF does. I often have properties that return IValueProviders that are created (or retrieved from the carrousel)&nbsp;on the fly (not stored in a local field or anything). WPF can bind directly to the Value of the returned IValueProvider. As long as&nbsp;WPF has an event registration the non-weak events (from the source up)&nbsp;will ensure that the transformation pipeline will remain allive. If Obtics would use weak events the pipeline would be garbage collected and no more&nbsp;updates would&nbsp;get through to&nbsp;the WPF binding.</p>\r\n<p>When WPF is done it unregisters. The transformation pipeline in turn will unregister from its source and can be garbage collected thus&nbsp;immediately reducing memory stress.</p>\r\n<p>There is an issue though with WPF bindings&nbsp;to objects that themselves have a strong reference path to the target of the binding. The binding uses the PropertyDescriptor.AddValueChanged method to register for property change notifications. This in turn will store a strong reference to the property owning object in a static container! And that means that because of the strong reference path from the object to the binding target that target will never be garbage collected and the binding never cleared -&gt; memory leak.</p>\r\n<p>So; if you have a WPF element that is not meant to stay arround for ever. Don't bind it to an observable expression that has that same element or a parent of&nbsp;that element&nbsp;as one of it's dependencies. I usually create a backing store (ValueProvider.Dynamic())&nbsp;for a value my observable expression depends on and then bind WPF to that backing store. WPF can then safely bind to my observable expression without the risk of creating the mentioned problem. So I don't use TextBox.Text directly in my observable expression but create a field IValueProvider&lt;string&gt; t = ValueProvider.Dynamic&lt;string&gt;(); I bind TextBox.Text to that field and base my observable expression on it. Thus preventing a strong reference path from my observable expression to the TextBox.&nbsp;</p>",
+    "PostedDate": "2009-12-09T13:14:40.757-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

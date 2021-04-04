@@ -1,0 +1,81 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": "2011-06-26T00:34:27.353-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "Hi Thomas\n \nI've just started using Obtics and on the whole it's excellent.  Well done!\n \nI understand there are a few undocumented gotchas (eg. http://obtics.codeplex.com/Thread/View.aspx?ThreadId=68881), but I believe I've found a nasty bug whereby the IValueProvider<>.Value is incorrect when;\na. Expression contains System.Linq.Enumerable.Intersect() that returns non-zero AND\nb. IValueProvider isn't bound/observed.\n \nThe following code illustrates the problem;\na. Class A - expression without Intersect that works without requiring the obtics property to be observed.\nb. Class B - expression with Intersect that fails unless the obitcs property is observed.\n \nI'm assuming the problem isn't unique to Intersect(), but instead possibly related to;\n- inter-dependencies in the constructed expression tree?\n- delayed execution not firing when the IValueProvider<>.Value is read?  I suspect this is the issue.\n \nI'd *really* appreciate a fix to this issue as these expressions are typical (albeit it more complex) of those I need to observe.\n \nMany Thanks\n \n \nusing System;\nusing System.Collections.Generic;\nusing System.Collections.ObjectModel;\nusing System.ComponentModel;\nusing System.Linq;\nusing Obtics.Values;\n \nnamespace ObticsValueTest\n{\n    // simpler expression that doesn't involve Intersect()\n    public class A\n    {\n        public ObservableCollection<object> OC1 = new ObservableCollection<object>();\n        public ObservableCollection<object> OC2 = new ObservableCollection<object>();\n \n        public int Method()\n        {\n            return OC1.Count() + OC2.Count();\n        }\n        public IValueProvider<int> Property\n        {\n            get { return ExpressionObserver.Execute(() => OC1.Count() + OC2.Count()); }\n        }\n    }\n \n    // more cmplex expression using Intersect()\n    public class B\n    {\n        public ObservableCollection<object> OC1 = new ObservableCollection<object>();\n        public ObservableCollection<object> OC2 = new ObservableCollection<object>();\n \n        public int Method()\n        {\n            return OC1.Intersect(OC2).Count();\n        }\n        public IValueProvider<int> Property\n        {\n            get { return ExpressionObserver.Execute(() => OC1.Intersect(OC2).Count()); }\n        }\n    }\n \n \n    class Program\n    {\n        static void Main()\n        {\n            // works\n            var a1 = new A();\n            Test(a1);\n \n            // works\n            var b1 = new B();\n            ((INotifyPropertyChanged) b1.Property).PropertyChanged += (s, e) => { };\n            Test(b1);\n            \n            // fails\n            var b2 = new B();\n            Test(b2);\n        }\n \n        static void Test(A a)\n        {\n            var o1 = new object();\n            var o2 = new object();\n \n            a.OC1.Add(o1);\n            if (a.Method() != a.Property.Value)\n                throw new Exception();\n \n            a.OC2.Add(o1);\n            if (a.Method() != a.Property.Value)\n                throw new Exception();\n \n            a.OC2.Add(o2);\n            if (a.Method() != a.Property.Value)\n                throw new Exception();\n        }\n \n        static void Test(B b)\n        {\n            var o1 = new object();\n            var o2 = new object();\n \n            b.OC1.Add(o1);\n            if (b.Method() != b.Property.Value)\n                throw new Exception();\n \n            b.OC2.Add(o1);\n            if (b.Method() != b.Property.Value)\n                throw new Exception();\n \n            b.OC2.Add(o2);\n            if (b.Method() != b.Property.Value)\n                throw new Exception();\n        }\n    }\n}",
+    "LastUpdatedDate": "2013-05-15T21:55:52.62-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-12-30T18:20:30.673-08:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "IValueProvider.Value is incorrect unless IValueProvider is being observed !?",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 2,
+    "Id": 5674
+  },
+  "FileAttachments": [
+    {
+      "FileId": 1860,
+      "FileName": "ObticsValueTest.zip",
+      "DownloadUrl": ".\\1860"
+    }
+  ],
+  "Comments": [
+    {
+      "Message": "Associated with changeset 33114.",
+      "PostedDate": "2010-01-05T12:18:52.877-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Some component used a cache when it shouldn't.. fixed.\r\n\r\nThanks for reporting the issue.\r\n\r\nBtw. Though this was a bug. I doubt wether it is a good idea to use obtics when you are not using the live aspect of it? i.e. directly or indirectly are registering for change events.\r\n\r\nRegs,\r\n\r\nThomas.",
+      "PostedDate": "2010-01-05T12:25:21.31-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2010-01-05T12:25:56.14-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Many thanks for fixing the bug.  I'll try it today.\r\n\r\nAgreed, the typical obtics scenario would be to have another entity register for change events (eg. WPF view binding to obtics backed model).  In addition to this, we have some exceptional scenarios;\r\na. Unit tests that validate the obtics backed model without the presence of (a binding) view.\r\nb. Obtics expressions that perform some fairly complex (and slow) calculations that we only want to execute once when an observable parameter changes, but whose result is not explicitly bound.\r\n\r\nThanks once again for the fix.\r\n\r\nRegards\r\nTibor",
+      "PostedDate": "2010-01-05T16:17:20.85-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2011-06-26T00:34:27.353-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:05.53-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:52.62-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

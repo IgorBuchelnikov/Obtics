@@ -1,0 +1,34 @@
+[
+  {
+    "Id": "265232",
+    "ThreadId": "77575",
+    "Html": "<p>I have a strange problem with my code where running ExpressionObserver.Execute(() =&gt; Target.Name) gives a different value than just compiling and executing the expression itself.</p>\r\n<p>The problem goes away when I comment out all of the carrousel &quot;cache&quot; code and let it just return the newItem every time.&nbsp; Basically, all lines but the search key creation and this next line are commented out and it works.</p>\r\n<p>var newItem = creator((Int32)searchKey.First, key);</p>\r\n<p>I'll try isolating the code into a unit test, but if anyone has any ideas where things might be going wrong, I'd be happy to hear them.</p>",
+    "PostedDate": "2009-12-09T01:27:27.38-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "265441",
+    "ThreadId": "77575",
+    "Html": "<p>Could the problem be in the&nbsp;Equals and&nbsp;GetHashCode method of the type of your Target? That two distinct instances would be regarded equal though they have different values for Name?</p>\r\n<p>You could disable the carrousel and it would all work&nbsp;but&nbsp;Obtics will&nbsp;become very slow and memory hungry.</p>",
+    "PostedDate": "2009-12-09T12:42:42.893-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "265465",
+    "ThreadId": "77575",
+    "Html": "<p>Turns out the problem was a missing property changed event.</p>",
+    "PostedDate": "2009-12-09T14:05:06.753-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "265571",
+    "ThreadId": "77575",
+    "Html": "<p>Well; that could be a perfect explanation too :-)</p>",
+    "PostedDate": "2009-12-09T23:10:08.31-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

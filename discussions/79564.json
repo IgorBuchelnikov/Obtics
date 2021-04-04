@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "272419",
+    "ThreadId": "79564",
+    "Html": "<p>I have an expression that is basically equivalent to the following:</p>\r\n<div style=\"color:Black;background-color:White\">\r\n<pre>t =&gt;\r\n\tt.ContextPaymentCreditCard == <span style=\"color:Blue\">null</span>\r\n\t\t? <span style=\"color:Blue\">null</span>\r\n\t\t: t.CreditCards\r\n\t\t\t.Cast&lt;ICreditCard&gt;()\r\n\t\t\t.Where(cc =&gt; cc.CVS == t.ContextPaymentCreditCard.CVS &amp;&amp;\r\n\t\t\t\t     cc.ExpiryMM == t.ContextPaymentCreditCard.ExpiryMM &amp;&amp;\r\n\t\t\t\t     cc.ExpiryYY == t.ContextPaymentCreditCard.ExpiryYY &amp;&amp;\r\n\t\t\t\t     cc.Name == t.ContextPaymentCreditCard.Name &amp;&amp;\r\n\t\t\t\t     cc.Number == t.ContextPaymentCreditCard.Number)\r\n\t\t\t.FirstOrDefault()\r\n\r\n</pre>\r\n</div>\r\n<p>When I comment out the Where clause or portions of the where clause it works.&nbsp; However, for some combination of the conditional expressions it fails with the following error:</p>\r\n<p>ExpressionRewriter:1312<br>Rewrite of System.Linq.Enumerable.ToList() or System.Linq.Enumerable.ToDictionary() not fully compatible. Cast result of call up to System.Collection.Generic.IList&lt;&gt; or System.Collection.Generic.IDictionary&lt;,&gt; before using in expression.</p>\r\n<p>The inner exception is:</p>\r\n<p>Expression of type 'System.Func`5[System.Collections.IEnumerable,System.String,System.Nullable`1[System.Int32],System.Nullable`1[System.Int32],Obtics.Values.IValueProvider`1[Pleasant.Erp.Accounting.Backend.ICreditCard]]' cannot be used for parameter of type 'System.Func`5[System.Collections.IEnumerable,System.String,System.Nullable`1[System.Int32],System.Nullable`1[System.Int32],Pleasant.Erp.Accounting.Backend.ICreditCard]' of method 'Pleasant.Erp.Accounting.Backend.ICreditCard SelectExt4[IEnumerable,String,Nullable`1,Nullable`1,ICreditCard](System.Object[], Int32, System.Func`5[System.Collections.IEnumerable,System.String,System.Nullable`1[System.Int32],System.Nullable`1[System.Int32],Pleasant.Erp.Accounting.Backend.ICreditCard])'<br><br>&nbsp;&nbsp; at System.Linq.Expressions.Expression.ValidateArgumentTypes(MethodInfo method, ReadOnlyCollection`1&amp; arguments)<br>&nbsp;&nbsp; at System.Linq.Expressions.Expression.Call(MethodInfo method, Expression[] arguments)<br>&nbsp;&nbsp; at Obtics.Values.ExpressionRewriter.MakeUnlimitedConvertCall(Expression nextExp, Boolean cascading) in C:\\Pleasant\\ThirdParty\\Obtics-1.0.13.0\\Obtics\\Values\\ExpressionRewriter.cs:line 513<br>&nbsp;&nbsp; at Obtics.Values.ExpressionRewriter.MakeConvertCall(Expression nextExp, Boolean cascading) in C:\\Pleasant\\ThirdParty\\Obtics-1.0.13.0\\Obtics\\Values\\ExpressionRewriter.cs:line 476<br>&nbsp;&nbsp; at Obtics.Values.ExpressionRewriter.MapMethod(MethodInfo orgMethodCall_Method, MapInfo&amp; mapping, IEnumerable`1 arguments, Type resultType) in C:\\Pleasant\\ThirdParty\\Obtics-1.0.13.0\\Obtics\\Values\\ExpressionRewriter.cs:line 1229<br>&nbsp;&nbsp; at Obtics.Values.ExpressionRewriter.VisitMethodCall(MethodCallExpression orgMethodCall) in C:\\Pleasant\\ThirdParty\\Obtics-1.0.13.0\\Obtics\\Values\\ExpressionRewriter.cs:line 1140<br>&nbsp;&nbsp; at Obtics.ExpressionVisitor.Visit(Expression exp) in C:\\Pleasant\\ThirdParty\\Obtics-1.0.13.0\\Obtics\\ExpressionVisitor.cs:line 73<br>&nbsp;&nbsp; at Obtics.Values.ExpressionRewriter.Observe(Expression ex) in C:\\Pleasant\\ThirdParty\\Obtics-1.0.13.0\\Obtics\\Values\\ExpressionRewriter.cs:line 588<br>&nbsp;&nbsp; at Obtics.Values.ExpressionRewriter.MapMethodArguments(MapInfo mapping, IEnumerable`1 orgMethodCallArgs, IEnumerable`1 orgMethodCallArgTypes, Int32&amp; mapIndex) in C:\\Pleasant\\ThirdParty\\Obtics-1.0.13.0\\Obtics\\Values\\ExpressionRewriter.cs:line 661<br>&nbsp;&nbsp; at Obtics.Values.ExpressionRewriter.VisitConditional(ConditionalExpression c) in C:\\Pleasant\\ThirdParty\\Obtics-1.0.13.0\\Obtics\\Values\\ExpressionRewriter.cs:line 948<br>&nbsp;&nbsp; at Obtics.ExpressionVisitor.Visit(Expression exp) in C:\\Pleasant\\ThirdParty\\Obtics-1.0.13.0\\Obtics\\ExpressionVisitor.cs:line 61<br>&nbsp;&nbsp; at Obtics.Values.ExpressionRewriter.ObserveLambdaBody(LambdaExpression ex, ExpressionObserverObject rewriteMethodMap) in C:\\Pleasant\\ThirdParty\\Obtics-1.0.13.0\\Obtics\\Values\\ExpressionRewriter.cs:line 1304</p>\r\n<p>I did try passing in a strongly typed list for CreditCards, but that failed in the same way... the cast was not necessary to break it.</p>\r\n<p>It seems that the outer exception might not be related to the inner one.&nbsp; Any ideas what might be going on here and how to work around it?</p>",
+    "PostedDate": "2010-01-02T10:59:32.733-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "272545",
+    "ThreadId": "79564",
+    "Html": "<p>Appeared there was a bug in the expression rewriter. Fixed in ChangeSet 33016.</p>\r\n<p>Thanks for reporting the issue.</p>",
+    "PostedDate": "2010-01-03T04:29:37.28-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "272713",
+    "ThreadId": "79564",
+    "Html": "<p>Great!&nbsp; Thanks for the fix.</p>",
+    "PostedDate": "2010-01-03T20:37:10.27-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

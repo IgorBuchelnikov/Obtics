@@ -1,0 +1,50 @@
+[
+  {
+    "Id": "561700",
+    "ThreadId": "244902",
+    "Html": "\r\n<p>Is the trunk considered to be production ready? &nbsp;We've been using 33016.</p>\r\n",
+    "PostedDate": "2011-02-06T20:25:29.837-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "562274",
+    "ThreadId": "244902",
+    "Html": "\r\n<p>No, it is not yet production ready.</p>\r\n<p>Main targets for the next release (V2)&nbsp;are robust exception handling. All collection transformations should be able to handle changes in atmost&nbsp;O(log n) time (mainly by using skiplists, a version of binary trees).</p>\r\n<p>Optional targets are&nbsp;adding extensions via config file and splitting obtics library in two. 1 for values and 1 for object linq (as an extension).</p>\r\n<p>Obtics has aquired quite a sizable code base. As you can imagine it is quite a bit of work to get it all&nbsp;done. If you would like a stable release soon,&nbsp;lend a hand.</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>\r\n",
+    "PostedDate": "2011-02-07T15:26:15.217-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "562301",
+    "ThreadId": "244902",
+    "Html": "\r\n<p>To be honest, I find the Obtics code base to be quite overwhelming, despite having contributed significant amounts of code to many other open source projects.&nbsp;&nbsp; The deeply nested call hierarchies with mysterious locking and cryptic class names\r\n have foiled my attempts to make much progress in improving things.&nbsp; Perhaps some architectural diagrams or other documentation would help light up understanding for those who have time to contribute.&nbsp; It seems like the barrier to entry is exceptionally\r\n high. :(</p>\r\n",
+    "PostedDate": "2011-02-07T16:24:17.873-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "562503",
+    "ThreadId": "244902",
+    "Html": "\r\n<p>Right; it is&nbsp;valid critique you are giving.&nbsp;&nbsp;So another reason I could use some help is to stop me blabbering in my own private dialect. I guess if you spend too much time in your own&nbsp;code&nbsp;both 'Tart'&nbsp;and 'Turd' seem&nbsp;perfect\r\n synonymes for 'Cake'&nbsp;and instead of a cooky factory you end up with a pile of&nbsp;.. &nbsp;&nbsp;:-/</p>\r\n<p>I should spend some time and do what&nbsp;programmers love to do... Document.</p>\r\n<p>&nbsp;</p>\r\n",
+    "PostedDate": "2011-02-08T02:22:23.173-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "562820",
+    "ThreadId": "244902",
+    "Html": "\r\n<p>Maybe we can start a bit of a dialog to try and bridge the gap.</p>\r\n<p>Obtics takes an expression and decomposes it into pieces, for example we might have:</p>\r\n<p>a &#43; b</p>\r\n<p>Now, I'm assuming there would be an Obtics object somewhere that basically takes a and b, observes them, and then whenever a change happens, it recomputes the result and fires its own property changed.&nbsp; Is this assumption true?&nbsp; If so, what would\r\n this object be called?</p>\r\n<p>Similarly there are a bunch of Linq operations, such as:</p>\r\n<p>l1.Concat(l2)</p>\r\n<p>When l1 or l2 change, a result list is modified.&nbsp; What would be the object that handles this operation?</p>\r\n<p>Presumably, the objects that handle the operations like a &#43; b and l1.Concat(l1) have a name associated with them.&nbsp; What is this name in Obtics?</p>\r\n<p>&nbsp;</p>\r\n<p>Once you have the objects handling the operations, they are presumably composed in some manner and they can pull values from each other.&nbsp; What's the mechanism for this composition?&nbsp; What classes are involved?</p>\r\n<p>What does the general flow of events look like from a high level?</p>\r\n",
+    "PostedDate": "2011-02-08T11:00:13.073-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "562968",
+    "ThreadId": "244902",
+    "Html": "\r\n<p>Ok,</p>\r\n<p>Obtics basicly consists of 3 layers.</p>\r\n<p><strong>The first layer</strong> are those classes whose instances do the actual grunt work. These classes take one or more 'sources' being an observable value&nbsp;or collection and have one or more clients.&nbsp;Together with some helper classes these\r\n are the 'Transformation' classes. Each Transformation class provides a 'transformed' view of it's source. What it means it takes the source values or collections, does some calculation with it and presents the result. What they also do is that when a source\r\n sends a change&nbsp;notification they check if it is relevant and if it is, propagate this notification to it's clients.</p>\r\n<p>The Transformation classes&nbsp;can be found in the Obtics.Collections.Transformations namespace (for collection transformations) and the Obtics.Values.Transformations namespace (for value transformations).</p>\r\n<p>Each Transformation&nbsp;object can be client or source for other Transformation objects. All these transformation objects working together allow for complex transformation graphs. I often call them transformation pipelines. The a &#43; b example would probably\r\n consist of 2 PropertyTransformation objects for reading and listening for changes on the individual properties&nbsp;and one BinaryTransformation doing the '&#43;' operation.</p>\r\n<p><strong>The second layer</strong> are those methods that create instances of the Transformation classes and glue them together into transformation pipelines or graphs. These methods are implemented as extension methods and for collections they map directly\r\n to the object linq methods. For value transformations they are extension methods on the IValueProvider interface and defined in the Obtics.Values.ValueProvider class. For object linq (collection transformations) they are defined in Obtics.Collections.ObservableEnumerable\r\n class.</p>\r\n<p>Your o.a &#43; o.b example could be expressed as ValueProvider.Select(&nbsp;ValueProvider.Property&lt;O,int&gt;(o,&quot;a&quot;), ValueProvider.Property&lt;O,int&gt;(o,&quot;b&quot;), (aValue, bValue) =&gt; aValue &#43; bValue). Executing this expression would result in two PropertyTransformation\r\n objects and one BinarySelectTransformation object.</p>\r\n<p><strong>The third layer</strong> is the Obtics.Values.ExpressionObserver. It takes a lambda&nbsp;expression and&nbsp;rewrites it into calls to the mentioned extension methods. In this process&nbsp;each value becomes an IValueProvider. Note that&nbsp;the\r\n ExpressionObserver is in the Obtics.Values namespace. This is technically correct since the hard work is in rewriting value expressions. An int value becomes an IValueProvider&lt;int&gt;. This requires complex rewriting of the expression.&nbsp;An IEnumerable&lt;int&gt;\r\n remaines an IEnumerable&lt;int&gt;. The IEnumerable becomes observable&nbsp;simply because the System.Linq.Enumerable methods are directly replaced with the Obtics.Collections.ObservableEnumerable methods.</p>\r\n<p>So ExpressonObserver.Rewrite((O o) =&gt; o.a &#43; o.b) would become something like&nbsp;(O o) =&gt; ValueProvider.Select( ValueProvider.Property&lt;O,int&gt;(o,&quot;a&quot;), ValueProvider.Property&lt;O,int&gt;(o,&quot;b&quot;), (p1, p2) =&gt; p1 &#43; p2) which would be a Func&lt;O,IValueProvider&lt;int&gt;&gt;</p>\r\n<p>ExpresionObserver.Rewrite((O o) =&gt;o.l1.Concat(o.l2)) would become (O o) =&gt; ValueProvider.Select( ValueProvider.Propert&lt;O, IEnumerable&lt;int&gt;&gt;(o,&quot;l1&quot;), ValueProvider.Property&lt;O.IEnumerable&lt;int&gt;&gt;(o,&quot;l2&quot;), (p1, p2) =&gt; ObservableEnumerable.Concat(p1,p2))\r\n which would be a Func&lt;O,IValueProvider&lt;IEnumerable&lt;int&gt;&gt;&gt;</p>\r\n<p>Hope this sheds some light,</p>\r\n<p>Thomas.</p>\r\n",
+    "PostedDate": "2011-02-08T15:44:55.663-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

@@ -1,0 +1,50 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": null,
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "Happy New Year, Thomas!  We have become great fans of your wonderful library.  So - A big Thanks from us to you.\n \nQuestion:\n----------------------------\nCould Obtics' Event Listeners / ValueProviders be Serializable?  I realize Expressions and func/delegates are not directly serializable.  Could there be some way?\n \nPossible Solution:\n----------------------------\nhttp://code.msdn.microsoft.com/exprserialization\n \nProblem & Background:\n----------------------------\nOur Calculations are running ASP.NET Server-side.  We are using VisualWebGui for our UI-layer, an advanced, stateful UI that resides on the server.\n \nBecause Obtics doesn't yet support serialization, we are forced to run In-Proc.  In-Proc is unstable, eats server memory, & our app pool is thus subject to random restarts - kicking all users off the system.  We would like to run StateServer, which is much more stable.\n \nIn Summary, Any chance Obtics will support Serialization in 2010?  Thanks again -\n \nRyan D. Hatch",
+    "LastUpdatedDate": "2013-02-13T18:41:05.323-08:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2010-01-03T13:58:22.217-08:00",
+    "Status": {
+      "Name": "Proposed",
+      "Id": 1
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "Obtics : Serialization",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 5687
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Thanks :-) and a happy new year to you too. \r\n\r\nI hope you can put Obtics to some good use.\r\n\r\nMaking transformation pipelines completely serializable should be possible but will be quite complex. If you are keen on it i'd propose you make a design and a proof of concept. We may be able to implement it together then. \r\n\r\nI think you should also consider that transformation pipelines basically give a live transformed view on something statefull underneath them. They themselves do not, in the strict sense, cary state. When just the transformation pipelines are destroyed no information is lost. It is a bit like a web-browser. The browser gives a view on an HTML document. The point I'm trying to make is that you probably wouldn't save the entire browser to disk. You'd just save the HTML document. When you want to view the HTML again you just reconstruct the browser. So it might be an idea to save your data (state) and just reconstruct the transformation pipelines when you load it again. This will save you a lot of storage space and load/save time too.\r\n\r\nRegs,\r\n\r\nThomas.",
+      "PostedDate": "2010-01-06T11:01:26.413-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:05.323-08:00",
+      "Id": -2147483648
+    }
+  ]
+}

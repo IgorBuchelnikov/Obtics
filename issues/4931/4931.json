@@ -1,0 +1,80 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": "2009-09-23T14:26:30.353-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "Hi!  Good job on the partial-trust fixes. I just updated to the newest source code, and everything related to that seems fixed.\n \nHowever, I found a new bug.  I have some code that used to work on the last release that doesn't now.  You can see the problem if I show you the result of breaking in code and typing some the following into the Visual Studio \"immediate window\":\n \n<code>\n?ExpressionObserver.Execute(Me, WeekTimeSlotsExpression).Cascade().Count()\n0\n?ExpressionObserver.Execute(Me, WeekTimeSlotsExpression).Value.Count()\n7\n</code>\n \nAs far as I know, this is not correct behavior, since the Cascade basically just adds the behavior of translating the Value property change event into a collection change event.\n \nI'll work on getting you a good, simplified example, but until I get that to you, here is the declaration of WeekTimeSlotsExpression:\n \n<code>\n\tPrivate Shared ReadOnly WeekTimeSlotsExpression As Expressions.Expression(Of Func(Of WeekCalendarViewModel, IEnumerable(Of ScheduleDateRange))) = _\n\tFunction(model As WeekCalendarViewModel) _\n\tFrom range In model.VisibleRange.Split(TimeSpan.FromDays(1))\n</code>\n \nAlso, I'm not sure if it will help or not, but here is a dump of the the ExpressionObserver result:\n<code>\n?ExpressionObserver.Execute(me,WeekTimeSlotsExpression)\n{Obtics.Values.Transformations.PipelineResultTransformation(Of Obtics.Tuple(Of System.Func(Of Npipm.Compas.WeekCalendarViewModel, Obtics.Values.IValueProvider(Of System.Collections.Generic.IEnumerable(Of CompasBiz.Scheduling.ScheduleDateRange))), Npipm.Compas.WeekCalendarViewModel), System.Collections.Generic.IEnumerable(Of CompasBiz.Scheduling.ScheduleDateRange), Obtics.Values.RewriterHelper.Generator(Of Npipm.Compas.WeekCalendarViewModel, System.Collections.Generic.IEnumerable(Of CompasBiz.Scheduling.ScheduleDateRange)))}\n    _Flags: 152\n    _HashCode: 524067822\n    _Prms: {Obtics.Tuple(Of System.Func(Of Npipm.Compas.WeekCalendarViewModel, Obtics.Values.IValueProvider(Of System.Collections.Generic.IEnumerable(Of CompasBiz.Scheduling.ScheduleDateRange))), Npipm.Compas.WeekCalendarViewModel)}\n    _ReceiverTable: {Obtics.NotifyChangedReceiverTable}\n    _Source: {Obtics.Values.Transformations.UnarySelectTransformation(Of CompasBiz.Scheduling.ScheduleDateRange, System.Collections.Generic.IEnumerable(Of CompasBiz.Scheduling.ScheduleDateRange))}\n    _ThreadId: 0\n    _TPG: {Obtics.Values.RewriterHelper.Generator(Of Npipm.Compas.WeekCalendarViewModel, System.Collections.Generic.IEnumerable(Of CompasBiz.Scheduling.ScheduleDateRange))}\n    BitFlagIndexEnd: 9\n    ChangingMask: 2\n    Contention: False\n    ContentionMask: 4\n    ExternalCacheHint: {\"The generic type 'Obtics.NCObservableObjectBase`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCObservableObjectBase`1\"}\n    ExternalCacheHintMask: 64\n    HaveBuffer: {\"The generic type 'Obtics.NCSourcedObject`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCSourcedObject`1\"}\n    HaveBufferMask: 256\n    HaveChangedListeningClients: {\"The generic type 'Obtics.NCObservableObjectBase`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCObservableObjectBase`1\"}\n    HaveChangedListeningClientsMask: 8\n    IsPivotNode: {\"The generic type 'Obtics.NCObservableObjectBase`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCObservableObjectBase`1\"}\n    IsPivotNodeMask: 32\n    IsReadOnly: {\"The generic type 'Obtics.NCSourcedObjectToVP`2' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCSourcedObjectToVP`2\"}\n    LockTokenMask: 1\n    NCReceiverCount: {\"The generic type 'Obtics.NCObservableObjectBase`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCObservableObjectBase`1\"}\n    NeedSourceChangedListener: {\"The generic type 'Obtics.NCSourcedObject`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCSourcedObject`1\"}\n    NeedSourceChangedListenerMask: 128\n    Obtics.Values.IValueProvider.Value: {\"The generic type 'Obtics.NCSourcedObjectToVP`2' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCSourcedObjectToVP`2\"}\n    ResultIsHidden: {\"The generic type 'Obtics.NCObservableObjectBase`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCObservableObjectBase`1\"}\n    ResultIsHiddenMask: 16\n    Value: {\"The generic type 'Obtics.NCSourcedObjectToVP`2' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCSourcedObjectToVP`2\"}\n    ValuePropertyName: \"Value\"\n</code>\n \nAnd also a dump of the Cascade:\n \n<code>\n?ExpressionObserver.Execute(me,WeekTimeSlotsExpression).Cascade\n{Obtics.Collections.Transformations.CascadeTransformation(Of CompasBiz.Scheduling.ScheduleDateRange, System.Collections.Generic.IEnumerable(Of CompasBiz.Scheduling.ScheduleDateRange))}\n    _Buffer: Count = 1\n    _ContentVersion: {Obtics.Collections.VersionNumber}\n    _Flags: 3224\n    _HashCode: 1082689404\n    _Prms: {Obtics.Values.Transformations.AsCollectionNullableTransformation(Of System.Collections.Generic.IEnumerable(Of CompasBiz.Scheduling.ScheduleDateRange))}\n    _ReceiverTable: {Obtics.NotifyChangedReceiverTable}\n    _Source: {Obtics.Values.Transformations.AsCollectionNullableTransformation(Of System.Collections.Generic.IEnumerable(Of CompasBiz.Scheduling.ScheduleDateRange))}\n    _SourceContentVersion: {Obtics.Collections.VersionNumber}\n    _ThreadId: 0\n    BitFlagIndexEnd: 12\n    ChangingMask: 2\n    Contention: False\n    ContentionMask: 4\n    ContentVersion: {\"Cannot find the method on the object instance.\"}\n    CS$<>9__CachedAnonymousMethodDelegate2: {Method = {System.Reflection.RuntimeMethodInfo}}\n    CS$<>9__CachedAnonymousMethodDelegate3: Nothing\n    ExternalCacheHint: {\"The generic type 'Obtics.NCObservableObjectBase`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCObservableObjectBase`1\"}\n    ExternalCacheHintMask: 64\n    HaveBuffer: {\"The generic type 'Obtics.NCSourcedObject`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCSourcedObject`1\"}\n    HaveBufferMask: 256\n    HaveChangedListeningClients: {\"The generic type 'Obtics.NCObservableObjectBase`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCObservableObjectBase`1\"}\n    HaveChangedListeningClientsMask: 8\n    HaveSourceContentVersionMask: 1024\n    InternalContentVersion: {\"The generic type 'Obtics.Collections.Transformations.OpaqueTransformationBase`3' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.Collections.Transformations.OpaqueTransformationBase`3\"}\n    IsMostUnordered: {\"Cannot find the method on the object instance.\"}\n    IsMostUnorderedMask: 512\n    IsPivotNode: {\"The generic type 'Obtics.NCObservableObjectBase`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCObservableObjectBase`1\"}\n    IsPivotNodeMask: 32\n    LockTokenMask: 1\n    NCReceiverCount: {\"The generic type 'Obtics.NCObservableObjectBase`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCObservableObjectBase`1\"}\n    NeedSourceChangedListener: {\"The generic type 'Obtics.NCSourcedObject`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCSourcedObject`1\"}\n    NeedSourceChangedListenerMask: 128\n    Obtics.Collections.ISequenceOrderQuality.UnorderedForm: {\"Cannot find the method on the object instance.\"}\n    ProtectedContentVersion: {\"The generic type 'Obtics.Collections.Transformations.OpaqueTransformationBase`3' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.Collections.Transformations.OpaqueTransformationBase`3\"}\n    ResultIsHidden: {\"The generic type 'Obtics.NCObservableObjectBase`1' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.NCObservableObjectBase`1\"}\n    ResultIsHiddenMask: 16\n    SnapshotNeedsChecking: {\"The generic type 'Obtics.Collections.Transformations.OpaqueTransformationBase`3' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.Collections.Transformations.OpaqueTransformationBase`3\"}\n    SnapshotNeedsCheckingMask: 2048\n    SourceContentVersion: {\"The generic type 'Obtics.Collections.Transformations.OpaqueTransformationBase`3' was used with the wrong number of generic arguments in assembly 'Obtics, Version=1.0.13.0, Culture=neutral, PublicKeyToken=17752bf2fea97f73'.\":\"Obtics.Collections.Transformations.OpaqueTransformationBase`3\"}\n    UnorderedForm: {\"Cannot find the method on the object instance.\"}\n    Results: Expanding will process the collection\n \n</code>",
+    "LastUpdatedDate": "2013-05-15T21:55:53.647-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-09-17T12:42:04.213-07:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": ".Cascade() not returning same results as .Value",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 4931
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Okay, scratch what I said about it working when the expression is non-pure.  I must not have been casting it to INotifyCollectionChanged when I tested that.",
+      "PostedDate": "2009-09-17T14:27:38.01-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Hi,\r\n\r\nIt is not quite clear to me what the exact issue is you encountered. That the results of Cascade and Value would be different at an arbitrary point in time is not impossible. Cascade may have a buffer that is waiting for change notifications. Only when 'the rumble has died down', meaning all internal change notifications have been processed, should the contents of Value and Cascade be the same.\r\n\r\nIn a single threaded application (and not using Async) only after your thread has returned from your \"collection altering method call\", should Value and Cascade have the same content.\r\n\r\nIf you have more input on your issue please post it.\r\n\r\n",
+      "PostedDate": "2009-09-18T02:36:34.557-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "As to your comment that says that it's okay for Value to be different than Cascade when the events haven't \"settled-down\" yet: I'm breaking in my code in such a way that any collection change notifications should long have been raised.\r\n\r\n",
+      "PostedDate": "2009-09-22T11:25:20.28-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Okay, so I think I've got this mostly figured out:\r\nThe \"observable\" Expression that does not update correctly relies on a property that is a DependencyProperty.\r\n\r\nNow, it could be that this is by design, and DependencyProperty change notifications are not sufficient to update an \"observable\" Expression, in which case, there isn't a bug in Obtics, but I'm at a loss as to why it worked in the last version.\r\n\r\nIn order to get everything working, I gave the DependencyProperty a PropertyChangedCallback, and within that callback, I raised INotifyPropertyChanged.PropertyChanged.\r\n\r\nIf, on the other hand, Obtics *should* work with DependencyProperty changes then I have a whole slew of debug information for you.  :)  Basically, if I trace into my Obtics code, there are a bunch of change-notification related variables that have the wrong value (e.g. HaveChangedListeningClients = true,  NCReceiverCount = 1, ResultIsHidden = false, NeedSourceChangedListener = true).\r\n\r\nThanks!",
+      "PostedDate": "2009-09-22T11:56:45.703-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Hi,\r\n\r\nI just had an idea as to what might be the problem. From your comments I guess that your class is both a DependencyObject and supports INotifyPropertyChanged.\r\n\r\nObtics can work with both. DependencyProperties by using PropertyDescriptor and INotifyPropertyChanged by registering for events directly. Recently I changed the order in which obtics tests for observablility. Now it first tries for INotifyPropertyChanged and then the PropertyDescriptor. It used to be the other way round. If it finds INotifyPropertyChanged it does not trie PropertyDescriptor.\r\n\r\nI did this for 2 reasons. 1 performance; PropertyDescriptor also works with INotifyPropertyChanged but introduces an extra level of indirection. 2 PropertyDescriptor is somewhat evil by storing the event registration in a static dictionary and thus increasing the risk of creating memory leaks.\r\n\r\nAs noted: PropertyDescriptor works both for INotifyPropertyChanged and DependencyObjects; so I think I'll have to revert my change.\r\n\r\nTx for reporting this issue.\r\n\r\nThomas.",
+      "PostedDate": "2009-09-23T02:24:01.773-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Resolved with changeset 27096.",
+      "PostedDate": "2009-09-23T14:26:30.353-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:07.783-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:53.647-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

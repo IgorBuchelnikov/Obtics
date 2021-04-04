@@ -1,0 +1,85 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": "2009-06-23T03:44:37.28-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "I get an exception in Obtics.Values.ExpressionRewriter.FindMemberMapping when it looks for a member from a base class.\n \nFor example, if I have the following two classes:\nPublic Class ClassA(Of T)\nPublic Overridable Property FirstValue as IValueProvider(Of T)\n...\nEnd Property\nEnd Class\n \nPublic Class ClassB\nInherits ClassA(Of ClassC)\n \nPublic Property SecondValue as IValueProvider(Of Integer)\nGet\nReturn ExpressionObserver.Execute(Function() Me.FirstValue.Value.SomeProperty)\nEnd Get\nEnd Property\n \nEnd Class\n \nthen I will get an exception when you try to get the value of SecondProperty.  However, if you rewrite ClassB to look like this then it works:\n \nPublic Class ClassB\nInherits ClassA(Of ClassC)\n \nPublic Overrides Property FirstValue as IValueProvider(Of ClassC)\nGet\nReturn Mybase.FirstValue\nEnd Get\nEnd Property\n \nPublic Property SecondValue as IValueProvider(Of Integer)\nGet\nReturn ExpressionObserver.Execute(Function() Me.FirstValue.Value.SomeProperty)\nEnd Get\nEnd Property\n \nEnd Class\n \n \nSo, I assume the problem is that the property is in a base class.  The exception is as follows:\n \nSystem.IndexOutOfRangeException occurred\n  Message=\"Index was outside the bounds of the array.\"\n  Source=\"Obtics\"\n  StackTrace:\n       at Obtics.Values.ExpressionRewriter.FindMemberMapping(MemberInfo orgMember, MapInfo& mapping)\n       at Obtics.Values.ExpressionRewriter.VisitMemberAccess(MemberExpression m)\n       at Obtics.ExpressionVisitor.Visit(Expression exp)\n       at Obtics.Values.ExpressionRewriter.Observe(Expression ex)\n       at Obtics.Values.ExpressionRewriter.VisitMemberAccess(MemberExpression m)\n       at Obtics.ExpressionVisitor.Visit(Expression exp)\n       at Obtics.Values.ExpressionRewriter.Observe(Expression ex)\n       at Obtics.Values.ExpressionRewriter.VisitMemberAccess(MemberExpression m)\n       at Obtics.ExpressionVisitor.Visit(Expression exp)\n       at Obtics.ExpressionVisitor.VisitList[TType](ReadOnlyCollection`1 original, Converter`2 converter)\n       at Obtics.ExpressionVisitor.VisitExpressionList(ReadOnlyCollection`1 original)\n       at Obtics.ExpressionVisitor.VisitMethodCall(MethodCallExpression m)\n       at Obtics.Values.ExpressionRewriter.VisitMethodCall(MethodCallExpression orgMethodCall)\n       at Obtics.ExpressionVisitor.Visit(Expression exp)\n       at Obtics.Values.ExpressionRewriter.Observe(Expression ex)\n       at Obtics.Values.ExpressionRewriter.VisitMemberAccess(MemberExpression m)\n       at Obtics.ExpressionVisitor.Visit(Expression exp)\n       at Obtics.Values.ExpressionRewriter.ObserveLambdaBody(LambdaExpression ex, ExpressionObserverObject rewriteMethodMap)\n       at Obtics.Values.ExpressionRewriter.Rewrite(LambdaExpression original, ExpressionObserverObject rewriteMethodMap)\n       at Obtics.Values.ExpressionObserverObject.Rewrite(LambdaExpression original)\n       at Obtics.Values.ExpressionObserverObject.Compile(LambdaExpression original)\n       at Obtics.Values.ExpressionObserverObject.Compile[TResult](Expression`1 original)\n       at Obtics.Values.ExpressionObserverObject.Execute[TResult](Expression`1 original)\n       at Obtics.Values.ExpressionObserver.Execute[TResult](Expression`1 original)",
+    "LastUpdatedDate": "2017-12-06T23:32:04.437-08:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "High",
+      "Severity": 150,
+      "Id": 3
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-06-10T08:23:36.707-07:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "ExpressionObserver & base type property",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 4128
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Hi,\r\n\r\nThanks for submitting the issue.\r\n\r\nI'm using the following code to try to reproduce your issue. (it's in C#; sorry I'm not fluent in VB)\r\n\r\n        class R2A\r\n        {\r\n            IValueProvider<string> _PropA = ValueProvider.Dynamic<string>(\"abc\");\r\n\r\n            public virtual IValueProvider<string> PropA\r\n            { get { return _PropA; } }\r\n        }\r\n\r\n        class R2B : R2A\r\n        {\r\n            public virtual IValueProvider<int> PropB\r\n            { get { return ExpressionObserver.Execute(() => this.PropA.Value.Length); } }\r\n        }\r\n\r\n        [TestMethod]\r\n        public void Regression2()\r\n        {\r\n            R2B r2b = new R2B();\r\n            Assert.AreEqual(3, r2b.PropB.Value);\r\n        }\r\n\r\nThis works fine in the version I'm working with now. Does this code (or simmilar) lead to errors in your case? Which version are you using? The 1.0.11.0 download or a specific source version?\r\n\r\nRegs,\r\n\r\nThomas.",
+      "PostedDate": "2009-06-22T18:34:10.957-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-06-22T18:44:57.25-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Hi,\r\n\r\nCould it be that your first property should be protected instead of public? If I make it protected it causes the exception mentioned.\r\n\r\nThis may pose an 'interesting' limitation on non-public members of generic classes.\r\n\r\nThomas.",
+      "PostedDate": "2009-06-22T18:56:55.573-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-06-22T18:59:16.337-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Resolved with changeset 21566.",
+      "PostedDate": "2009-06-23T03:44:37.28-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Fixed in ChangeSet 21566",
+      "PostedDate": "2009-06-23T04:10:23.18-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:08.527-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:54.613-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2017-12-06T23:32:04.437-08:00",
+      "Id": -2147483648
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "232681",
+    "ThreadId": "68408",
+    "Html": "<p>I have another question wrt to the implementation though.</p>\r\n<ol>\r\n<li>Is it possible to track Distincts on a particular property within observablecollection&lt;T&gt;. Say I need to bind distincts of Person.Name within the the collection and bind to a dropdownlist.</li>\r\n<li>Is it possible to track Expressions based out of a calculation on properties. E.g. Savings = (Person.Income * 30%) - Person.Expense and bind it to a control or a column in a datagrid.</li>\r\n</ol>\r\n<p>I am sure this is what you intended with this api, but a guidance in the implementation approach will be very helpful.</p>\r\n<p>Thanks for your help</p>\r\n<p>Vinay</p>",
+    "PostedDate": "2009-09-09T07:21:32.717-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "232714",
+    "ThreadId": "68408",
+    "Html": "<p>Hi Vinay,</p>\r\n<p>Yes, both are very&nbsp;possible:</p>\r\n<p>For the first you can use the standard Enumerable.Distinct method like:</p>\r\n<div style=\"color:Black;background-color:White\">\r\n<pre>ExpressionObserver.Execute(\r\n    Persons,\r\n    persons =&gt; persons.Select( p =&gt; p.Name ).Distinct()\r\n).Cascade();</pre>\r\n</div>\r\n<p>The Cascade method will return an IEnumerable&lt;string&gt; provided Name is of type string.</p>\r\n<p>For the second just use the expression you want:</p>\r\n<div style=\"color:Black;background-color:White\">\r\n<pre>ExpressionObserver.Execute(\r\n    Person,\r\n    person =&gt; person.Income * 0.3 - person.Expense\r\n);\r\n</pre>\r\n</div>\r\n<p>And bind to the Value property of the returned IValueProvider. Income and Expense properties naturaly need to be observable if you want the resulting Value to react to changes. (The owning class needs to implement INotifyPropertyChanged (Silverlight))</p>\r\n<p>If you have a collection of persons:</p>\r\n<pre>ExpressionObserver.Execute(\r\n    Persons,\r\n    persons =&gt; \r\n        from p in persons\r\n        select p.Income * 0.3 - p.Expense\r\n).Cascade();</pre>\r\n<p>If you feel like donating an Obtics&nbsp;users guide,&nbsp;I would be very interested. :-)</p>\r\n<p>Regs,</p>\r\n<p>Thomas</p>\r\n<p>&nbsp;</p>\r\n<p>&nbsp;</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2009-09-09T08:10:31.167-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "233224",
+    "ThreadId": "68408",
+    "Html": "<p>Thomas,</p>\r\n<p>Thanks for the quick response. I would love to be helpful whereever I could.</p>\r\n<p>Vinay</p>",
+    "PostedDate": "2009-09-10T10:49:33.237-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

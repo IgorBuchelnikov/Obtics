@@ -1,0 +1,42 @@
+[
+  {
+    "Id": "216129",
+    "ThreadId": "63561",
+    "Html": "<p>Hi,</p>\r\n<p>Certain query does not seem to work (no notifications) for me, and I am not sure whether it's my undersight or an issue with Obtics.<br>There is a query in question:</p>\r\n<div style=\"color:Black;background-color:White\">\r\n<pre>            <span style=\"color:Blue\">return</span> ExpressionObserver.Execute(\r\n                () =&gt; functions.Where(f =&gt; f.Word == word &amp;&amp; f.Function.IsNotNullOrEmpty())\r\n                                     .GroupBy(f =&gt; f.Function)\r\n                                     .Select(g =&gt; g.Key)\r\n                                     .FirstOrDefault()\r\n            );\r\n</pre>\r\n</div>\r\n<p>This is actually a simplified version, so it should not make sense as is (but it should work).<br>Now, some context:</p>\r\n<ol>\r\n<li><strong>functions</strong> is a field of type ObservableCollection.</li>\r\n<li><strong>f.Word </strong>is a string property which never changes.</li>\r\n<li><strong><span style=\"font-weight:normal\"><strong>word</strong>&nbsp;is an argument to the method we are returning from</span></strong></li>\r\n<li><strong>f.Function </strong>is a property with change notifications which is changed quite often.<br>Change notifications for it are not broken since other Obtics queries work correctly<strong>.</strong></li>\r\n</ol>\r\n<p>Can you help me with understanding of how I can make this query work correctly?<br>Thanks in advance.</p>\r\n<p>Andrey Shchekin</p>",
+    "PostedDate": "2009-07-26T03:45:42.817-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "216365",
+    "ThreadId": "63561",
+    "Html": "<p>Hi Andrey,</p>\r\n<p>I created a unit-test to verify your code and checked it in under changeset 25242. I had to make a few assumptions of which the chief one is that the Function property is of type String. In the uni-ttest obtics behaves as expected. Is the Function property of a more complex type? Note that you take the key of a group and that though the contents of a group may change the collection of groups itself may stay the same. I'm afraid I will need more information to find out what goes wrong in your case.</p>\r\n<p>I notice that you use the ExpressionObserver.Execute method together with closures of the 'functions' and 'word' variables. This is fine but <strong>only when you call this statement incidentaly</strong>! The use of closures especialy makes it more likely that obtics needs to recompile your lambda expression at every call!</p>\r\n<p>If you are going to execute this statement often. I'd recommend that you remove the closures and precompile the lambda expression.:</p>\r\n<pre>//precompile and store in a static field. Note that functions and word are now parameters to the lambda and not closures\r\nstatic Func&lt;&lt;ObservableCollection&lt;FClass&gt;,string,IValueProvider&lt;string&gt;&gt; _F =\r\n    ExpressionObserver.Compile(\r\n        (ObservableCollection&lt;FClass&gt; functions, string word) =&gt;\r\n            functions.Where(f =&gt; f.Word == word &amp;&amp; f.Function.IsNotNullOrEmpty())\r\n                .GroupBy(f =&gt; f.Function)\r\n                .Select(g =&gt; g.Key)\r\n                .FirstOrDefault()\r\n );</pre>\r\n<pre>//in your function just call _F\r\n return _F(functions,word) ;</pre>\r\n<p>You can also just remove the closures and not precompile. ExpressionObserver will compile rarely but will still need to check the compilation cache every time.</p>\r\n<pre>//closures have become parameters\r\nreturn ExpressionObserver.Execute(\r\n    functions,\r\n    word,\r\n    (fncs,wrd) =&gt; \r\n        fncs.Where(f =&gt; f.Word == wrd &amp;&amp; f.Function.IsNotNullOrEmpty())\r\n            .GroupBy(f =&gt; f.Function)\r\n            .Select(g =&gt; g.Key)\r\n            .FirstOrDefault()\r\n);</pre>\r\n<p>There is a folder with code snippets in the project that can help you create code as above.</p>\r\n<p>In your statement you use the combination:</p>\r\n<p>&nbsp;.Where(f =&gt; f.Word == wrd &amp;&amp; f.Function.IsNotNullOrEmpty())<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .GroupBy(f =&gt; f.Function)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .Select(g =&gt; g.Key)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .FirstOrDefault()</p>\r\n<p>Your original code may be more complex but I think this can be simplified to:</p>\r\n<p>&nbsp;.FirstOrDefault(f =&gt; f.Word == wrd &amp;&amp; f.Function.IsNotNullOrEmpty()).Function</p>\r\n<p>Obtics will be so friendly not to&nbsp;access the Function property in case no object can be found. It will just return a default value.</p>\r\n<p>Regs,</p>\r\n<p>Thomas</p>",
+    "PostedDate": "2009-07-27T06:38:10.117-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "218242",
+    "ThreadId": "63561",
+    "Html": "<p>You are right, the simplified version does indeed work, I have found an error in my test.<br>The reason why it does not work in the full version seems to be due to the custom extension method.</p>\r\n<p>The full code looks like this:</p>\r\n<pre><div style=\"color:Black;background-color:White\">.Where(f =&gt; f.Word == wrd &amp;&amp; f.Function.IsNotNullOrEmpty())\r\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .GroupBy(f =&gt; f.Function)\r\n        .HavingMax(g =&gt; g.Count())\r\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .Select(g =&gt; g.Key)\r\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .FirstOrDefault()&nbsp;</div></pre>\r\n<p>where HavingMax is a custom extension method (from <a href=\"http://code.google.com/p/ashmind/source/browse/trunk/AshMind.Extensions/AshMind.Extensions/EnumerableExtensions.cs\">here</a>).</p>\r\n<p>Are custom IEnumerable methods supported for notifications, or am I missing something again?</p>\r\n<p>Thanks for the improvement recommendations, I was going to try precompilation after I make this version work.</p>",
+    "PostedDate": "2009-07-31T23:06:10.453-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "218946",
+    "ThreadId": "63561",
+    "Html": "<p>Yes, custom field, property and (extension) method mappings are very possible.</p>\r\n<p>Check out the &quot;CustomMapping&quot; example project in the source code. There a method very similar to your HavingMax method, is being mapped to an observable form.</p>\r\n<p>In the example project the method is being mapped using attributes but mappings are also possible imperatively, using the&nbsp;ExpressionObserverMaster object.&nbsp;</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2009-08-03T13:48:23.21-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "219805",
+    "ThreadId": "63561",
+    "Html": "<p>By the way; If you would publish your library&nbsp;of&nbsp;linq&nbsp;extensions with ExpressionObserver mappings then I would like to refer to it from the Obtics pages.</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2009-08-05T08:53:31.553-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

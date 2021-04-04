@@ -1,0 +1,85 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": "2011-07-30T16:12:16.323-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "Hi Throb,\n \nI tried to migrate the version I use Obtics hoping to have a performance gain for the last\nchangeset. I am facing a bug, here is the stacktrace:\n \n   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)\n   at Obtics.Collections.Patches.StandardPatchBase`2.<TakeSnapshot>b__0()\n   at Obtics.Collections.Transformations.XLazySnapshotEnumerator.TakeSnapshot[TType](Object transformation, VersionNumber contentVersion, Func`1 generateEnumerable)\n   at Obtics.Collections.Patches.StandardPatchBase`2.TakeSnapshot()\n   at Obtics.Collections.Patches.StandardPatchBase`2.GetEnumerator()\n   at Obtics.Collections.Transformations.NotifyVpcTransformation`2.InitializeBuffer(FlagsState& flags)\n   at Obtics.Collections.Transformations.OpaqueTransformationBase`3.CallInitializeBuffer(FlagsState& flags)\n   at Obtics.Collections.Transformations.OpaqueTransformationBase`3.GetEnumeratorEvent()\n   at Obtics.NCSourcedObjectToVE`2.GetEnumerator()\n   at Obtics.Collections.Transformations.FilterTransformationBase`3.InitializeBuffer(FlagsState& flags)\n   at Obtics.Collections.Transformations.OpaqueTransformationBase`3.CallInitializeBuffer(FlagsState& flags)\n   at Obtics.Collections.Transformations.OpaqueTransformationBase`3.GetEnumeratorEvent()\n   at Obtics.NCSourcedObjectToVE`2.GetEnumerator()\n   at Obtics.Collections.Transformations.ConvertTransformationBase`4.GetEnumerator()\n   at Obtics.Collections.Transformations.ConvertTransformationBase`4.GetEnumeratorEvent()\n   at Obtics.NCSourcedObjectToVE`2.GetEnumerator()\n   at Obtics.NCSourcedObjectToVE`2.System.Collections.Generic.IEnumerable<TOut>.GetEnumerator()\n   at System.Linq.Enumerable.Aggregate[TSource,TAccumulate,TResult](IEnumerable`1 source, TAccumulate seed, Func`3 func, Func`2 resultSelector)\n   at Obtics.Collections.Transformations.AccumulativeAggregate`3.GetValueDirect()\n   at Obtics.Collections.Transformations.AggregateBase`2.InitializeBuffer()\n   at Obtics.Values.Transformations.CachedTransformationBase`2.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n   at Obtics.Values.Transformations.UnarySelectTransformation`2.GetValue()\n   at Obtics.Values.Transformations.ConvertTransformationBase`2.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n   at Obtics.Values.Transformations.CascadeTransformation`2.GetValueFromItm(IInternalValueProvider`1 itm)\n   at Obtics.Values.Transformations.CascadingTransformationBase`3.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n   at Obtics.Values.Transformations.CascadeTransformation`2.GetValueFromItm(IInternalValueProvider`1 itm)\n   at Obtics.Values.Transformations.CascadingTransformationBase`3.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n   at Obtics.Values.Transformations.PipelineResultTransformation`3.GetValue()\n   at Obtics.Values.Transformations.ConvertTransformationBase`2.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n   at Arcan.Planning.ViewModels.DynamicWorkDay.get_Value()\n   at lambda_method(Closure , DynamicWorkDay )\n   at Obtics.Values.Transformations.PropertyTransformation`2.PropertyClass.GetValue(TIn obj)\n   at Obtics.Values.Transformations.PropertyTransformation`2.GetValueFromItm(TIn itm)\n   at Obtics.Values.Transformations.CascadingTransformationBase`3.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n   at Obtics.Values.Transformations.UnarySelectTransformation`2.GetValue()\n   at Obtics.Values.Transformations.ConvertTransformationBase`2.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n   at Obtics.Values.Transformations.UnarySelectTransformation`2.GetValue()\n   at Obtics.Values.Transformations.ConvertTransformationBase`2.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n   at Obtics.Values.Transformations.CascadeTransformation`2.GetItmFromSource()\n   at Obtics.Values.Transformations.CascadingTransformationBase`3.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n   at Obtics.Values.Transformations.UnarySelectTransformation`2.GetValue()\n   at Obtics.Values.Transformations.ConvertTransformationBase`2.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n   at Obtics.Values.Transformations.CascadeTransformation`2.GetItmFromSource()\n   at Obtics.Values.Transformations.CascadingTransformationBase`3.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n   at Obtics.Values.Transformations.PipelineResultTransformation`3.GetValue()\n   at Obtics.Values.Transformations.ConvertTransformationBase`2.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n   at Obtics.Values.Transformations.ExceptionTransformation`2.GetValue()\n   at Obtics.Values.Transformations.ConvertTransformationBase`2.GetValueEvent()\n   at Obtics.NCSourcedObjectToVP`2.get_Value()\n \nI think I'll go back to the old, when do you think that a new stable version will be available?\n \nYou use your assembly in your projects?\nI'd like Microsoft to do a library like yours, because it should ask you a lot of work.\n \nBest regards,\nVincent BOUZON",
+    "LastUpdatedDate": "2013-05-15T21:55:52.457-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2010-12-02T11:13:00.79-08:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "ArgumentNullException",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 7639
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Yes, it does take a lot of work. So at the moment progress is quite slow. The new version will not do implicit null reference checks. This leads to a significant performance improvement but leaves checking for null references or catching exceptions to the developer. Also the new introduction of skiplists (form of binary trees) should lead to improvements when working with large collections. \r\n\r\nWould be nice to work on this concept in a real team, like at Microsoft.",
+      "PostedDate": "2010-12-24T03:36:35.927-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Hi Throb,\r\n\r\nI have again this issue =(\r\n\r\nObtics_Silverlight!Obtics.Collections.Patches.StandardPatchBase<System.ServiceModel.DomainServices.Client.EntityCollection<Arcan.Planning.Services.Web.Model.WorkDay>,Arcan.Planning.Services.Web.Model.WorkDay>.TakeSnapshot() Line 281\r\n=>       void TakeSnapshot()\r\n        { XLazySnapshotEnumerator.TakeSnapshot<TOut>(this, _ContentVersion, () => SL.Enumerable.ToArray(_Buffer)); }\r\n\r\n_Buffer is null, i don't know why...\r\n\r\nI have the latest version and my Expression is :\r\n\r\nprivate static readonly Func<Employee, DateTime, bool, IValueProvider<WorkDay>> WorkDayProvider = \r\nExpressionObserver.Compile((Employee e, DateTime dt, bool r) => e.WorkDays == null ? null : e.WorkDays.AsEnumerable().SingleOrDefault(wd => wd.Date == dt && wd.IsRealized == r));\r\n\r\nI need your help.\r\n\r\nBest regards,\r\nVincent",
+      "PostedDate": "2011-07-17T04:51:51.85-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Sorry my good expression is :\r\n\r\n        private static readonly Func<Employee, DateTime, bool, IValueProvider<WorkDay>> WorkDayProvider = ExpressionObserver.Compile((Employee e, DateTime dt, bool r) => e.WorkDays == null ? null : e.WorkDays.SingleOrDefault(wd => wd.Date == dt && wd.IsRealized == r));\r\n\r\nAnd \"WorkDays\" is a EntityCollection from WCF Ria Services, thanks.",
+      "PostedDate": "2011-07-17T04:53:11.28-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Hi Vincent,\r\n\r\nWhat do you mean with 'latest version'? Latest source code or the latest 'official' release?\r\n\r\nRegs,\r\n\r\nThomas",
+      "PostedDate": "2011-07-25T11:26:31.597-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Hi Throb,\r\n\r\nI speak about \"Latest source code\". I do not use the latest version, because it not support SL4.\r\n\r\nVincent",
+      "PostedDate": "2011-07-25T12:19:43.567-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Resolved with changeset 60992.",
+      "PostedDate": "2011-07-30T16:12:16.323-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Thanks ! \r\n\r\n",
+      "PostedDate": "2011-07-31T01:29:31.873-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:04.747-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:52.457-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

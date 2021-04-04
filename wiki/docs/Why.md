@@ -1,0 +1,19 @@
+# Why?
+
+The idea for this project grew while working on a large administrative application using XAML for the user interface. In this application we had an extensive domain model for our data and views on it to bind our XAML components to. It was quite difficult to determine when to update the views. Just recalculating everything on any user input wasn't good enough since it took too much time and data could be updated from background threads. As a solution I created collection transformation objects and later value transformation objects that could track changes in their source and update bindings to them. I found that these objects were conceptually very useful. No more registering and unregistering of events, or remembering to update my controls on a certain click event. You could just specify the dependencies and how to calculate the result from them and that was it. 
+
+WPF bindings weren't really an option for this job because 
+# The binding targets always need to be properties on a DependencyObject derived class. 
+# Bindings don't really work well with observable collections 
+# Bindings can't (couldn't) easily be chained to more complex transformations. It would always require an DependencyObject as an intermediary step.
+
+Though I thought the transformation objects were really useful they almost got scrapped for three reasons.
+# Using them was quite verbose and the code was hard to understand for somebody not familiar with them. And though "register-event-handler-update" code is in fact more complicated, for many colleagues is was more readable
+# The objects worked completely asynchronous and each had its own message queue and buffer and so were quite heavy. Thanks to their success they were used a lot and formed a quite load for the application.
+# Debugging transformation pipelines is very hard in a classic debugger. The process of updating a value can't easily be traced step by step.
+
+These experiences led me to specify some extra requirements for the new transformation objects:
+# Using them should be easy (LINQ for collection transformations), and the objects should be virtually static objects so that they can be easily manipulated.
+# They should be as light as possible. 
+# Using the objects should be none-intrusive. They should put as little as possible requirements on the environment they work in (Like demanding that targets are derived of DependencyObject) and not obstruct existing libraries (Extend LINQ, not replace it).
+# For the debugging problem I could just recommend different debugging techniques like unit testing. The idea is to leave the updating process to the transformation objects so I’m afraid that the untraceability of that process is inherent.

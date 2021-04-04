@@ -1,0 +1,58 @@
+[
+  {
+    "Id": "498860",
+    "ThreadId": "228697",
+    "Html": "<p>Hi,</p>\r\n<p>I use Obtics with Silverlight 4. I wonder about my experience.</p>\r\n<p>In the following example _versionableObjectsViewModels is observable, and I would like to filtered collection with this predicate: item.LastVersion! = null.</p>\r\n<p>My first try was:</p>\r\n<p>\r\n<div style=\"color:black;background-color:white\">\r\n<pre><span style=\"color:blue\">var</span> xx = _versionableObjectsViewModels.Where(vovm =&gt; vovm.LastVersion != <span style=\"color:blue\">null</span>);\r\n</pre>\r\n<pre><br></pre>\r\n</div>\r\n</p>\r\n<p>I realized that if an item changes LastVersion value with null, xx does not changed...&nbsp;I therefore looked for a long time to find:</p>\r\n<p>\r\n<div style=\"color:black;background-color:white\">\r\n<pre><span style=\"color:blue\">var</span> xx = ExpressionObserver.Execute(() =&gt; _versionableObjectsViewModels.Where(vovm =&gt; ExpressionObserver.Execute(() =&gt; vovm.LastVersion != <span style=\"color:blue\">null</span>))).Cascade();</pre>\r\n<pre><br></pre>\r\n</div>\r\n</p>\r\n<p>Is this the right way? If so why don't have not do simpler?</p>\r\n<p>Best regards,</p>\r\n<p>Vincent</p>",
+    "PostedDate": "2010-09-27T03:59:43.747-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "499397",
+    "ThreadId": "228697",
+    "Html": "<p>Hi Vincent,</p>\r\n<p>I think something like:</p>\r\n<pre><span style=\"color:blue\">var</span> xx = ExpressionObserver.Execute(() =&gt; _versionableObjectsViewModels.Where(vovm =&gt; vovm.LastVersion != <span style=\"color:blue\">null</span>)).Cascade();</pre>\r\n<p>should work better.</p>\r\n<p>Regs,</p>\r\n<p>Thomas</p>\r\n<p>&nbsp;</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2010-09-28T03:33:43.53-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "499455",
+    "ThreadId": "228697",
+    "Html": "<p><span>Hello,<br><br></span><span>I already tried that, but it does not work: (<br><br></span><span>Vincent</span></p>",
+    "PostedDate": "2010-09-28T06:00:14.177-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "499553",
+    "ThreadId": "228697",
+    "Html": "<p>Hi Vincent,</p>\r\n<p>The reason your code works,&nbsp;I guess, is because you included the Obtics.Collections namespace in the using directives. The 'Where' method that is being used in that case is the Obtics.Collections.ObservableEnumerable.Where method instead of the System.Linq.Enumerable.Where method.</p>\r\n<p>When working with the ExpressionObserver you should make sure that the System.Linq.Enumerable methods are used. That means including System.Linq instead of Obtics.Collections in your&nbsp;using directives.</p>\r\n<p>ExpressionObserver will translate the call to the System.Linq.Enumberable.Where method to a call to the Obtics.Collections.ObservableEnumerable.Where method and translate your lambda expression as well. It actually can't do anything with the Obtics.Collections.ObservableEnumerable.Where method itself.</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2010-09-28T10:24:54.85-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "499935",
+    "ThreadId": "228697",
+    "Html": "<p>Okay, thanks you, it works, but then in which case the use of&nbsp;Where Obtics.Collections is required ?</p>\r\n<p>Vincent.</p>",
+    "PostedDate": "2010-09-29T05:40:21.557-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "500379",
+    "ThreadId": "228697",
+    "Html": "<p>In simple cases I don't think the using of Obtics.Collections would ever be required. You could use it if you would want to construct observable expressions manually. (Not using ExpressionObserver)</p>\r\n<p>ExpressionObserver&nbsp;translates ordinary expressions to observable ones and maps object LINQ&nbsp;methods to observable&nbsp;equivalents&nbsp;in Obtics.Collections.ObservableEnumberable.</p>\r\n<p>Regs,</p>\r\n<p>Thomas</p>",
+    "PostedDate": "2010-09-30T00:57:58.843-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "500408",
+    "ThreadId": "228697",
+    "Html": "<p>ok, thanks you :)</p>\r\n<p>Vincent</p>",
+    "PostedDate": "2010-09-30T01:53:14.69-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

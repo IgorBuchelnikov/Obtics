@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "275341",
+    "ThreadId": "80335",
+    "Html": "<p>Thomas,</p>\r\n<p>I was wondering why you didn't include handling the TableClearing event for a datatable collection notification. You do handle the TableCleared event though (obviously). The reason I ask is because, although I can see an argument stating &quot;why care if it's clearing, wait till its cleared&quot;, there may be a need to alert users that a clearing is taking place but not yet complete. As I think the timespan between Clearing and Cleared events is undetermined (based upon the size of the tables, etc.), by having this notification (but not incrementing the version number), the user could know that something is taking place, thus not allowing additional tasks to take place (if required) until the Cleared event is fired.</p>\r\n<p>With that being said, have you ever considered allowing the &quot;pausing&quot; of observability? What I mean by this is, in enterprise applications with some clients, it's not uncommon for the end user to want to be the one to actually hit the &quot;Refresh&quot; button on their screen to refresh the data. Perhaps they want to continue looking at data that is displayed on the screen for analysis purposes and do not want it dynamically changing on them. While some could argue that you just would not use Obtics for this instance, I would say that you very well could, but you may want to temporarily disable the observability by having&nbsp;a flag that tells Obtics to disregard propogating any changes or updates, wait until the flag is cleared.</p>\r\n<p>As an example, the user could have a checkbox on the screen that says &quot;Dynamically Update Data&quot;. Observability is enabled/disabled relative to that.</p>\r\n<p>Just some thoughts. Hope it helps.</p>\r\n<p>Kind Regards,</p>\r\n<p>Matt</p>",
+    "PostedDate": "2010-01-10T06:31:05.837-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "275906",
+    "ThreadId": "80335",
+    "Html": "<p>Hi Matt,</p>\r\n<p>Beware that the Obtics to DataSet&nbsp;library is nowhere finished. Started&nbsp;on it some time ago but never got round finishing it.&nbsp;Currently I'm busy with a redo of the transformation elements. You&nbsp;can use the parts of the DataSet adaptation that work. Would even be better if you could&nbsp;develop it further and make it more finished :-)</p>\r\n<p>I don't think there can be a switch to stop the whole of obtics to pause processing changes. There could be transformation elements that pause processing and in fact there already are. The ValueProvider.Async and ObservableEnumerable.Async methods can take a custom IWorkQueue object. All you need to do is implement an IWorkQueue object&nbsp;that processes events when you want it to. Then use&nbsp;Async, with your IWorkQueue as its parameter,&nbsp;as the last element of your transformations.</p>\r\n<p>Regards,</p>\r\n<p>Thomas</p>",
+    "PostedDate": "2010-01-11T14:51:26.117-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

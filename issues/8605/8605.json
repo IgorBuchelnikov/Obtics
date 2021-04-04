@@ -1,0 +1,60 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": "2011-08-13T07:03:36.673-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "Hi Throb,\n \nI have an exception at \n \n  à System.Runtime.CompilerServices.ConditionalWeakTable`2.Add(TKey key, TValue value)\n  à Obtics.ProviderFinder`3.GetValue(TKey key)\n \nbecause an other thread has already add this key. \n \nThanks,\nVincent",
+    "LastUpdatedDate": "2013-05-15T21:55:51.707-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2011-08-12T02:25:52.043-07:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "ProviderFinder and concurrency",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 8605
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Resolved with changeset 61362.",
+      "PostedDate": "2011-08-13T07:03:36.673-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Tx for reporting that. 'Add' doesn't behave as I thought.. fixed.",
+      "PostedDate": "2011-08-13T07:25:10.863-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:03.47-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:51.707-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

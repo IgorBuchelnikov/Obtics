@@ -1,0 +1,80 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "Fixed",
+    "ClosedDate": "2009-12-10T10:49:41.51-08:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "What is wrong with this test?\n \n        [TestMethod()]\n        public void TestCalcSimple()\n        {\n           IList<double> doubleValues = new double[] { 0.05d, 1d };\n           double doubleResult = Obtics.Values.ExpressionObserver.Execute(() => doubleValues.Sum()).Value;\n           // will be 1.05\n           \n           IList<decimal> decimalValues = new decimal[] { 0.05M, 1M };\n           decimal obticsDecimalResult = Obtics.Values.ExpressionObserver.Execute(() => decimalValues.Sum()).Value;\n            // will be 1\n \n           decimal linqDecimalResult = decimalValues.Sum();\n            // will be 1.05\n            Assert.AreEqual(doubleResult, obticsDecimalResult);\n        }\n \n \nWhy can't obtics calculate a decimal sum, but linq can?\nWhy can obtics properly evaluate a sum for a double array, but not a decimal array?",
+    "LastUpdatedDate": "2013-05-15T21:55:53.163-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-10-30T08:58:23.64-07:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "Decimal madness (incorrect calculation values using ExpressionObserver, no decimal places??)",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 3,
+    "Id": 5379
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "I have the exact same problem - This is a huge issue... I am dead in the water right now.\r\n\r\nObtics - When can this issue be fixed?\r\n\r\nThank you very much -\r\n\r\nRyan D. Hatch",
+      "PostedDate": "2009-10-31T10:32:18.56-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Associated with changeset 30432.",
+      "PostedDate": "2009-11-01T15:52:24.78-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-11-01T16:08:55.33-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "False implementation of Decimal Sum and Average. Fixed.",
+      "PostedDate": "2009-11-01T16:15:27.753-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-12-10T10:49:41.51-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Thank you for your prompt response - decimal is no longer an issue!",
+      "PostedDate": "2009-12-14T17:12:45.233-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:06.27-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:53.163-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

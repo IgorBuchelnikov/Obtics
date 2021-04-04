@@ -1,0 +1,42 @@
+[
+  {
+    "Id": "262557",
+    "ThreadId": "76796",
+    "Html": "<p>Writing expressions that pass in all inputs for performance reasons is somewhat cumbersome.&nbsp; For example, it's much nicer to write:</p>\r\n<p>\r\n<pre>Execute ( () =&gt; A + B )</pre>\r\n</p>\r\n<p>Rather than:</p>\r\n<p>\r\n<pre>Execute ( this, t =&gt; t.A + t.B )</pre>\r\n</p>\r\n<p>Obviously this is a very simple example, but it's unfortunate that consumers of the library have to be fully aware of this significant performance issue.</p>\r\n<p>In our system, we have a &quot;Getter&quot; method that lives in a base class and sets up the Obtics expressions.&nbsp; In this, we would have the opportunity to transform an expression like the first form into an expression like the second form.&nbsp; All we'd need to do is replace all references to &quot;this&quot; with a lambda parameter and then add a lambda parameter to the expression.&nbsp; Can anyone comment on the easiest way to walk the lambda expression tree to do this transformation?&nbsp; Is there perhaps a way to use Obtics framework code as a visitor system for performing this transformation?</p>\r\n<p>I haven't thought it through, but perhaps a system that replaces variables with parameters would be useful in a general case for Obtics.&nbsp; Upon compilation, it could strip the fixed values and make them into parameters, thereby providing greater opportunity for caching.&nbsp; Obviously there would be some cost for the expression modification, but I imagine it would be significantly less than the cost of compilation.</p>\r\n<p>Thoughts are welcome. :)</p>",
+    "PostedDate": "2009-12-01T19:11:42.573-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "262785",
+    "ThreadId": "76796",
+    "Html": "<p>In general use ExpressionObserver.Execute in not so often executed code only. That is when Execute itself is not called very often.</p>\r\n<p>The second variation you&nbsp;advised certanly is faster but&nbsp;when the use of&nbsp;Execute starts to degrade performance I'd advice to switch to the&nbsp;ExpressionObserver.Compile method. Use that method to 'pre-compile' your lambda expression and store the resulting lambda method in a static field. This will automatically force you to use the 't' parameter en give compilation errors wherever you forget to insert one.</p>\r\n<p>Regs,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2009-12-02T08:25:32.46-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "262832",
+    "ThreadId": "76796",
+    "Html": "<p>I found your ExpressionVisitor class... exactly what I wanted.&nbsp; I wrote the following class to enable the above scenario with our &quot;Getter&quot; method.</p>\r\n<p>I just have one question... do the names of parameters matter for the compilation cache, or does it just look at the signature?</p>\r\n<p>\r\n<div style=\"color:Black;background-color:White\">\r\n<pre><span style=\"color:Blue\">using</span> System;\r\n<span style=\"color:Blue\">using</span> System.Collections.Generic;\r\n<span style=\"color:Blue\">using</span> System.Linq;\r\n<span style=\"color:Blue\">using</span> System.Linq.Expressions;\r\n<span style=\"color:Blue\">using</span> System.Text;\r\n<span style=\"color:Blue\">using</span> Obtics;\r\n\r\n<span style=\"color:Blue\">namespace</span> Pleasant.Watchers\r\n{\r\n    <span style=\"color:Blue\">internal</span> <span style=\"color:Blue\">class</span> ConstantExtractionRewriter : ExpressionVisitor\r\n    {\r\n        <span style=\"color:Blue\">public</span> <span style=\"color:Blue\">static</span> ConstantExtractionRewriter Instance\r\n        {\r\n            <span style=\"color:Blue\">get</span>\r\n            {\r\n                <span style=\"color:Blue\">if</span> (_Instance == <span style=\"color:Blue\">null</span>)\r\n                    _Instance = <span style=\"color:Blue\">new</span> ConstantExtractionRewriter();\r\n                <span style=\"color:Blue\">return</span> _Instance;\r\n            }\r\n        }\r\n        <span style=\"color:Blue\">private</span> <span style=\"color:Blue\">static</span> ConstantExtractionRewriter _Instance;\r\n\r\n        <span style=\"color:Blue\">private</span> <span style=\"color:Blue\">object</span> _ConstantValue;\r\n        <span style=\"color:Blue\">private</span> ParameterExpression _ConstantParameter;\r\n\r\n        <span style=\"color:Gray\">///</span> <span style=\"color:Gray\">&lt;summary&gt;</span>\r\n        <span style=\"color:Gray\">///</span><span style=\"color:Green\"> Takes a lambda expression with zero arguments and extracts a single constant into a parameter.</span>\r\n        <span style=\"color:Gray\">///</span> <span style=\"color:Gray\">&lt;/summary&gt;</span>\r\n        <span style=\"color:Gray\">///</span> <span style=\"color:Gray\">&lt;param name=&quot;expression&quot;&gt;</span><span style=\"color:Gray\">&lt;/param&gt;</span>\r\n        <span style=\"color:Gray\">///</span> <span style=\"color:Gray\">&lt;param name=&quot;constantValue&quot;&gt;</span><span style=\"color:Gray\">&lt;/param&gt;</span>\r\n        <span style=\"color:Gray\">///</span> <span style=\"color:Gray\">&lt;returns&gt;</span><span style=\"color:Gray\">&lt;/returns&gt;</span>\r\n        <span style=\"color:Blue\">public</span> Expression&lt;Func&lt;TConstant, TResult&gt;&gt; Rewrite&lt;TConstant, TResult&gt;(Expression&lt;Func&lt;TResult&gt;&gt; expression, TConstant constantValue)\r\n        {\r\n            _ConstantValue = constantValue;\r\n            _ConstantParameter = Expression.Parameter(constantValue.GetType(), <span style=\"color:#A31515\">&quot;extractedConstantParameter&quot;</span>);\r\n            Expression&lt;Func&lt;TConstant, TResult&gt;&gt; resultExpression =\r\n                Expression.Lambda&lt;Func&lt;TConstant, TResult&gt;&gt;(Visit(expression.Body), _ConstantParameter);\r\n            <span style=\"color:Green\">// Don't keep static references around, preventing garbage collection.</span>\r\n            _ConstantValue = <span style=\"color:Blue\">null</span>;\r\n            _ConstantParameter = <span style=\"color:Blue\">null</span>;\r\n            <span style=\"color:Blue\">return</span> resultExpression;\r\n        }\r\n\r\n        <span style=\"color:Blue\">protected</span> <span style=\"color:Blue\">override</span> Expression VisitConstant(ConstantExpression c)\r\n        {\r\n            <span style=\"color:Blue\">if</span> (c.Value == _ConstantValue)\r\n                <span style=\"color:Blue\">return</span> _ConstantParameter;\r\n\r\n            <span style=\"color:Blue\">return</span> <span style=\"color:Blue\">base</span>.VisitConstant(c);\r\n        }\r\n    }\r\n}\r\n\r\n</pre>\r\n</div>\r\n</p>",
+    "PostedDate": "2009-12-02T10:01:23.6-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "262836",
+    "ThreadId": "76796",
+    "Html": "<p>Is it fairly fast to execute a compiled lambda expression?&nbsp;&nbsp; In other words, would it be reasonable to run it thousands of times for all of the items in a list?</p>\r\n<p>In our homegrown solution, we ended up chaining factories together.&nbsp; Each factory had already precompiled any expressions and then just had to attach propertychanged and collectionchanged event handlers for each item that the factory chain processed.</p>",
+    "PostedDate": "2009-12-02T10:10:06.04-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "262877",
+    "ThreadId": "76796",
+    "Html": "<p>When talking about observable expressions then the execution of a pre-compiled (with ExpressionObserver.Compile) expression is way faster than running ExpressionObserver.Execute over the same expression. Execute will at least have&nbsp;to compare the given lambda expression with the contents of the compilation cache and with luck&nbsp;run the same cached&nbsp;compiled lambda expression as would have been generated by Compile.&nbsp;The only problem with pre-compiling is that it is more cumbersome to write the code&nbsp;than just using Execute.</p>\r\n<p>If it is fast enough for your list will depend on your requirements (minutes/seconds/milliseconds), specs of your&nbsp;host, size of your data&nbsp;and the actual expression you try to execute. I'd say just experiment with it.</p>",
+    "PostedDate": "2009-12-02T11:55:02.23-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

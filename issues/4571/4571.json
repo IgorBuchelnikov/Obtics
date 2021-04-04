@@ -1,0 +1,70 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "Not an issue. Probably mixup between older and newer obtics versions&#63;Explanation added in comments.",
+    "ClosedDate": "2009-07-12T18:21:56.97-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "If I use the following LINQ expression:\nvar observable = items.Select(item => item.Name)\n                                  .Distinct()\n                                  .OrderBy(name => name);\n \nwith implicit Obtics (referencing Obtics.Collections), it does not update when item.Name updates.\nItem is an INotifyPropertyChanged and item.Name does raise PropertyChanged event.\n \nHowever, if I use just items.Select(item => item.Name) without following steps, then observing does work.",
+    "LastUpdatedDate": "2013-05-15T21:55:54.467-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-07-12T03:15:26.55-07:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "Certain LINQ expression does not work with Obtics",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 4571
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Hi,\r\n\r\nThanks for submitting this issue.\r\n\r\nFirst I would like to appologise for what is probably an old and confusing terminology. Implicit and Explicit obtics are old terms. The old implicit observable Linq would make your statement  items.Select(item => item.Name)  observable. It would take the  item => item.Name  lambda expression and analyse it for dependencies. With explicit observable linq you would need to write out this expression manually as item => ValueProvider.Property<Person,string>(item,\"Name\").\r\n\r\nThis is all 'old stuff'.\r\n\r\nThe Implicit observable linq functionality has been superseded (replaced) by the ExpressionObserver. Explicit observable linq is now the one and only observable linq. \r\n\r\nThis means that if you build your statement using the  Obtics.Collections  namespace you are actually building an explicitly observable linq statement. Because you are not specifying the dependecies in your  item => item.Name  lambda expression it will not respond to changes in the Name property. Also not if you just use items.Select(item => item.Name)  !  Did you use this statement with an older version of Obtics?\r\n\r\nYou need to either write out the dependencies:\r\n\r\n-----------------------------------\r\nusing Obtics.Collections;\r\n\r\nvar observable = items.Select(item => ValueProvider.Property<Person,string>(item,\"Name\"))\r\n    .Distinct()\r\n    .OrderBy(name => name);\r\n------------------------------------------------------\r\n\r\nOr use ExpressionObserver:\r\n\r\n------------------------------------------------------------\r\nvar observable = ExpressionObserver.Execute(\r\n    () => \r\n        items.Select(item => item.Name)\r\n            .Distinct()\r\n            .OrderBy(name => name)\r\n).Cascade();\r\n-------------------------------------------------------\r\n\r\nUsing ExpressionObserver for such a simple statement is more complicated than the old Implicit Observable Linq but can lead to far better performance when used correctly.\r\n(it can completely compile the statement so that after compilation the created delegate doesn't need to deal with lambda expressions anymore)\r\n\r\nSee \"Transformation Examples\" in the Wiki how to use the ExpressionObserver.\r\n\r\nI checked in some unit test code that verifies that obtics works as intended (tests Regression3 and Regression4 in ObticsUnitTest project).\r\n\r\nRegs,\r\n\r\nThomas\r\n\r\n\r\n ",
+      "PostedDate": "2009-07-12T18:17:29.66-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-07-12T18:21:56.97-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Note that when building observable linq statements using  the ExpressionObserver you should NOT reference 'Obtics.Collections' namespace but instead the normal 'System.Linq' namespace! ",
+      "PostedDate": "2009-07-12T18:27:19.907-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Ok, this is helpful, I used ExpressionObserver.Execute(...).Cascade() and everything started working, thanks.\r\nHowever Select(item => item.Name) for some reason does work without ValueProvider in latest downloadable version (1.0.11.0), I have just tested it again to be sure.",
+      "PostedDate": "2009-07-13T00:21:10.423-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:08.37-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:54.467-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

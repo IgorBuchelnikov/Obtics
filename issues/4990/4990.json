@@ -1,0 +1,70 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "Fixed",
+    "ClosedDate": "2009-12-10T10:50:29.777-08:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "I found the root of my collections-not-sending-change-notifications problem.  I think I have been experiencing this problem since day 1 of using Obtics, but have just worked around it by changing my implementations.\n \nConsider the following:\nI have an interface IExpression and a class TestExpression that implements IExpression.  Then, if you have the following code:\n \nDim workingExpression As Expressions.Expression(Of Func(Of IExpression, IEnumerable(Of IEnumerable(Of ScheduleDateRange)))) = Function(source As IExpression) DirectCast(source, TestExpression).Values\nDim workingExpression2 As Expressions.Expression(Of Func(Of TestExpression, IEnumerable(Of IEnumerable(Of ScheduleDateRange)))) = Function(source As TestExpression) source.Values\nDim notWorkingExpression As Expressions.Expression(Of Func(Of IExpression, IEnumerable(Of IEnumerable(Of ScheduleDateRange)))) = Function(source As TestExpression) source.Values\n \nDim working = ExpressionObserver.Execute(Me, workingExpression).Cascade()\nDim working2 = ExpressionObserver.Execute(Me, workingExpression2).Cascade()\nDim notWorking = ExpressionObserver.Execute(Me, notWorkingExpression).Cascade()\n \nIf you subscribe to the INotifyCollectionChanged.CollectionChanged events on working, working2, and notWorking, the first two will raise events successfully, but the third will not.\nThe reason is that when notWorkingExpression is declared, its declared TDelegate type argument differs from the lamda expression's first argument type (i.e. IExpression != TestExpression).\n \nSo that's the bug that's been plaguing me!  I can't believe it took so long to find.\n \nI wrote a little helper method to diagnose Obtics collections, so here is the output if it helps you:\n?Npipm.DebugHelper.WriteObject(working)\n\"Root {CascadeTransformation`2}\n|\t<enumerated results> Count=1\n|\t|\t0 {List`1}\n|\t|\t|\t<enumerated results> Count=1\n|\t|\t|\t|\t0=9/25/2009 12:00:00 AM to 9/26/2009 12:00:00 AM\n|\t_Source {AsCollectionNullableTransformation`1}\n|\t|\t<enumerated results> Count=1\n|\t|\t|\t0 {List`1}\n|\t|\t|\t|\t<enumerated results> Count=1\n|\t|\t|\t|\t|\t0 {List`1}\n|\t|\t|\t|\t|\t|\t<enumerated results> Count=1\n|\t|\t|\t|\t|\t|\t|\t0=9/25/2009 12:00:00 AM to 9/26/2009 12:00:00 AM\n|\t|\tContentVersion=(sn 0)\n|\t|\t_Prms {Tuple`2}\n|\t|\t|\tFirst {PipelineResultTransformation`3}\n|\t|\t|\t|\t_Source {PropertyTransformation`2}\n|\t|\t|\t|\t|\t_Prms {Tuple`2}\n|\t|\t|\t|\t|\t|\tFirst {StaticValueProvider`1}\n|\t|\t|\t|\t|\t|\tSecond {PropertyClass}\n|\t|\t|\t|\t_Prms {Tuple`2}\n|\t|\t|\t|\t|\tFirst {Func`2}\n|\t|\t|\t|\t|\tSecond {TestExpression}\n|\t|\t|\tSecond {Func`2}\n|\tContentVersion=(sn 0)\n|\t_Prms {AsCollectionNullableTransformation`1}\n|\t|\t<enumerated results> Count=1\n|\t|\t|\t0 {List`1}\n|\t|\t|\t|\t<enumerated results> Count=1\n|\t|\t|\t|\t|\t0 {List`1}\n|\t|\t|\t|\t|\t|\t<enumerated results> Count=1\n|\t|\t|\t|\t|\t|\t|\t0=9/25/2009 12:00:00 AM to 9/26/2009 12:00:00 AM\n|\t|\tContentVersion=(sn 0)\n|\t|\t_Prms {Tuple`2}\n|\t|\t|\tFirst {PipelineResultTransformation`3}\n|\t|\t|\t|\t_Source {PropertyTransformation`2}\n|\t|\t|\t|\t|\t_Prms {Tuple`2}\n|\t|\t|\t|\t|\t|\tFirst {StaticValueProvider`1}\n|\t|\t|\t|\t|\t|\tSecond {PropertyClass}\n|\t|\t|\t|\t_Prms {Tuple`2}\n|\t|\t|\t|\t|\tFirst {Func`2}\n|\t|\t|\t|\t|\tSecond {TestExpression}\n|\t|\t|\tSecond {Func`2}\n\"\n \n?Npipm.DebugHelper.WriteObject(notworking)\n\"Root {CascadeTransformation`2}\n|\t<enumerated results> Count=1\n|\t|\t0 {List`1}\n|\t|\t|\t<enumerated results> Count=1\n|\t|\t|\t|\t0=9/25/2009 12:00:00 AM to 9/26/2009 12:00:00 AM\n|\t_Source {AsCollectionNullableTransformation`1}\n|\t|\t<enumerated results> Count=1\n|\t|\t|\t0 {List`1}\n|\t|\t|\t|\t<enumerated results> Count=1\n|\t|\t|\t|\t|\t0 {List`1}\n|\t|\t|\t|\t|\t|\t<enumerated results> Count=1\n|\t|\t|\t|\t|\t|\t|\t0=9/25/2009 12:00:00 AM to 9/26/2009 12:00:00 AM\n|\t|\tContentVersion=(sn 0)\n|\t|\t_Prms {Tuple`2}\n|\t|\t|\tFirst {PipelineResultTransformation`3}\n|\t|\t|\t|\t_Source {StaticValueProvider`1}\n|\t|\t|\t|\t_Prms {Tuple`2}\n|\t|\t|\t|\t|\tFirst {Func`2}\n|\t|\t|\t|\t|\tSecond {TestExpression}\n|\t|\t|\tSecond {Func`2}\n|\tContentVersion=(sn 0)\n|\t_Prms {AsCollectionNullableTransformation`1}\n|\t|\t<enumerated results> Count=1\n|\t|\t|\t0 {List`1}\n|\t|\t|\t|\t<enumerated results> Count=1\n|\t|\t|\t|\t|\t0 {List`1}\n|\t|\t|\t|\t|\t|\t<enumerated results> Count=1\n|\t|\t|\t|\t|\t|\t|\t0=9/25/2009 12:00:00 AM to 9/26/2009 12:00:00 AM\n|\t|\tContentVersion=(sn 0)\n|\t|\t_Prms {Tuple`2}\n|\t|\t|\tFirst {PipelineResultTransformation`3}\n|\t|\t|\t|\t_Source {StaticValueProvider`1}\n|\t|\t|\t|\t_Prms {Tuple`2}\n|\t|\t|\t|\t|\tFirst {Func`2}\n|\t|\t|\t|\t|\tSecond {TestExpression}\n|\t|\t|\tSecond {Func`2}\n\"",
+    "LastUpdatedDate": "2013-05-15T21:55:53.323-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-09-25T07:15:56.493-07:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "ExpressionObserver.Execute expression broken when expression has type differences",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 4990
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Interesting report. This code has no equivalent in C#. Covariance is not supported yet. Still it is something that should work in Obtics so I'm working on it.",
+      "PostedDate": "2009-09-26T02:17:54.123-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-09-26T05:10:32.54-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Associated with changeset 27147.",
+      "PostedDate": "2009-09-26T05:10:37.963-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-12-10T10:50:29.777-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:07.2-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:53.323-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

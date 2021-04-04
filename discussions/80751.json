@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "276930",
+    "ThreadId": "80751",
+    "Html": "<p>We've come across a use case where we compute two values via an aggregate and want to perform a calculation on those two values at the end of an operation.&nbsp; Basically, we're creating a percent method.</p>\r\n<p>We originally used two separate .Count() expressions on the same list, but it seemed that the two counts could get out of sync sometimes.&nbsp; The following code demonstrates what we invented to do the counting in an &quot;atomic&quot; way.</p>\r\n<p>&nbsp;</p>\r\n<div style=\"color:Black;background-color:White\">\r\n<pre>list.Aggregate(<span style=\"color:Blue\">new</span> { MatchingItems = 0, TotalItems = 0 }, (total, item) =&gt;\r\n    item.MatchesSomeCriteria\r\n        ? <span style=\"color:Blue\">new</span> { MatchingItems = total.MatchingItems + 1, TotalItems = total.TotalItems + 1}\r\n        : <span style=\"color:Blue\">new</span> { total.MatchingItems, TotalItems = total.TotalItems + 1 }).??? -&gt; the percentage of matching items</pre>\r\n</div>\r\n<p>&nbsp;</p>\r\n<p>The problem now becomes computing the percent.&nbsp; We couldn't think of any way to do this with built-in method, so we made a new method called &quot;Transform&quot;.&nbsp; Here's the definition.</p>\r\n<p>&nbsp;</p>\r\n<div style=\"color:Black;background-color:White\">\r\n<pre>    <span style=\"color:Blue\">public</span> <span style=\"color:Blue\">static</span> <span style=\"color:Blue\">class</span> ObjectExtensions\r\n    {\r\n        [ExpressionObserverMapping(<span style=\"color:Blue\">typeof</span>(Observable))]\r\n        <span style=\"color:Blue\">public</span> <span style=\"color:Blue\">static</span> TResult Transform&lt;T, TResult&gt;(<span style=\"color:Blue\">this</span> T obj, Func&lt;T, TResult&gt; selector)\r\n        {\r\n            <span style=\"color:Blue\">return</span> selector(obj);\r\n        }\r\n\r\n        <span style=\"color:Blue\">public</span> <span style=\"color:Blue\">static</span> <span style=\"color:Blue\">class</span> Observable\r\n        {\r\n            <span style=\"color:Blue\">public</span> <span style=\"color:Blue\">static</span> IValueProvider&lt;TResult&gt; Transform&lt;T, TResult&gt;(T obj, Func&lt;T, IValueProvider&lt;TResult&gt;&gt; selector)\r\n            {\r\n                <span style=\"color:Blue\">return</span> selector(obj);\r\n            }\r\n        }\r\n    }\r\n\r\n</pre>\r\n</div>\r\n<p>To use it, we essentially replace the ??? with Transform(x =&gt; x.MatchingItems / x.TotalItems).&nbsp; [math issues ignored for simplicity]</p>\r\n<p>Having to make that method felt a little strange, but perhaps it is the best way to go.&nbsp; If there's not a better way, hopefully this method will help somebody out in a similar situation.</p>\r\n<p>&nbsp;</p>\r\n<p>&nbsp;</p>\r\n<p>&nbsp;</p>",
+    "PostedDate": "2010-01-13T18:06:09.557-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "277479",
+    "ThreadId": "80751",
+    "Html": "<p>Since variables can't be used in lambda expressions I think this is a perfect solution to your problem and a great tip. Thanks.</p>",
+    "PostedDate": "2010-01-15T00:12:59.397-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

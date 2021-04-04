@@ -1,0 +1,105 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": "2009-08-27T13:20:58.577-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "It appears that a lot is broken in Obtics if you \"Enable ClickOnce Security Settings\", set your project to a partial trust application, and then set the Zone to \"Internet\".\n \nThe first few problems are because Obtics tries to reflect on classes that are private or internal.  So, if I change the Obtics source code and make these public, that \"fixes\" them.\n \nThe next problem is when I call .Cascade and I get an exception \"Operation could destabilize the runtime.\"   I'm still working on how to fix this.",
+    "LastUpdatedDate": "2013-05-15T21:55:54.32-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "High",
+      "Severity": 150,
+      "Id": 3
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-07-27T15:00:20.51-07:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "Obtics with ClickOnce Security set to Internet",
+    "Type": {
+      "Name": "Feature",
+      "Id": 1
+    },
+    "VoteCount": 1,
+    "Id": 4660
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "By the way, the classes that I had to make public are:\r\nExpressionRewriter, ExpressionVisitor, DefaultWorkQueueProviderValidatorClass",
+      "PostedDate": "2009-07-27T16:52:46.18-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Nothing definite yet, but here are some notes:\r\nThe first place I got that exception, I was using a type of IList<T> to Obtics ExpressionObserver and getting a return type of IValueProvider<IList<T>>.  When I changed it to use IEnumerable<T>, the exception went away.  Too much changed at one time for me to pinpoint it exactly on the type change, but something related to the type change definitely fixed it.\r\n\r\nThe second place I get the exception is in ValueProvider.Convert.cs, on the following return line:\r\npublic static IValueProvider<TResult> Convert<TSource, TResult>(this IValueProvider<TSource> source, Func<IValueProvider<TSource>, IValueProvider<TResult>> valueConverter)\r\n{ return CascadeTransformation<TResult, IValueProvider<TResult>>.GeneralCreate(Convert<TSource, IValueProvider<TResult>>(source, valueConverter)); }\r\n\r\nI printed the value of valueConverter because its constructor reference intrigues me... from google searches, it seems like the main two reason for this exception are constructor-related and generic-type-related:\r\n?valueConverter\r\n{Method = {Obtics.Values.IValueProvider`1[System.Boolean] <.ctor>b__4(Obtics.Values.IValueProvider`1[System.Boolean])}}\r\n    base {System.MulticastDelegate}: {Method = {Obtics.Values.IValueProvider`1[System.Boolean] <.ctor>b__4(Obtics.Values.IValueProvider`1[System.Boolean])}}\r\n\r\n\r\nHope that helps a little!",
+      "PostedDate": "2009-07-28T06:35:19.99-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Well, I found a work-around.\r\nThe problem occurs when I have an AndAlso in my expression.  If I change this to an And, the exception goes away.  For example:\r\n\r\n\t'Protected Shared ReadOnly StartDateVisibilityExpression As Expressions.Expression(Of Func(Of AppointmentViewModel, Boolean)) = Function(source As AppointmentViewModel) _\r\n\t'source.Appointment.IsEvent _\r\n\t'AndAlso Not source.VisibleRange.Contains(source.Appointment.Start)\r\n\r\n\tProtected Shared ReadOnly StartDateVisibilityExpression As Expressions.Expression(Of Func(Of AppointmentViewModel, Boolean)) = Function(source As AppointmentViewModel) _\r\n\tsource.Appointment.IsEvent _\r\n\tAnd Not source.VisibleRange.Contains(source.Appointment.Start)\r\n\r\n\tProtected Shared ReadOnly StartDateVisibilityExpressionCompiled As Func(Of AppointmentViewModel, IValueProvider(Of Boolean)) = ExpressionObserver.Compile(StartDateVisibilityExpression)\r\n\r\n\tPublic ReadOnly Property StartDateVisibility() As IValueProvider(Of Boolean)\r\n\t\tGet\r\n\t\t\tIf _StartDateVisibility Is Nothing Then\r\n\t\t\t\t_StartDateVisibility = StartDateVisibilityExpressionCompiled(Me)\r\n\t\t\tEnd If\r\n\t\t\tReturn _StartDateVisibility\r\n\t\tEnd Get\r\n\tEnd Property\r\n\tPrivate _StartDateVisibility As IValueProvider(Of Boolean)\r\n\r\nIf I use the first declaration of StartDateVisibilityExpression, then the exception is thrown when StartDateVisibilityExpressionCompiled(Me) is invoked.  If I use the second then it works fine.\r\n\r\nThe biggest difference I can see is that the version that uses \"AndAlso\" calls the following methods, whereas the version that uses \"And\" does not:\r\n        public static IValueProvider<bool> And(this IValueProvider<bool> a, IValueProvider<bool> b)\r\n        public static IValueProvider<TResult> Convert<TSource, TResult>(this IValueProvider<TSource> source, Func<IValueProvider<TSource>, IValueProvider<TResult>> valueConverter)\r\n\r\n",
+      "PostedDate": "2009-07-28T07:21:43.07-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "I think a full test of the library needs to be done with partial-trust code-access security.  For example, I'm trying to databind to the Key property on a ConvertPairsGroupingTransformation object, which fails because ConvertPairsGroupingTransformation is set to internal instead of public, and I don't have ReflectionPermission.  \r\n\r\nTo be able to bind to the Key property, I had to make the following types public:\r\nConvertPairsGroupingTransformation\r\nConvertTransformationBase\r\nNCSourcedObjectToSE\r\nNCSourcedObject\r\nNCObservableObjectBase\r\nObservableObjectBase\r\nTuple\r\nIReceiveChangeNotification\r\nINCEventArgs\r\nINCEventArgsTypes\r\nINCollectionAddEventArgs\r\nSingleItemINCollectionEventArgs\r\nSingleItemINCollectionEventArgs\r\nINCollectionChangedEventArgs\r\nINotifyChanged\r\nINPropertyChangedEventArgs\r\nINCollectionResetEventArgs\r\nINCollectionRemoveEventArgs\r\nINCollectionReplaceEventArgs\r\nINCollectionReplaceEventArgs\r\n\r\nBoundGroupFilterTransformation\r\nFilterTransformationBase\r\nOpaqueTransformationBase\r\nBoundGroupFilterDispenser\r\nUnorderedBoundGroupFilterDispenser\r\nItemIndexPair",
+      "PostedDate": "2009-07-29T05:50:51.987-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "This is very usefull input. Obtics had not been ensured yet for other than full trust use and this is something that needs to be done badly. Tx.\n \nWhy are you accessing the key property of an ConvertPairsGroupingTransformation object and how? It should not be public. The ConvertPairsGroupingTransformation class implements the System.Linq.IGrouping<,> interface which is public and has a public Key property. If there is some internal path (ExpressionObserver?) that forces you to use the ConvertPairsGroupingTransformation.Key property then that would be a bug.\n \nRegs,\n \nThomas",
+      "PostedDate": "2009-07-29T06:28:43.503-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Here's how I'm accessing the Key property.  It's pretty straight-forward, and there's not much I can change to make it simpler without getting rid of databinding.\r\n\r\nI have a public class, which has a public property (I'll call it DataItemGroups) which returns an IEnumerable<IGrouping<TKey, TData>>.\r\nAn instance of this class is bound to the DataContext of a UserControl.\r\nInside this UserConrol is an ItemsControl, which has its ItemsSource property bound to the DataItemGroups property.\r\nThe DataTemplate (which is applied to type IGrouping<TData>) of the ItemsControl has a TextBlock with its Text property bound to the Key property.  The binding contains a converter to convert the TKey type a displayable string value.\r\n",
+      "PostedDate": "2009-07-29T20:48:17.35-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Another note:\r\nThat \"Operation could destabilize the runtime.\" exception is showing up in a lot of places, and I find myself rewriting Expressions in different ways in order to get rid of them.\r\n\r\nFor example, something like this threw the exception:\r\nDim lookupList = some IEnumerable<T> list.\r\nExpressionObserver.Execute(.... from a in b where lookupList.Contains(a.SomeProperty) ...)\r\n\r\nBut if I rewrote it like this, it worked:\r\nExpressionObserver.Execute(... from a in b join lookupList on a.SomeProperty = lookupList select a ... )\r\n\r\n",
+      "PostedDate": "2009-07-29T20:55:49.4-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Associated with changeset 25382.",
+      "PostedDate": "2009-07-30T19:59:43.263-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "Obtics should now run under partial trust. All ValueProvider and ObservableEnumerable methods should work as 'normal' but there are some limitations for ExpressionObserver. Manual creation of lambda expressions (what ExpressionObserver does) demands that all members in the expression are public.\r\n\r\nUnfortunately this excludes closures of local variables ( var x = 10; ExpressionObserver.Execute( () => x + 10 ); ) these closuers are mapped to non-public members of an on-the-fly created anonymous class. This is not done by optics but by the Linq.Expressions system. A statement as above needs to be mapped to ( ExpressionObserver.Execute(10, (x) => x + 10); ). This is not that bad since closures cary a severe performance risk anyway.\r\n\r\nAlso excluded are anonymous types ( ExpressionObserver.Execute( () => new { X = 1, Y = 2 } ); ) Apparently the created anonymous type or its constructor is not public. This is more anoying but can be worked around: ( public class XY { public int X; public int Y; }; ExpressionObserver.Execute( () => new XY { X = 1, Y = 2 } ); )\r\n\r\nThe \"May destabilize the runtime\" errors are very obscure. The type system appears not to be able to verify the typesafety of perfectly legal C# (VB) code in some cases. Usualy this has to do with implicit casting to interfaces in an inline if (?:) or coalesce operator (??). I believe they are all fixed.\r\n\r\nI don't have a definite solution for the 'Key' property issue yet. Making implementation classes public leads to a whole avalange of types that need to be made public. I'm thinking of creating proxy classes for different interfaces that would give XAML a concreate type to bind to but that would hide all further details. \r\nIt might also be a solution to refer to the explicit interface property in XAML. This is also supposed to give better performance since WPF doesn't have to search for the property by name all the time.\r\nTo do this, register the System.Linq namespace in xaml. ( xmlns:sl=\"clr-namespace:System.Linq etc.. ) and in a binding refer to the Key property as {Binding Path=MyGroup.(sl:IGrouping.Key)}. Note that you need 'Path=' because {Binding MyGroup.(sl:IGrouping.Key)} will lead to a beautifull internal null reference exception.",
+      "PostedDate": "2009-07-31T04:21:05.867-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "(Fixed in changeset 25585)\nRegexTool project has been concverted to an XBAP application. This verifies that the solution works. Interface properties can be refered in XAML bindings by using explicit reference to the properties as mentioned. Though this is the prefered solution it is also possible to use the new ObticsBindingHelper class. This class can proxy interfaces with concrete and public interface implementations.",
+      "PostedDate": "2009-08-05T08:43:27.793-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-08-27T13:20:58.577-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:08.17-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:54.32-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

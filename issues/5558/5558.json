@@ -1,0 +1,60 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "Reported as not a bug",
+    "ClosedDate": "2009-12-10T10:46:37.457-08:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "All of the following operations should return one item, but for some reason one of them returns zero.  This is very confusing and I have not been able to construct a unit test to reproduce it yet.\n \nNote:  GenericClass indirectly implements IModelEntity.\n \nSystem.Linq.Enumerable.OfType<IModelEntity>(allItems).Count()\n1\nObtics.Collections.ObservableEnumerable.OfType<IModelEntity>(allItems).Count()\n0\nObtics.Collections.ObservableEnumerable.OfType<GenericClass>(allItems).Count()\n1\nObtics.Collections.ObservableEnumerable.OfType<IModelEntity>(allItems.ToArray()).Count()\n1\nObtics.Collections.ObservableEnumerable.Distinct(allItems).Count()\n1",
+    "LastUpdatedDate": "2013-05-15T21:55:53.033-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-12-08T20:41:42.603-08:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "Very strange bug seemingly related to OfType",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 1,
+    "Id": 5558
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "Turns out this was related to having a non-observable \"Distinct()\" in the chain.  It's not a bug.",
+      "PostedDate": "2009-12-08T21:40:17.577-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-12-10T10:46:37.457-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:05.907-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:53.033-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

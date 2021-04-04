@@ -1,0 +1,34 @@
+[
+  {
+    "Id": "262550",
+    "ThreadId": "76792",
+    "Html": "<p>Greetings.</p>\r\n<p>First, I wanted to thank you for releasing Obtics.&nbsp; We built our own linq-based notification framework before we discovered Bindable Linq, Continous Linq, and Obtics (among a few other minor ones).&nbsp; We also recognized the need for full expression support and as such we selected Obtics for this.&nbsp; Obtics has been treating us fairly well so far.&nbsp; We did bang our heads against the wall for a while while trying to create some custom mappings.&nbsp; I'll make another post with that story so it might help others.</p>\r\n<p>This post is regarding the use of proxy objects with Obtics.&nbsp; We use NHibernate as an ORM and build reactive properties and lists on top of the data retrieved from the database.&nbsp; NHibernate supports lazy loading which uses proxy objects.&nbsp; In other words, the object that you're adding the property changed handler to will be a proxy that points to the real implementation object.&nbsp; This means that from Obtic's perspecective, it just added a PropertyChanged event handler to a ProxyPerson instance.&nbsp; The PropertyChanged handler addition is passed along to the real Person object.&nbsp; When the event is thrown, the sender will be the real Person object.&nbsp; Obtics checks the sender (Person) against the previous reference it had (ProxyPerson) and finds that they don't match.&nbsp; Because of this it doesn't recognize the update.</p>\r\n<p>Here is the pertinent code from PropertyTransformation:</p>\r\n<p>\r\n<div style=\"color:Black;background-color:White\">\r\n<pre>        <span style=\"color:Blue\">void</span> Buffer_PropertyChanged(<span style=\"color:Blue\">object</span> sender, EventArgs args)\r\n        {\r\n            LockForChange();\r\n\r\n            INCEventArgs message = <span style=\"color:Blue\">null</span>;\r\n\r\n            <span style=\"color:Blue\">try</span>\r\n            {\r\n                <span style=\"color:Green\">//if (object.ReferenceEquals(sender, Buffer))</span>\r\n                message = SIValueProvider.ValueINCEventArgs;\r\n            }\r\n            <span style=\"color:Blue\">finally</span> { Release(message); }\r\n        }\r\n\r\n</pre>\r\n</div>\r\n</p>\r\n<p>Note that when we commented the line out, it seemed to correct the issue for us, but we're not sure what the ramifications would be.&nbsp; Is this reference comparison needed?&nbsp; If not, it would be great to eliminate it.&nbsp; If it is needed, perhaps there could be a way to hook a different reference equality check method into Obtics.&nbsp; Would very much appreciate feedback or questions on this.</p>\r\n<p>Thanks!</p>",
+    "PostedDate": "2009-12-01T18:49:40.44-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "262584",
+    "ThreadId": "76792",
+    "Html": "<p>On the topic of considering possibilities, I was curious how hard it would be for NHibernate to use the same object for the proxy.&nbsp; Based on this post and the fact that it hasn't been done yet, it doesn't seem very feasible.</p>\r\n<p>http://ayende.com/Blog/archive/2009/08/28/a-guide-into-orm-implementation-challenges-lazy-loading.aspx</p>\r\n<p>One thing that I should note is that all our objects override Equals to work properly with the proxy objects.&nbsp; If checks like the one mentioned are indeed needed, would it be reasonable to use Equals instead?</p>",
+    "PostedDate": "2009-12-01T21:35:23.897-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "262665",
+    "ThreadId": "76792",
+    "Html": "<p>Hi,</p>\r\n<p>It is good to hear that you are using and finding value in Obtics. I would very much like to incourage you to post about your successes, failures and dents in the forehead you experienced&nbsp;while using&nbsp;Obtics.</p>\r\n<p>I could complain that the proxy is not proxying properly since it does not translate the 'sender' parameter of the event to itself. It therefore is not fully transparant and a little bit opague.This translation would incure some administrative overhead on part of the proxy class.</p>\r\n<p>The 'if' statement you removed though only 'protects' against some hypothetical events that might be 'on the way' when the PropertyTransformation object would switch source. (Buffer property&nbsp;gets a different value) Seeing that the only information the event caries is that 'something may have changed' there would be no risk in letting the odd extra event pass through. Using Equals in this case would cary too much overhead for the&nbsp;supposed improvement.&nbsp;I think it would actually be an improvement if the 'if' statement was removed and I'll mark it as a 'To be done soon'.</p>\r\n<p>Thanks for the tip,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2009-12-02T03:20:50.877-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "263322",
+    "ThreadId": "76792",
+    "Html": "<p>Your suggestion of improving the proxy was right on the money.&nbsp; WPF also suffers from the exact same issue where it requires the object references to be equal.&nbsp; I found a page that details how to enhance the PropertyChanged behaviour of the proxy objects to correct this.</p>\r\n<p>http://www.progware.org/Blog/post/NHibernate-PropertyChanged-event-and-WPF.aspx</p>\r\n<p>Implementing this fix will allow Obtics and WPF to work out of the box with NHibernate lazy loaded objects.</p>",
+    "PostedDate": "2009-12-03T11:18:42.417-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

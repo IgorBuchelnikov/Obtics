@@ -1,0 +1,95 @@
+! Implicit Observable LINQ Examples
+
+Implicit observable LINQ differs from Explicit observable LINQ in that every lambda passed to an Implicit observable LINQ method is accepted as an LambdaExpression and this lambda expression is rewritten to a reactive form by passing it to the ExpressionObserver.Compile method.
+
+Like with explicit observable linq if you would like to use observable LINQ with inline query syntax then you will need to remove the System.Linq namespace from your using directives or hide it behind an identifier. Otherwise you will get ambiguouity compilation errors.
+
+{{
+using SL = System.Linq; 
+using Obtics.Values;
+using Obtics.Collections.ImplicitObservable;
+
+class Test
+{
+        ObservableCollection<Person> _People = new ObservableCollection<Person>();
+
+        public ReadOnlyObservableCollection<Person> People
+        { get { return new ReadOnlyObservableCollection<Person>(_People); } }
+
+        public IEnumerable<string> LastNames
+        {
+            get 
+            {
+                return
+                    from p in People
+                    select p.LastName into ln
+                    orderby ln
+                    select ln;
+            }
+        }
+}
+}}
+
+The above returned sequence is observable and fully reactive to changes in the LastName property of any Person object in the People collection as well as changes to the People collection itself.
+
+Always try to prevent the use of free variables in lambda expressions. There exist special Select methods to seed observable linq queries with external variables though they can't be used with the convenient inline query syntax. Note that in the below example the Select method call takes an extra parameter to bind the otherwise free _LastOrFirstCheckBox. If instead a free _LastOrFirstCheckBox would have been used then the lambda would have been unique for each Test class instance and recompiled for every Test class instance.
+
+{{
+using SL = System.Linq; 
+using Obtics.Values;
+using Obtics.Collections.ImplicitObservable;
+
+class Test
+{
+        ObservableCollection<Person> _People = new ObservableCollection<Person>();
+
+        public ReadOnlyObservableCollection<Person> People
+        { get { return new ReadOnlyObservableCollection<Person>(_People); } }
+
+        System.Windows.Controls.CheckBox _LastOrFirstCheckBox;
+
+        public IEnumerable<string> LastOrFirstNames
+        {
+            get 
+            {
+                return
+                    People
+                        .Select( this, (p, t) => t._LastOrFirstCheckBox.IsChecked ? p.LastName : p.FirstName )
+                        .OrderBy( name => name );
+            }
+        }
+}
+}}
+
+In case Test class instances are rare and the LastNames property getter is accessed often, it could be usefull to cache the generated IEnumerable in a member field. But note that the garbage collector can not reclaim the pipeline before its owning Test object is reclaimed as well.
+
+{{
+using SL = System.Linq; 
+using Obtics.Values;
+using Obtics.Collections.ImplicitObservable;
+
+class Test
+{
+        ObservableCollection<Person> _People = new ObservableCollection<Person>();
+
+        public ReadOnlyObservableCollection<Person> People
+        { get { return new ReadOnlyObservableCollection<Person>(_People); } }
+
+        IEnumerable<string> _LastNames;
+
+        public IEnumerable<string> LastNames
+        {
+            get 
+            {
+                return _LastNames ?? ( _LastNames =
+                    from p in People
+                    select p.LastName into ln
+                    orderby ln
+                    select ln
+                );
+            }
+        }
+}
+}}
+
+See also:[Transformation Examples]

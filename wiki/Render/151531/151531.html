@@ -1,0 +1,109 @@
+<div class="wikidoc"><h1>Pipeline Caches</h1>
+When Obtics transformations are used to generate live property values and the getters of these properties are accessed often, it may be advantageous to cache the results of those transformations.<br /><br />The results could be stored in local fields but that will prevent the result from being garbage collected when it is no longer needed. Proposed here are two simple cache types that can be used to hold a weak reference to a transformation pipeline.<br /><br /><b>LocalPipelineCache</b>:<br />This struct contains a WeakReference object that is used to hold a reference to the generated transformation pipeline. Disadvantage is that a WeakReference object will be created for every property that uses this struct. Even when the pipeline is GC&#39;ed this WeakReference object will remain.<br /> <br /><pre>
+    public struct LocalPipelineCache&lt;TType&gt; where TType : class
+    {
+        WeakReference _WR;
+
+        bool TryGetValue(out TType value)
+        {
+            if (_WR == null)
+            {
+                value = null;
+                return false;
+            }
+            else
+            {
+                value = (TType)_WR.Target;
+                return value != null;
+            }
+        }
+
+        TType SetValue(TType value)
+        {
+            if (_WR == null)
+                _WR = new WeakReference(value);
+            else
+                _WR.Target = value;
+
+            return value;
+        }
+
+        public TType Get(Func&lt;TType&gt; creator)
+        {
+            TType res;
+            return TryGetValue(out res) ? res : SetValue(creator());
+        }
+
+        public TType Get&lt;Arg1&gt;(Arg1 arg1, Func&lt;Arg1, TType&gt; creator)
+        {
+            TType res;
+            return TryGetValue(out res) ? res : SetValue(creator(arg1));
+        }
+    }
+</pre><br /><br />LocalPipelineCache can be used as such:<br /><br /><pre>
+using Obtics.Values;
+ 
+class Test
+{
+        Person _Person = new Person(&quot;Glenn&quot;,&quot;Miller&quot;);
+ 
+        Person Person
+        { get { return _Person; } }
+ 
+        static readonly Func&lt;Person,IValueProvider&lt;int&gt;&gt; _PersonFullNameLengthF = 
+            ExpressionObserver.Compile( (Test t) =&gt; t.Person.FirstName.Length + t.Person.LastName.Length + 1);
+ 
+        LocalPipelineCache&lt;IValueProvider&lt;int&gt;&gt; _PersonFullNameLength;
+ 
+        public IValueProvider&lt;int&gt; PersonFullNameLength
+        {
+            get 
+            {
+                return _PersonFullNameLength.Get(this, _PersonFullNameLengthF) ;
+            }
+        }
+}
+</pre><br /><br /><b>CachedFunc</b>:<br />This class uses a static dictionary to map object instances to transformation pipelines. This method is slower than using a local reference but the advantage is that there are no idle costs per instance. So if you have many instances and you are accessing the properties of a relative few this may in fact be a cheaper aproach.<br /><br />It uses the ConcurrentWeakDictionary class from the ConcurrentHashtable library.<br /><pre>
+    using TvdP.Collections;
+
+    public sealed class CachedFunc&lt;TOwner,TType&gt;
+        where TOwner : class
+        where TType : class
+    {
+        ConcurrentWeakDictionary&lt;TOwner, TType&gt; _Map = new ConcurrentWeakDictionary&lt;TOwner, TType&gt;();
+        Func&lt;TOwner,TType&gt; _Creator;
+
+        public CachedFunc(Func&lt;TOwner,TType&gt; creator)
+        { _Creator = creator; }
+
+        public static implicit operator CachedFunc&lt;TOwner, TType&gt;(Func&lt;TOwner,TType&gt; creator)
+        { return new CachedFunc&lt;TOwner,TType&gt;(creator); }
+
+        public TType Get(TOwner instance)
+        {
+            TType res;
+            return _Map.TryGetValue(instance, out res) ? res : _Map.GetOldest(instance, _Creator(instance));
+        }
+    }
+</pre><br /><br />It can be used as such:<br /><br /><pre>
+using Obtics.Values;
+ 
+class Test
+{
+        Person _Person = new Person(&quot;Glenn&quot;,&quot;Miller&quot;);
+ 
+        Person Person
+        { get { return _Person; } }
+ 
+        static readonly CachedFunc&lt;Person,IValueProvider&lt;int&gt;&gt; _PersonFullNameLengthF = 
+            ExpressionObserver.Compile( (Test t) =&gt; t.Person.FirstName.Length + t.Person.LastName.Length + 1);
+  
+        public IValueProvider&lt;int&gt; PersonFullNameLength
+        {
+            get 
+            {
+                return PersonFullNameLengthF.Get(this);
+            }
+        }
+}
+</pre><br /><br />See also: <a href="https://obtics.codeplex.com/wikipage?title=Transformation%20Examples&referringTitle=Pipeline%20Caches">Transformation Examples</a></div><div class="ClearBoth"></div>

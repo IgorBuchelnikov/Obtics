@@ -1,0 +1,21 @@
+<div class="wikidoc"><h1>ExpressionEqualityComparer</h1>
+It is a little strange that two similar Expressions trees are not considered equal even though they are completely interchangeable. Like:<br /><br /><pre>
+int a = 1, b = 2
+
+Expression&lt;Func&lt;bool, int&gt;&gt; exp1 = x =&gt; x ? a : b ;
+Expression&lt;Func&lt;bool, int&gt;&gt; exp2 = x =&gt; x ? a : b ;
+
+Console.Out.WriteLine(exp1.Equals(exp2));
+</pre><br /><br />This will write <i>False</i> to the console, even though they will always give the same result. The only thing compared here is the instance id.<br /><br /><pre>
+int a = 1, b = 2
+
+Expression&lt;Func&lt;bool, int&gt;&gt; exp1 = x =&gt; x ? a : b ;
+Expression&lt;Func&lt;bool, int&gt;&gt; exp2 = x =&gt; x ? a : b ;
+
+Console.Out.WriteLine(  (new ExpressionEqualityComparer()).Equals(exp1,exp2) );
+</pre><br /><br />This code will return <i>True</i> in this case. If two Expression trees are equal ExpressionEqualityComparer will return true.<br />More specifically: if ExpressionEqualityComparer.Equals returns true for two expressions trees than the compiled versions of those<br />trees are completely interchangeable. Note that the reverse is not true! If ExpressionEqualityComparer.Equals returns false for two expression trees then it does not mean that they are not interchangeable. For example:<br /><br /><pre>
+Expression&lt;Func&lt;int, int, int&gt;&gt; exp1 = (x,y) =&gt; x + y ;
+Expression&lt;Func&lt;int, int, int&gt;&gt; exp2 = (x,y) =&gt; y + x ;
+
+Console.Out.WriteLine(  (new ExpressionEqualityComparer()).Equals(exp1,exp2) );
+</pre><br /><br />Will return <i>False</i> but the two expressions are interchangeable.<br /></div><div class="ClearBoth"></div>

@@ -1,0 +1,267 @@
+﻿<Window 
+    x:Class="ObticsExaml.Window1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:ObticsExaml"
+    xmlns:model="clr-namespace:ObticsExaml.Model"
+    xmlns:ov="clr-namespace:Obtics.Values;assembly=Obtics"
+    Title="Shop" 
+    Height="600" 
+    Width="1000"      
+    x:Name="MainWindow"
+    >
+    <Window.Resources>
+        
+        <model:Shop x:Key="shop" />
+        
+        <local:SellingDaemon x:Key="sellingDaemon" Context="{StaticResource shop}" />
+        
+        <local:PartInUseConverter x:Key="usageConverter" Context="{StaticResource shop}" />
+        
+        <CollectionViewSource 
+            x:Key="PartsUsageViewSource" 
+            Source="{Binding Path=Parts, Converter={StaticResource usageConverter}}"
+            >
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Second" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+        
+        <DataTemplate x:Key="ProductTemplate" >
+            <ContentControl x:Name="ProductName" Content="{Binding Path=Name.(ov:IValueProvider.Value)}" />
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Path=SellingStatus.(ov:IValueProvider.Value)}" Value="{x:Static model:SellingStatusEnum.Free}">
+                    <Setter TargetName="ProductName" Property="Foreground" Value="Green"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=SellingStatus.(ov:IValueProvider.Value)}" Value="{x:Static model:SellingStatusEnum.Limited}">
+                    <Setter TargetName="ProductName" Property="Foreground" Value="Orange"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=SellingStatus.(ov:IValueProvider.Value)}" Value="{x:Static model:SellingStatusEnum.Blocked}">
+                    <Setter TargetName="ProductName" Property="Foreground" Value="Red"></Setter>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PartTemplate" >
+            <ContentControl x:Name="PartName" Content="{Binding Path=Name.(ov:IValueProvider.Value)}" />
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Path=StockStatus.(ov:IValueProvider.Value)}" Value="{x:Static model:StockStatusEnum.Plenty}">
+                    <Setter TargetName="PartName" Property="Foreground" Value="Green"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=StockStatus.(ov:IValueProvider.Value)}" Value="{x:Static model:StockStatusEnum.Low}">
+                    <Setter TargetName="PartName" Property="Foreground" Value="Orange"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=StockStatus.(ov:IValueProvider.Value)}" Value="{x:Static model:StockStatusEnum.Insufficient}">
+                    <Setter TargetName="PartName" Property="Foreground" Value="Red"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=StockStatus.(ov:IValueProvider.Value)}" Value="{x:Static model:StockStatusEnum.Empty}">
+                    <Setter TargetName="PartName" Property="Foreground" Value="Red"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=CanDelete.(ov:IValueProvider.Value)}" Value="True">
+                    <Setter TargetName="PartName" Property="Foreground" Value="Black"></Setter>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+        
+    </Window.Resources>
+    <DockPanel LastChildFill="False" >
+        <GroupBox Header="Sales" DockPanel.Dock="Bottom">
+            <ContentControl Margin="4,4,4,4" Content="{Binding Source={StaticResource sellingDaemon}, Path=LastSaleMessage.(ov:IValueProvider.Value)}" />
+        </GroupBox>
+        <GroupBox DockPanel.Dock="Left" Header="Products">
+            <DockPanel >
+                <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left" Orientation="Horizontal">
+                    <Button 
+                        Margin="4,4,4,4" 
+                        HorizontalAlignment="Center"  
+                        Name="NewProductButton" 
+                        Click="NewProductButton_Click"
+                        ToolTip="Create new product"
+                        >New</Button>
+                    <ContentControl
+                        Margin="4,4,4,4" 
+                        HorizontalAlignment="Center"
+                        ToolTip="{Binding ElementName=MainWindow, Path=DeleteSelectedProductToolTip.(ov:IValueProvider.Value)}" 
+                        >
+                        <Button  
+                            Name="DeleteProductButton" 
+                            IsEnabled="{Binding ElementName=MainWindow, Path=SelectedProduct.(ov:IValueProvider.Value).CanDelete.(ov:IValueProvider.Value), FallbackValue=false}" 
+                            Click="DeleteProductButton_Click"
+                            >Delete</Button>
+                    </ContentControl>
+                </StackPanel>
+                <ListBox 
+                    Width="150" 
+                    Margin="4,4,4,4" 
+                    ItemsSource="{Binding Products}" 
+                    SelectedItem="{Binding ElementName=MainWindow, Path=SelectedProduct.(ov:IValueProvider.Value), UpdateSourceTrigger=Explicit}" 
+                    SelectionChanged="Selector_SelectionChanged"
+                    x:Name="ProductsList" 
+                    HorizontalAlignment="Left"
+                    ItemTemplate="{StaticResource ProductTemplate}"
+                    />
+                <DockPanel 
+                    LastChildFill="False"
+                    DataContext="{Binding ElementName=MainWindow, Path=SelectedProduct.(ov:IValueProvider.Value)}" 
+                    IsEnabled="{Binding  ElementName=MainWindow, Path=ProductPanelEnabled.(ov:IValueProvider.Value)}"
+                    >
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <ContentControl Width="100" Margin="4,4,4,4" >Name:</ContentControl>
+                        <TextBox Width="150" Margin="4,4,4,4" Text="{Binding Path=Name.(ov:IValueProvider.Value)}"/>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <ContentControl Width="100" Margin="4,4,4,4" >Sale prohibited:</ContentControl>
+                        <CheckBox Width="150" Margin="4,4,4,4" IsChecked="{Binding Path=SaleProhibited.(ov:IValueProvider.Value)}" />
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <ContentControl Width="100" Margin="4,4,4,4" >Parts:</ContentControl>
+                        <ListBox 
+                        Margin="4,4,4,4" 
+                        Width="150" 
+                        ItemsSource="{Binding ProductParts}" 
+                        SelectedItem="{Binding ElementName=MainWindow, Path=SelectedProductPart.(ov:IValueProvider.Value), UpdateSourceTrigger=Explicit}"
+                        SelectionChanged="Selector_SelectionChanged"
+                        VerticalAlignment="Stretch"
+                        >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type model:IProductPart}">
+                                    <DockPanel Margin="4,4,4,4" HorizontalAlignment="Stretch">
+                                        <ContentControl 
+                                            DockPanel.Dock="Left" 
+                                            Content="{Binding Path=Part.(ov:IValueProvider.Value)}" 
+                                            ContentTemplate="{StaticResource PartTemplate}"
+                                            />
+                                        <ContentControl DockPanel.Dock="Left" >:</ContentControl>
+                                        <TextBox 
+                                            DockPanel.Dock="Right" 
+                                            Width="30" 
+                                            HorizontalContentAlignment="Right" 
+                                            Text="{Binding Path=PartCount.(ov:IValueProvider.Value)}" 
+                                            />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                    <StackPanel 
+                        DockPanel.Dock="Top" 
+                        Orientation="Horizontal" 
+                        Visibility="{Binding ElementName=MainWindow, Path=CantSellSelectedProductWarningVisibility.(ov:IValueProvider.Value)}"
+                        >
+                        <ContentControl Margin="4,4,4,4" Foreground="Red">Can't sell;</ContentControl>
+                        <ContentControl Margin="4,4,4,4" Foreground="Red" Content="{Binding Path=WhyCanNotSell.(ov:IValueProvider.Value)}" />
+                    </StackPanel>
+                </DockPanel>                                                          
+            </DockPanel>
+        </GroupBox>
+        <StackPanel 
+            DockPanel.Dock="Left" 
+            Orientation="Vertical" 
+            VerticalAlignment="Center"
+            >
+            <Button 
+                Margin="4,4,4,4" 
+                ToolTip="Remove part from product"  
+                Name="RemovePartFromProductButton" 
+                VerticalAlignment="Center" 
+                IsEnabled="{Binding ElementName=MainWindow, Path=CanRemovePartFromProduct.(ov:IValueProvider.Value)}" 
+                Click="RemovePartFromProductButton_Click"
+                >&gt;</Button>
+            <Button 
+                Margin="4,4,4,4" 
+                ToolTip="Add part to product" 
+                Name="AddPartToProductButton" 
+                VerticalAlignment="Center" 
+                IsEnabled="{Binding ElementName=MainWindow, Path=CanAddPartToProduct.(ov:IValueProvider.Value)}" 
+                Click="AddPartToProductButton_Click"
+                >&lt;</Button>
+        </StackPanel>
+        <GroupBox DockPanel.Dock="Left" Header="Parts">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left" Orientation="Horizontal">
+                    <Button 
+                        ToolTip="Create new part" 
+                        Margin="4,4,4,4" 
+                        HorizontalAlignment="Center" 
+                        Name="NewPartButton" 
+                        Click="NewPartButton_Click"
+                        >New</Button>
+                    <ContentControl 
+                        ToolTip="{Binding ElementName=MainWindow, Path=DeleteSelectedPartToolTip.(ov:IValueProvider.Value)}" 
+                        Margin="4,4,4,4" 
+                        HorizontalAlignment="Center">
+                        <Button 
+                            Name="DeletePartButton" 
+                            IsEnabled="{Binding ElementName=MainWindow, Path=SelectedPart.(ov:IValueProvider.Value).CanDelete.(ov:IValueProvider.Value), FallbackValue=false}" 
+                            Click="DeletePartButton_Click"
+                            >Delete</Button>
+                    </ContentControl>
+                </StackPanel>
+                <ListBox 
+                    Margin="4,4,4,4" 
+                    Width="150" 
+                    x:Name="PartsList" 
+                    ItemsSource="{Binding Source={StaticResource PartsUsageViewSource}}" 
+                    SelectedItem="{Binding ElementName=MainWindow, Path=SelectedPart.(ov:IValueProvider.Value), Converter={StaticResource usageConverter}, UpdateSourceTrigger=Explicit}" 
+                    SelectionChanged="Selector_SelectionChanged"
+                    >
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl Content="{Binding First}" ContentTemplate="{StaticResource PartTemplate}" />
+                        </DataTemplate>  
+                    </ListBox.ItemTemplate>
+                    <ListBox.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate DataType="{x:Type CollectionViewGroup}">
+                                    <Label x:Name="Label"/>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Name}" Value="True">
+                                            <Setter TargetName="Label" Property="Content" Value="-- In use --"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Name}" Value="False">
+                                            <Setter TargetName="Label" Property="Content" Value="-- Unused --"></Setter>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>                            
+                        </GroupStyle>
+                    </ListBox.GroupStyle>
+                </ListBox>
+                <DockPanel
+                    DataContext="{Binding ElementName=MainWindow, Path=SelectedPart.(ov:IValueProvider.Value)}"
+                    IsEnabled="{Binding ElementName=MainWindow, Path=PartPanelEnabled.(ov:IValueProvider.Value)}"
+                    LastChildFill="False"
+                    >
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <ContentControl Width="100" Margin="4,4,4,4" >Part name:</ContentControl>
+                        <TextBox Width="150" Margin="4,4,4,4" Text="{Binding Path=Name.(ov:IValueProvider.Value)}"></TextBox>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <ContentControl Width="100" Margin="4,4,4,4" >In stock:</ContentControl>
+                        <TextBox Width="150" Margin="4,4,4,4" IsReadOnly="True" Text="{Binding Path=InStock.(ov:IValueProvider.Value)}"></TextBox>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <ContentControl Width="100" Margin="4,4,4,4" >Add to stock:</ContentControl>
+                        <Button Margin="4,4,4,4" Tag="10" Click="AddStockButton_Click">10</Button>
+                        <Button Margin="4,4,4,4" Tag="20" Click="AddStockButton_Click">20</Button>
+                        <Button Margin="4,4,4,4" Tag="50" Click="AddStockButton_Click">50</Button>
+                        <Button Margin="4,4,4,4" Tag="100" Click="AddStockButton_Click">100</Button>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <ContentControl Width="100" Margin="4,4,4,4">Products:</ContentControl>
+                        <ListBox 
+                            Width="150" 
+                            Margin="4,4,4,4"
+                            x:Name="PartProductsList"
+                            ItemsSource="{Binding ElementName=MainWindow, Path=ProductsWhereSelectedPartUsedIn}"                         
+                            SelectionChanged="Selector_SelectionChanged"
+                            SelectedItem="{Binding ElementName=MainWindow, Path=SelectedProduct.(ov:IValueProvider.Value), UpdateSourceTrigger=Explicit}"
+                            ItemTemplate="{StaticResource ProductTemplate}"
+                            />
+                    </StackPanel>
+                </DockPanel>                   
+            </DockPanel>
+        </GroupBox>
+    </DockPanel>
+</Window>

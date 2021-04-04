@@ -1,0 +1,18 @@
+[
+  {
+    "Id": "439880",
+    "ThreadId": "211794",
+    "Html": "<p>Hi,</p>\r\n<p>&nbsp; Any idea when 2.0 (with two-way notifications) will be landing?</p>\r\n<p>&nbsp; You were mentioned at http://blog.alner.net/archive/2010/02/09/mvvm-to-wrap-or-not-to-wrap-blinq-and-clinq.aspx and it seems a reasonable step to think you might be able to help with the MVVM list problem.</p>\r\n<p>&nbsp; Any thoughts?</p>\r\n<p>&nbsp;&nbsp;&nbsp; thanks,</p>\r\n<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; J</p>",
+    "PostedDate": "2010-05-06T07:45:07.7-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "442492",
+    "ThreadId": "211794",
+    "Html": "<p>Hi,</p>\r\n<p>Two-way 'notification' just like that can never happen. Point is that with non-trivial or realistic&nbsp;tranformations the system&nbsp;can't deduce what to do with changes originating at the target.</p>\r\n<p>For example if you would bind to a sorted view of a list and a client would add an element at the end of the diplayed view; where in the source list would the system need to add the new element? Extra information is required.</p>\r\n<p>The ObticsBindingHelper library contains extension methods in the Obtics.Collections.ListReturnPath and Obtics.Collections.DictionaryReturnPath classes that allow a developer to specify what needs to happen when updating operations are performed. The Obtics library itself has the ValueProvider.ReturnPath method that allows specification of what needs to happen when an IValueProvider.Value gets updated.</p>\r\n<p>There are some 'examples' of&nbsp;how to&nbsp;use these methods in the UnitTest libraries.</p>\r\n<p>Hope this helps,</p>\r\n<p>Thomas.</p>",
+    "PostedDate": "2010-05-13T06:09:21.963-07:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

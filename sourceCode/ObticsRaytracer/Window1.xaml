@@ -1,0 +1,19 @@
+﻿<Window x:Class="ObticsRaytracer.Window1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Window1" Height="330" Width="300">
+    <DockPanel Name="TopPanel">
+        <DockPanel DockPanel.Dock="Bottom" Margin="5,5,5,5" Name="dockPanel1" VerticalAlignment="Bottom">
+            <DockPanel Name="RedrawPanel" Width="100">
+                <Label Name="RedrawLabel">Redraw:</Label>
+                <Label Name="RedrawCount"></Label>
+            </DockPanel>
+            <DockPanel Name="AveragePanel" >
+                <Label Name="AverageLabel">Avg time:</Label>
+                <Label Name="AverageTotal"></Label>
+            </DockPanel>
+        </DockPanel>
+        <Image DockPanel.Dock="Top" Stretch="Fill" x:Name="PictureBox">
+        </Image>
+    </DockPanel>
+</Window>

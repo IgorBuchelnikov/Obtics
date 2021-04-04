@@ -1,0 +1,78 @@
+<div class="wikidoc"><h1>Implicit Observable LINQ Examples</h1>
+Implicit observable LINQ differs from Explicit observable LINQ in that every lambda passed to an Implicit observable LINQ method is accepted as an LambdaExpression and this lambda expression is rewritten to a reactive form by passing it to the ExpressionObserver.Compile method.<br /><br />Like with explicit observable linq if you would like to use observable LINQ with inline query syntax then you will need to remove the System.Linq namespace from your using directives or hide it behind an identifier. Otherwise you will get ambiguouity compilation errors.<br /><br /><pre>
+using SL = System.Linq; 
+using Obtics.Values;
+using Obtics.Collections.ImplicitObservable;
+
+class Test
+{
+        ObservableCollection&lt;Person&gt; _People = new ObservableCollection&lt;Person&gt;();
+
+        public ReadOnlyObservableCollection&lt;Person&gt; People
+        { get { return new ReadOnlyObservableCollection&lt;Person&gt;(_People); } }
+
+        public IEnumerable&lt;string&gt; LastNames
+        {
+            get 
+            {
+                return
+                    from p in People
+                    select p.LastName into ln
+                    orderby ln
+                    select ln;
+            }
+        }
+}
+</pre><br /><br />The above returned sequence is observable and fully reactive to changes in the LastName property of any Person object in the People collection as well as changes to the People collection itself.<br /><br />Always try to prevent the use of free variables in lambda expressions. There exist special Select methods to seed observable linq queries with external variables though they can&#39;t be used with the convenient inline query syntax. Note that in the below example the Select method call takes an extra parameter to bind the otherwise free <i>LastOrFirstCheckBox. If instead a free </i>LastOrFirstCheckBox would have been used then the lambda would have been unique for each Test class instance and recompiled for every Test class instance.<br /><br /><pre>
+using SL = System.Linq; 
+using Obtics.Values;
+using Obtics.Collections.ImplicitObservable;
+
+class Test
+{
+        ObservableCollection&lt;Person&gt; _People = new ObservableCollection&lt;Person&gt;();
+
+        public ReadOnlyObservableCollection&lt;Person&gt; People
+        { get { return new ReadOnlyObservableCollection&lt;Person&gt;(_People); } }
+
+        System.Windows.Controls.CheckBox _LastOrFirstCheckBox;
+
+        public IEnumerable&lt;string&gt; LastOrFirstNames
+        {
+            get 
+            {
+                return
+                    People
+                        .Select( this, (p, t) =&gt; t._LastOrFirstCheckBox.IsChecked ? p.LastName : p.FirstName )
+                        .OrderBy( name =&gt; name );
+            }
+        }
+}
+</pre><br /><br />In case Test class instances are rare and the LastNames property getter is accessed often, it could be usefull to cache the generated IEnumerable in a member field. But note that the garbage collector can not reclaim the pipeline before its owning Test object is reclaimed as well.<br /><br /><pre>
+using SL = System.Linq; 
+using Obtics.Values;
+using Obtics.Collections.ImplicitObservable;
+
+class Test
+{
+        ObservableCollection&lt;Person&gt; _People = new ObservableCollection&lt;Person&gt;();
+
+        public ReadOnlyObservableCollection&lt;Person&gt; People
+        { get { return new ReadOnlyObservableCollection&lt;Person&gt;(_People); } }
+
+        IEnumerable&lt;string&gt; _LastNames;
+
+        public IEnumerable&lt;string&gt; LastNames
+        {
+            get 
+            {
+                return _LastNames ?? ( _LastNames =
+                    from p in People
+                    select p.LastName into ln
+                    orderby ln
+                    select ln
+                );
+            }
+        }
+}
+</pre><br /><br />See also:<a href="https://obtics.codeplex.com/wikipage?title=Transformation%20Examples&referringTitle=Implicit%20Observable%20LINQ%20Examples">Transformation Examples</a></div><div class="ClearBoth"></div>

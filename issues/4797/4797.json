@@ -1,0 +1,65 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "This can not be implemented. Extending the resulting interface would lead to compatibility issues with standard Linq methods.second Because C&#35; 3.0 does not support covariant method parameters this would lead to a manifold of the number of methods in ObservableEnumerable.",
+    "ClosedDate": "2009-10-07T16:17:44.06-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "It would be nice if the return type from ExpressionObserver.Execute (currently IValueProvider<T>) would inherit from INotifyPropertyChanged.  The reason is that I'd like to easily handle the result's INotifyPropertyChanged.PropertyChanged event.  In VB.Net, I find myself doing this a lot:\n \n \n\tPublic ReadOnly Property DayInterval() As Integer\n\t\tGet\n\t\t\tIf _DayInterval Is Nothing Then\n\t\t\t\t_DayInterval = ExpressionObserver.Execute(Me, Function(source As DailyRecurrenceViewModel) _\n\t\t\t\tsource.DateSeries.Interval _\n\t\t\t\t)\n\t\t\t\t_DayIntervalAsNotifyPropertyChanged = DirectCast(_DayInterval, INotifyPropertyChanged)\n\t\t\tEnd If\n\t\t\tReturn _DayInterval.Value\n\t\tEnd Get\n\tEnd Property\n\tPrivate _DayInterval As IValueProvider(Of Integer)\n\tPrivate WithEvents _DayIntervalAsNotifyPropertyChanged As INotifyPropertyChanged\n \n\tPrivate Sub OnDayIntervalPropertyChanged(ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs) Handles _DayIntervalAsNotifyPropertyChanged.PropertyChanged\n\t\tMe.NotifyPropertyChanged(Function() Me.DayInterval)\n\tEnd Sub\n \nThe problem I have with that code is that the field _DayIntervalAsNotifyPropertyChanged should not be needed.  If IValueProvider<T> (or whatever return type ExpressionObserver.Execute may expose) inherited from INotifyPropertyChanged, then I could remove _DayIntervalAsNotifyPropertyChanged and just add the \"WithEvents\" keyword to _DayInterval.",
+    "LastUpdatedDate": "2013-05-15T21:55:54.17-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Low",
+      "Severity": 50,
+      "Id": 1
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-08-20T11:33:46.827-07:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "ExpressionObserver.Execute doesn't expose INotifyPropertyChanged",
+    "Type": {
+      "Name": "Issue",
+      "Id": 3
+    },
+    "VoteCount": 2,
+    "Id": 4797
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "It would be convenient in your case but I'm reluctant to do that. \r\n\r\nReturning a concrete type would lead to problems with the expression rewriter (by taking the Value property of the concrete type instead of the interface.. big trouble). Having an IValueProvider implementing object without INotifyPropertyChanged is a strong hint to the expression rewriter that the Value property will not change (at least not noticebly). I also think it would be a bit unclean to tie IValueProvider directly to INotifyPropertyChanged. Both have different purposes and tying them should implement a clear hierarchical relationship between the two and not just be convenient. (Being a bit of a purist now).\r\n\r\nWould it not be possible to use the AddHandler statement and attach the handler imperatively? I'm not a VB expert but in C# I often use an extension method for IValueProvider<X> that 1 would test if the provider also implements INtoifyPropertyChanged and 2 if so adds a given handler to the PropertyChanged event. I also have an extension method that does the reverse!\r\n\r\nThis is very important! If you use value transformations in the way you do (translating them to POCO properties) you need to unregister from change events when you are done with your object. If you don't; your object is very likely to remain in memory for ever. With what I have read about the 'WithEvents' and 'Handles' construct sofar I'm not sure if the handler gets properly unlinked.\r\n\r\nCode (sorry C#)\r\n\r\n//extension method(s)\r\npublic static IValueProvider<X> LinkPocoProp<X>( this IValueProvider<X> source, ref IValueProvider<X> field, PropertyChangedEventHandler handler)\r\n{\r\n\tvar pc = source as INotifyPropertyChanged;\r\n\r\n\tif(pc != null)\r\n\t\tpc += handler;\r\n\r\n\tfield = source;\r\n\r\n\treturn source;\r\n}\r\n\r\npublic static void UnlinkPocoProp<X>( ref IValueProvider<X> field, PropertyChangedEventHandler handler)\r\n{\r\n\tvar pc = field as INotifyPropertyChanged;\r\n\r\n\tif(pc != null)\r\n\t\tpc -= handler;\r\n\r\n\tfield = null;\r\n}\r\n\r\n\r\n//used in the class like\r\nIValueProvider<bool> _X;\r\n\r\nstatic PropertyChangedEventArgs _XChangedArgs = new PropertyChangedEventArgs(\"X\");\r\n\r\nvoid XChangedHandler(object sender, PropertyChangedEventArgs args)\r\n{\r\n\tOnPropertyChanged(_XChangedArgs);\r\n}\r\n\r\npublic bool X { get { return ( _X ?? Execute( ...code here... ).LinkPocoProp( ref _X, XChangedHandler )).Value; } }\r\n\r\npublic void Dispose()\r\n{\r\n\tif(_X != null)\r\n\t\tUnlinkPocoProp( ref _X, XChangedHandler  );\t\r\n}\r\n",
+      "PostedDate": "2009-08-22T18:59:37.693-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-09-14T08:56:05.783-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-10-07T16:17:44.06-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:07.98-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:54.17-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

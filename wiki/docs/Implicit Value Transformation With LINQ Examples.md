@@ -1,0 +1,131 @@
+# Implicit Value Transformation With LINQ Examples
+
+Implicit value transformations can be combined with LINQ statements. The resulting sequences are [observable](observable) and [reactive](reactive) to an extent depending on the LINQ implementation used.
+
+Class Person in these examples is an observable class. That means an instance of this class sends change notifications whenever a property changes value. See [http://www.codeplex.com/Obtics/SourceControl/FileView.aspx?itemId=209671&changeSetId=14599](http://www.codeplex.com/Obtics/SourceControl/FileView.aspx?itemId=209671&changeSetId=14599) for a possible implementation.
+
+{{
+using System.Linq; 
+using Obtics.Values;
+
+class Test
+{        
+        System.Windows.Controls.ListBox listBox;
+
+        public IEnumerable<string> Names
+        {
+            get 
+            {
+                return
+                    ExpressionObserver.Execute(
+                        SomeSourceOfPeople, 
+                        listBox,
+                        (s, lb) => 
+                            from person in s 
+                            where person.LastName.StartsWith( lb.SelectedItem ) 
+                            select person.LastName + " " + person.FirstName
+                    )
+                    .Cascade();
+            }
+        }
+}
+}}
+
+This would work for **any** form of LINQ. With LINQ to objects the result would be fully [reactive](reactive). This means that if the LastName of a person would change then the result sequence will be updated. With any other form of Linq the full reactiveness would stop at the boundaries of that Linq form and then would be as reactive as that Linq form allows. For example with standard Linq to Sql the result sequence would not get updated if a Persons LastName changes. **The sequence would be updated though if listBox.SelectedItem would change!** 
+
+With the [LinqToXml](LinqToXml) extension library fully reactive and observable **Linq to Xml** statements can be created.
+
+The above property could also be rewritten like this:
+
+{{
+using System.Linq; 
+using Obtics.Values;
+
+class Test
+{        
+        System.Windows.Controls.ListBox listBox;
+
+        public IEnumerable<string> Names
+        {
+            get 
+            {
+                return
+                    ExpressionObserver.Execute(
+                        () => 
+                            from person in SomeSourceOfPeople 
+                            where person.LastName.StartsWith( (string)listBox.SelectedItem ) 
+                            select person.LastName + " " + person.FirstName
+                    )
+                    .Cascade();
+            }
+        }
+}
+}}
+
+The above form would still work but note that the Expression passed to ExpressionObserver.Execute() contains [free variables](free-variables) (listBox and probably SomeSourceOfPeople). **This forces ExpressionObserver to recompile the expression at every call making the the above form very inefficient!**
+
+When there are many Test class instances then te below form may be most efficient. In this case the expression gets rewritten and compiled
+only once and the GarbageCollector can reclaim any unused transformation pipelines.
+
+{{
+using System.Linq; 
+using Obtics.Values;
+
+class Test
+{        
+        System.Windows.Controls.ListBox listBox;
+
+        static Func<SomeSourceOfPeopleType,System.Windows.Controls.ListBox,IValueProvider<IEnumerable<string>>> _NamesF =
+            ExpressionObserver.Compile(
+                (SomeSourceOfPeopleType s, System.Windows.Controls.ListBox lb) => 
+                    from person in s 
+                    where person.LastName.StartsWith( (string)lb.SelectedItem ) 
+                    select person.LastName + " " + person.FirstName
+            );
+
+        public IEnumerable<string> Names
+        { get { return _NamesF( SomeSourceOfPeople, listBox ).Cascade(); } }
+}
+}}
+Code snippets for this instance property pattern can be found here: [http://obtics.codeplex.com/SourceControl/changeset/view/19469#368332](http://obtics.codeplex.com/SourceControl/changeset/view/19469#368332).
+
+When Test class instances are few then the below form may be most efficient. The pipeline gets built one time only (per Test object instance) and it gets destroyed only when the owning Test object is destroyed.
+
+{{
+using System.Linq; 
+using Obtics.Values;
+
+class Test
+{        
+        System.Windows.Controls.ListBox listBox;
+
+        IEnumerable<string> _Names;
+
+        public IEnumerable<string> Names
+        {
+            get 
+            {
+                return _Names ?? ( _Names =
+                        ExpressionObserver.Execute(
+                            SomeSourceOfPeople, 
+                            listBox,
+                            (s, lb) => 
+                                from person in s 
+                                where person.LastName.StartsWith( (string)lb.SelectedItem ) 
+                                select person.LastName + " " + person.FirstName
+                        )
+                        .Cascade();
+                )
+            }
+        }
+}
+}}
+
+Care needs to be taken when using System.Linq.Enumerable methods ToDictionary and ToList in an expression passed to an ExpressionObserver method. These methods return a Dictionary and a List respectively but these results need to be cast up to IDictionary and IList to prevent runtime compilation errors.
+
+{{
+ExpressionObserver.Execute( source, listBox, (s,lb) => s.ToDictionary( p => p.LastName )[(string)lb.SelectedItem]((string)lb.SelectedItem) ); //error
+ExpressionObserver.Execute( source, listBox, (s,lb) => ((IDictionary<string,Person>)s.ToDictionary(p => p.LastName))[(string)lb.SelectedItem]((string)lb.SelectedItem) ); //ok
+}}
+
+See also: [Transformation Examples](Transformation-Examples)

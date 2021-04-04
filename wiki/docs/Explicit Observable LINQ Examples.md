@@ -1,0 +1,68 @@
+# Explicit Observable LINQ Examples
+
+To use explicit observable LINQ the Obtics.Collections.ExplicitObservable namespace should be added to your using directives.This is enough to use Explicit Observable LINQ. If you would like to use observable LINQ with inline query syntax then you will need to remove the System.Linq namespace from your using directives or hide it behind an identifier. Otherwise you will get ambiguouity compilation errors.
+
+Explicit observable LINQ is usefull when you want to control how change aware the resulting transformation pipeline should be to avoid unwanted overhead. Like with explicit value transformation this makes the developer responsible and breaks the care-free always works tenet.
+
+Class Person in these examples is an observable class. That means an instance of this class sends change notifications whenever a property changes value. See [http://www.codeplex.com/Obtics/SourceControl/FileView.aspx?itemId=209671&changeSetId=14599](http://www.codeplex.com/Obtics/SourceControl/FileView.aspx?itemId=209671&changeSetId=14599) for a possible implementation.
+
+{{
+using SL = System.Linq; 
+using Obtics.Values;
+using Obtics.Collections.ExplicitObservable;
+
+class Test
+{
+        ObservableCollection<Person> _People = new ObservableCollection<Person>();
+
+        public ReadOnlyObservableCollection<Person> People
+        { get { return new ReadOnlyObservableCollection<Person>(_People); } }
+
+        public IEnumerable<string> LastNames
+        {
+            get 
+            {
+                return
+                    from p in People
+                    select ValueProvider.Static(p).Property<Person, string>("LastName") into ln
+                    orderby ln
+                    select ln;
+            }
+        }
+}
+}}
+
+At every call to the LastNames property getter a 'new' transformation pipeline is returned. Depending on the type of build of Obtics these pipelines may actually be the same object instance. What will always hold is that {{Object.Equals(LastNames,LastNames)}} returns true, regardless if it is the same object instance or not. Since there is no strong reference from the Test object to the transformation pipeline the Garbage Collector can reclaim the pipeline object when the caller is done with it.
+ 
+In case Test class instances are rare and the LastNames property getter is accessed often, it could be usefull to cache the generated IEnumerable in a member field. But note that the garbage collector can not reclaim the pipeline before its owning Test object is reclaimed as well.
+
+{{
+using SL = System.Linq; 
+using Obtics.Values;
+using Obtics.Collections.ExplicitObservable;
+
+class Test
+{
+        ObservableCollection<Person> _People = new ObservableCollection<Person>();
+
+        public ReadOnlyObservableCollection<Person> People
+        { get { return new ReadOnlyObservableCollection<Person>(_People); } }
+
+        IEnumerable<string> _LastNames;
+
+        public IEnumerable<string> LastNames
+        {
+            get 
+            {
+                return _LastNames ?? ( _LastNames =
+                    from p in People
+                    select ValueProvider.Static(p).Property<Person, string>("LastName") into ln
+                    orderby ln
+                    select ln
+                );
+            }
+        }
+}
+}}
+
+See also: [Transformation Examples](Transformation-Examples)

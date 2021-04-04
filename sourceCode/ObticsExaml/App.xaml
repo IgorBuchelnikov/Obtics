@@ -1,0 +1,82 @@
+﻿<Application x:Class="ObticsExaml.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:ObticsExaml"
+    StartupUri="Window1.xaml">
+    <Application.Resources>
+
+        <!--local:Part x:Key="WheelSmall" Name="Wheel - Small" ItemsInStock="200" ItemsSold="0" />
+        <local:Part x:Key="WheelLarge" Name="Wheel - Large" ItemsInStock="200" ItemsSold="0" />
+        <local:Part x:Key="BoltSmall" Name="Bolt - Small" ItemsInStock="4000" ItemsSold="0" />
+        <local:Part x:Key="BoltMedium" Name="Bolt - Medium" ItemsInStock="4000" ItemsSold="0" />
+        <local:Part x:Key="BoltLarge" Name="Bolt - Large" ItemsInStock="4000" ItemsSold="0" />
+        <local:Part x:Key="Strap" Name="Strap" ItemsInStock="50" ItemsSold="0" />
+        <local:Part x:Key="Tire" Name="Tire" ItemsInStock="60" ItemsSold="0" />
+        <local:Part x:Key="BicycleFrame" Name="Bicycle frame" ItemsInStock="50" ItemsSold="0" />
+        <local:Part x:Key="TricycleFrame" Name="Tricycle frame" ItemsInStock="50" ItemsSold="0" />
+        <local:Part x:Key="Pedle" Name="Pedle" ItemsInStock="50" ItemsSold="0" />
+        <local:Part x:Key="Valve" Name="Valve" ItemsInStock="20" ItemsSold="0" />
+        <local:Part x:Key="RubberTube" Name="Rubber tube" ItemsInStock="30" ItemsSold="0" />
+        <local:Part x:Key="Cylinder" Name="Cylinder" ItemsInStock="50" ItemsSold="0" />
+        <local:Part x:Key="TwoToneBell" Name="Two tone bell" ItemsInStock="7" ItemsSold="0" />
+        
+        <local:Context x:Key="context">
+            <local:Context.Parts>
+                <StaticResource ResourceKey="WheelSmall"/>
+                <StaticResource ResourceKey="WheelLarge"/>
+                <StaticResource ResourceKey="BoltSmall"/>
+                <StaticResource ResourceKey="BoltMedium"/>
+                <StaticResource ResourceKey="BoltLarge"/>
+                <StaticResource ResourceKey="Strap"/>
+                <StaticResource ResourceKey="Tire"/>
+                <StaticResource ResourceKey="BicycleFrame"/>
+                <StaticResource ResourceKey="TricycleFrame"/>
+                <StaticResource ResourceKey="Pedle"/>
+                <StaticResource ResourceKey="Valve"/>
+                <StaticResource ResourceKey="RubberTube"/>
+                <StaticResource ResourceKey="Cylinder"/>
+                <StaticResource ResourceKey="TwoToneBell"/>
+            </local:Context.Parts>
+            <local:Context.Products>
+                <local:Product Name="Skates">
+                    <local:Product.Parts>
+                        <local:ProductPart Count="8" Part="{StaticResource WheelSmall}"/>
+                        <local:ProductPart Count="2" Part="{StaticResource Strap}"/>
+                        <local:ProductPart Count="8" Part="{StaticResource BoltSmall}"/>
+                        <local:ProductPart Count="4" Part="{StaticResource BoltMedium}"/>
+                    </local:Product.Parts>
+                </local:Product>
+                <local:Product Name="Bicycle">
+                    <local:Product.Parts>
+                        <local:ProductPart Count="2" Part="{StaticResource WheelLarge}"/>
+                        <local:ProductPart Count="1" Part="{StaticResource BicycleFrame}"/>
+                        <local:ProductPart Count="2" Part="{StaticResource BoltSmall}"/>
+                        <local:ProductPart Count="6" Part="{StaticResource BoltMedium}"/>
+                        <local:ProductPart Count="4" Part="{StaticResource BoltLarge}"/>
+                        <local:ProductPart Count="2" Part="{StaticResource Pedle}"/>
+                        <local:ProductPart Count="2" Part="{StaticResource Tire}"/>
+                    </local:Product.Parts>
+                </local:Product>
+                <local:Product Name="Tricycle">
+                    <local:Product.Parts>
+                        <local:ProductPart Count="3" Part="{StaticResource WheelLarge}"/>
+                        <local:ProductPart Count="1" Part="{StaticResource TricycleFrame}"/>
+                        <local:ProductPart Count="2" Part="{StaticResource BoltSmall}"/>
+                        <local:ProductPart Count="8" Part="{StaticResource BoltMedium}"/>
+                        <local:ProductPart Count="7" Part="{StaticResource BoltLarge}"/>
+                        <local:ProductPart Count="2" Part="{StaticResource Pedle}"/>
+                        <local:ProductPart Count="3" Part="{StaticResource Tire}"/>
+                    </local:Product.Parts>
+                </local:Product>
+                <local:Product Name="Pump">
+                    <local:Product.Parts>
+                        <local:ProductPart Count="1" Part="{StaticResource Valve}"/>
+                        <local:ProductPart Count="1" Part="{StaticResource Cylinder}"/>
+                        <local:ProductPart Count="1" Part="{StaticResource RubberTube}"/>
+                        <local:ProductPart Count="1" Part="{StaticResource BoltMedium}"/>
+                    </local:Product.Parts>
+                </local:Product>
+            </local:Context.Products>
+        </local:Context-->
+    </Application.Resources>
+</Application>

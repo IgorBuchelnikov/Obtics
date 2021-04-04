@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "262965",
+    "ThreadId": "76913",
+    "Html": "<p>We've run into another problem related to lazy loading and Obtics, but we're having trouble finding it.&nbsp; We can see the PropertyChanged firing in the PropertyTransformer and it creates the message.&nbsp; Any tips on somehow following this message to know where the chain is breaking down?</p>\r\n<p>Are there any generally useful debugging techniques for following the values through transformations?</p>\r\n<p>The code gets hard to understand when it goes into the message system, so any guiding suggestions would be appreciated.</p>\r\n<p>Thanks!</p>",
+    "PostedDate": "2009-12-02T15:25:01.843-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "263321",
+    "ThreadId": "76913",
+    "Html": "<p>Turns out the problem had nothing to do with Obtics, but we thought it did because Obtics doesn't fire notification events when you don't reread the property.</p>\r\n<p>In any case, the problem turned out to be WPF binding to the proxy objects.&nbsp; The same problem we experienced earlier with Obtics and the object reference.&nbsp; I'll update the other thread with information in case anyone is looking.</p>",
+    "PostedDate": "2009-12-03T11:16:17.523-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  },
+  {
+    "Id": "263348",
+    "ThreadId": "76913",
+    "Html": "<p>It's a pain in the behind sometimes when you need to debug a transformation pipeline. One day I hope it will be possible to map pipeline elements to parts of lambda expressions where they originate from. This would be a hughe help in debugging.</p>\r\n<p>The best trategy I found sofar is unit testing.&nbsp;You may occasionally still need to get your hands dirty but those times will get quite rare. Most problems with obtics to my experience come from&nbsp;things not being&nbsp;'well-behaved'. Here is some need to read if you are wondering what I'm writing about: <a href=\"http://obtics.codeplex.com/wikipage?title=Well-behaved\">http://obtics.codeplex.com/wikipage?title=Well-behaved</a></p>",
+    "PostedDate": "2009-12-03T12:34:20.087-08:00",
+    "UserRole": null,
+    "MarkedAsAnswerDate": null
+  }
+]

@@ -1,0 +1,60 @@
+{
+  "WorkItem": {
+    "AffectedComponent": {
+      "Name": "",
+      "DisplayName": ""
+    },
+    "ClosedComment": "",
+    "ClosedDate": "2009-10-07T16:06:57.063-07:00",
+    "CommentCount": 0,
+    "Custom": null,
+    "Description": "Currently the actual type of the source is ignored. THis means that if a ConvertTransformation is created with a source that itself is a ConvertTransformation, the result will be a chained pipeline of two ConvertTransformations where they could easily be merged into 1.",
+    "LastUpdatedDate": "2013-05-15T21:55:55.047-07:00",
+    "PlannedForRelease": "",
+    "ReleaseVisibleToPublic": false,
+    "Priority": {
+      "Name": "Medium",
+      "Severity": 100,
+      "Id": 2
+    },
+    "ProjectName": "Obtics",
+    "ReportedDate": "2009-01-04T06:46:18.73-08:00",
+    "Status": {
+      "Name": "Closed",
+      "Id": 4
+    },
+    "ReasonClosed": {
+      "Name": "Unassigned"
+    },
+    "Summary": "Regard actual type of source when creating transformation elements.",
+    "Type": {
+      "Name": "Feature",
+      "Id": 1
+    },
+    "VoteCount": 0,
+    "Id": 3546
+  },
+  "FileAttachments": [],
+  "Comments": [
+    {
+      "Message": "This would make assumptions about the quality of the conversion at every level. It could be that the first conversion is very expensive but doesn;t get calculated often. THe second level is cheap but gets calculated often. (different observable dependencies). If these would be merged you'd get an expensive conversion that would be recalculated often.\r\n\r\nMerges like these will need to be done by the developer",
+      "PostedDate": "2009-10-07T16:06:42.513-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2009-10-07T16:06:57.063-07:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-02-13T18:41:09.04-08:00",
+      "Id": -2147483648
+    },
+    {
+      "Message": "",
+      "PostedDate": "2013-05-15T21:55:55.047-07:00",
+      "Id": -2147483648
+    }
+  ]
+}

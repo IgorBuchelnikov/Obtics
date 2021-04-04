@@ -1,0 +1,64 @@
+<div class="wikidoc"><h1>Implicit Value Transformation Examples</h1>
+With implicit value transformations you let Obtics build the transformation pipeline for you. This method is much more convenient than creating the pipeline by hand. The resulting pipline though strives for maximum change awareness. This means it listens for possible changes on all properties and that in turn will create some overhead. Creating the pipeline generator will also generate overhead but in most cases this can be neutralised.<br /><br />Class Person in these examples is an observable class. That means an instance of this class sends change notifications whenever a property changes value. See <a href="http://www.codeplex.com/Obtics/SourceControl/FileView.aspx?itemId=209671&amp;changeSetId=14599">http://www.codeplex.com/Obtics/SourceControl/FileView.aspx?itemId=209671&amp;changeSetId=14599</a> for a possible implementation.<br /><br /><pre>
+using Obtics.Values;
+
+class Test
+{
+        Person _Person = new Person(&quot;Glenn&quot;,&quot;Miller&quot;);
+
+        Person Person
+        { get { return _Person; } }
+
+        public IValueProvider&lt;int&gt; PersonFullNameLength
+        {
+            get 
+            {
+                return 
+                    ExpressionObserver.Execute(this, t =&gt; t.Person.FirstName.Length + t.Person.LastName.Length + 1);
+
+                //the below line is even simpler but because the lambda expression depends on the external &#39;this&#39; variable the
+                //expression is re-compiled for every Test class instance. Better use lambda&#39;s without external variables.
+                //return ExpressionObserver.Execute(() =&gt; Person.FirstName.Length + Person.LastName.Length + 1);
+            }
+        }
+}
+</pre><br /><br />In case the PersonFullNameLength property getter gets called more often it will be worth the effort to cache the compiled LambdaExpression. A caching mechanism already prevents the LambdaExpression from being recompiled (as long as it doesn&#39;t contain any free variables a.k. is &#39;pseudo-pure&#39;) but the entire expression tree still needs to be built and compared with expression trees already in the cache. Thuis building and comparing can be avoided if the compiled expression is saved in a static field.  <br /><br /><pre>
+using Obtics.Values;
+
+class Test
+{
+        Person _Person = new Person(&quot;Glenn&quot;,&quot;Miller&quot;);
+
+        Person Person
+        { get { return _Person; } }
+
+        static readonly Func&lt;Person,IValueProvider&lt;int&gt;&gt; _PersonFullNameLengthF = 
+            ExpressionObserver.Compile( (Test t) =&gt; t.Person.FirstName.Length + t.Person.LastName.Length + 1);
+
+        public IValueProvider&lt;int&gt; PersonFullNameLength
+        { get { return _PersonFullNameLengthF(this); } }
+}
+</pre><br />Code snippets for this instance property pattern can be found here: <a href="http://obtics.codeplex.com/SourceControl/changeset/view/19469#368332">http://obtics.codeplex.com/SourceControl/changeset/view/19469#368332</a>.<br /><br />In case instances of class Test are rare and the getter of the PersonFullNameLength property gets called often then it may be advantageous to cache the resulting IValueProvider in a cache. In this example a LocalPipelineCache struct is used to store the IValueProvider localy. See <a href="https://obtics.codeplex.com/wikipage?title=Pipeline%20Caches&referringTitle=Implicit%20Value%20Transformation%20Examples">Pipeline Caches</a> for examples of caches. <br /><br /><pre>
+using Obtics.Values;
+
+class Test
+{
+        Person _Person = new Person(&quot;Glenn&quot;,&quot;Miller&quot;);
+
+        Person Person
+        { get { return _Person; } }
+
+        static readonly Func&lt;Person,IValueProvider&lt;int&gt;&gt; _PersonFullNameLengthF = 
+            ExpressionObserver.Compile( (Test t) =&gt; t.Person.FirstName.Length + t.Person.LastName.Length + 1);
+
+        LocalPipelineCache&lt;IValueProvider&lt;int&gt;&gt; _PersonFullNameLength;
+
+        public IValueProvider&lt;int&gt; PersonFullNameLength
+        {
+            get 
+            {
+                return _PersonFullNameLength.Get(this, _PersonFullNameLengthF) ;
+            }
+        }
+}
+</pre><br /><br />See also: <a href="https://obtics.codeplex.com/wikipage?title=Transformation%20Examples&referringTitle=Implicit%20Value%20Transformation%20Examples">Transformation Examples</a>, <a href="https://obtics.codeplex.com/wikipage?title=Pipeline%20Caches&referringTitle=Implicit%20Value%20Transformation%20Examples">Pipeline Caches</a></div><div class="ClearBoth"></div>
